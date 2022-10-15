@@ -2,6 +2,7 @@ package com.mysite.sbb.Controller;
 
 import com.mysite.sbb.Model.Question;
 import com.mysite.sbb.Repository.QuestionRepository;
+import com.mysite.sbb.Service.QuestionService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -14,11 +15,11 @@ import java.util.List;
 @Controller
 public class QuestionController {
 
-    private final QuestionRepository questionRepository;
+    private final QuestionService questionService;
 
     @RequestMapping("/question/list")
     public String list(Model model) {
-        List<Question> questionList = questionRepository.findAll();
+        List<Question> questionList = questionService.getList();
         // questionList라는 이름으로 질문목록을 model객체에 저장한다.
         model.addAttribute("questionList", questionList);
         return "question_list";
