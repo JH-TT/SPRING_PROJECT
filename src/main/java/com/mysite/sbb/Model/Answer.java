@@ -27,10 +27,12 @@ public class Answer {
     private String content;
 
     @CreatedDate
-    private LocalDateTime create_date;
+    @Column(name = "create_date")
+    private LocalDateTime createDate;
 
     @LastModifiedDate
-    private LocalDateTime modified_date;
+    @Column(name = "modified_date")
+    private LocalDateTime modifiedDate;
 
     // 한 질문에 여러개의 댓글을 달 수 있으니 ManyToOne을 넣는다.
     @ManyToOne
