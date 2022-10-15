@@ -40,7 +40,7 @@ public class Question {
     // Question에선 여러개의 답글이 생길 수 있으니 One to Many로 지정한다.
     // CascadeType.REMOVE -> 질문이 삭제되면 달린 답변들도 전부 삭제하기 위함.
     // FetchType.LAZY -> 필요시점에 데이터를 가져오기 위함.
-    @OneToMany(mappedBy = "question", cascade = CascadeType.REMOVE, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "question", cascade = CascadeType.REMOVE, fetch = FetchType.EAGER)
     private List<Answer> answerList;
 
 //    public Question(String subject, String content) {
