@@ -28,4 +28,10 @@ public class QuestionServiceImpl implements QuestionService{
             throw new DataNotFoundException("question not found");
         }
     }
+
+    @Override
+    public void create(String subject, String content) {
+        Question q = new Question(subject, content);
+        questionRepository.save(q);
+    }
 }

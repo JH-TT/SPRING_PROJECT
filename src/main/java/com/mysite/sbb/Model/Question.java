@@ -43,8 +43,8 @@ public class Question {
     @OneToMany(mappedBy = "question", cascade = CascadeType.REMOVE, fetch = FetchType.EAGER)
     private List<Answer> answerList;
 
-//    public Question(String subject, String content) {
-//        this.subject = subject;
-//        this.content = content;
-//    }
+    public Question(String subject, String content) {
+        this.subject = subject;
+        this.content = content;
+    }
 }
