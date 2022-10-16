@@ -5,24 +5,29 @@
     <title>Title</title>
 </head>
 <body>
-    <h2>Hello Template</h2>
-    <table>
-        <thead>
-            <tr>
-                <th>제목</th>
-                <th>작성일시</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr th:each="question : ${questionList}">
-                <td>
-                    <!-- th:href 를 이용해서 URL주소를 나타낼때는 @{ 주소 }이렇게 한다. -->
-                    <!-- 문자열과 ${}를 합칠 떈 | 기호를 이용한다. -->
-                    <a th:href="@{|/question/detail/${question.id}|}" th:text="${question.subject}"></a>
-                </td>
-                <td th:text="${question.createDate}"></td>
-            </tr>
-        </tbody>
-    </table>
+    <link rel="stylesheet" type="text/css" th:href="@{/bootstrap.min.css}">
+    <div class="container my-3">
+        <table class="table">
+            <thead class="table-dark">
+                <tr>
+                    <th>번호</th>
+                    <th>제목</th>
+                    <th>작성일시</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="question, loop : ${questionList}">
+                    <td th:text="${loop.count}"></td>
+                    <td>
+                        <!-- th:href 를 이용해서 URL주소를 나타낼때는 @{ 주소 }이렇게 한다. -->
+                        <!-- 문자열과 ${}를 합칠 떈 | 기호를 이용한다. -->
+                        <a th:href="@{|/question/detail/${question.id}|}" th:text="${question.subject}"></a>
+                    </td>
+                    <!-- #temporals.format(날짜객체, 날짜포맷) - 날짜객체를 날짜포맷에 맞게 변환한다. -->
+                    <td th:text="${#temporals.format(question.createDate, 'yyyy-MM-dd HH:mm')}"></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
 </body>
 </html>
