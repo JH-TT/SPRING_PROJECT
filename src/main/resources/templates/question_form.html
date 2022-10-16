@@ -2,9 +2,9 @@
 <div layout:fragment="content" class="container">
   <h5 class="my-3 border-bottom pb-2">질문등록</h5>
   <form th:action="@{/question/create}" th:object="${questionForm}" method="post">
-    <div class="alert alert-danger" role="alert" th:if="${#fields.hasAnyErrors()}">
-      <div th:each="err : ${#fields.allErrors()}" th:text="${err}" />
-    </div>
+    <!-- th:replace속성을 하면 공통 템플릿을 템플릿 내에 삽입가능 -->
+    <!-- 바로 아래 코드의미 : div엘리먼트를 form_error.html 파일의 th:fragment 속성명이 formErrorsFragment인 엘리먼트로 교체하라는 의미. -->
+    <div th:replace="form_errors :: formErrorsFragment"></div>
     <div class="mb-3">
       <label for="subject" class="form-label">제목</label>
       <!-- *{subject}를 하면 해당 태그의 id, name, value 속성이 자동으로 생성됨. -->
