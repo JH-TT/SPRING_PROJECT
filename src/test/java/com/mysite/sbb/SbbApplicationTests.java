@@ -4,6 +4,7 @@ import com.mysite.sbb.Model.Answer;
 import com.mysite.sbb.Model.Question;
 import com.mysite.sbb.Repository.AnswerRepository;
 import com.mysite.sbb.Repository.QuestionRepository;
+import com.mysite.sbb.Service.QuestionService;
 import org.hibernate.boot.model.relational.QualifiedSequenceName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +24,9 @@ class SbbApplicationTests {
 
     @Autowired
     private QuestionRepository questionRepository;
+
+    @Autowired
+    private QuestionService questionService;
 
     @Autowired
     private AnswerRepository answerRepository;
@@ -101,6 +105,15 @@ class SbbApplicationTests {
 
         assertEquals(1, answerList.size());
         assertEquals("네 자동으로 생성됩니다", answerList.get(0).getContent());
+    }
+
+    @Test
+    void testJpa4() {
+        for(int i=1; i<= 300; i++) {
+            String subject = String.format("테스트 데이터입니다:[%03d]", i);
+            String content = "내용무";
+            questionService.create(subject, content);
+        }
     }
 
     @Test

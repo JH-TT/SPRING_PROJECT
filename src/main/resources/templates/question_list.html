@@ -9,7 +9,7 @@
             </tr>
             </thead>
             <tbody>
-            <tr th:each="question, loop : ${questionList}">
+            <tr th:each="question, loop : ${paging}">
                 <td th:text="${loop.count}"></td>
                 <td>
                     <!-- th:href 를 이용해서 URL주소를 나타낼때는 @{ 주소 }이렇게 한다. -->
@@ -21,6 +21,40 @@
             </tr>
             </tbody>
         </table>
+        <!-- 페이징처리 시작 -->
+        <div th:if="${!paging.isEmpty()}">
+            <ul class="pagination justify-content-center">
+                <li class="page-item" th:if="${paging.number >= 5}">
+                    <a class="page-link"
+                       th:href="@{|?page=0|}">
+                        <span>처음</span>
+                    </a>
+                </li>
+                <li class="page-item" th:if="${paging.hasPrevious}">
+                    <a class="page-link"
+                       th:href="@{|?page=${paging.number-1}|}">
+                        <span>이전</span>
+                    </a>
+                </li>
+                <li th:each="page: ${#numbers.sequence(1, paging.totalPages)}"
+                    th:if="${page >= paging.number-3 and page <= paging.number+5}"
+                    th:classappend="${page == paging.number+1} ? 'active'"
+                    class="page-item">
+                    <a th:text="${page}" class="page-link" th:href="@{|?page=${page-1}|}"></a>
+                </li>
+                <li class="page-item" th:if="${paging.hasNext}">
+                    <a class="page-link" th:href="@{|?page=${paging.number+1}|}">
+                        <span>다음</span>
+                    </a>
+                </li>
+                <li class="page-item" th:if="${paging.number < paging.totalPages-5}">
+                    <a class="page-link" th:href="@{|?page=${paging.totalPages-1}|}">
+                        <span>마지막</span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+        <!-- 페이징처리 끝 -->
         <a th:href="@{/question/create}" class="btn btn-primary">질문 등록하기</a>
     </div>
 </html>

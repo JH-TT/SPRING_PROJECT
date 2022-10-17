@@ -5,6 +5,7 @@ import com.mysite.sbb.Model.Question;
 import com.mysite.sbb.QuestionForm;
 import com.mysite.sbb.Service.QuestionService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -20,11 +21,19 @@ public class QuestionController {
 
     private final QuestionService questionService;
 
+//    @RequestMapping("/list")
+//    public String list(Model model) {
+//        List<Question> questionList = questionService.getList();
+//        // questionList라는 이름으로 질문목록을 model객체에 저장한다.
+//        model.addAttribute("questionList", questionList);
+//        return "question_list";
+//    }
+
+    // 스프링부트의 페이징은 첫페이지 번호가 1이 아닌 0이다.
     @RequestMapping("/list")
-    public String list(Model model) {
-        List<Question> questionList = questionService.getList();
-        // questionList라는 이름으로 질문목록을 model객체에 저장한다.
-        model.addAttribute("questionList", questionList);
+    public String list(Model model, @RequestParam(value = "page", defaultValue = "0") int page) {
+        Page<Question> paging = questionService.getList(page);
+        model.addAttribute("paging", paging);
         return "question_list";
     }
 
@@ -52,7 +61,7 @@ public class QuestionController {
     @PostMapping("/create")
     public String questionCreate(@Valid QuestionForm questionForm, BindingResult bindingResult) {
         // 오류가 있는 경우엔 다시 폼을 작성하는 화면을 렌더링하게한다.
-        if(bindingResult.hasErrors()) {
+        if (bindingResult.hasErrors()) {
             return "question_form";
         }
         questionService.create(questionForm.getSubject(), questionForm.getContent());
