@@ -10,11 +10,15 @@
             </thead>
             <tbody>
             <tr th:each="question, loop : ${paging}">
-                <td th:text="${loop.count}"></td>
+                <td th:text="${paging.getTotalElements() - (paging.number * paging.size) - loop.index}"></td>
                 <td>
                     <!-- th:href 를 이용해서 URL주소를 나타낼때는 @{ 주소 }이렇게 한다. -->
                     <!-- 문자열과 ${}를 합칠 떈 | 기호를 이용한다. -->
                     <a th:href="@{|/question/detail/${question.id}|}" th:text="${question.subject}"></a>
+                    <span class="text-danger small ms-2"
+                        th:if="${#lists.size(question.answerList) > 0}"
+                        th:text="|[${#lists.size(question.answerList)}]|">
+                    </span>
                 </td>
                 <!-- #temporals.format(날짜객체, 날짜포맷) - 날짜객체를 날짜포맷에 맞게 변환한다. -->
                 <td th:text="${#temporals.format(question.createDate, 'yyyy-MM-dd HH:mm')}"></td>
