@@ -2,8 +2,10 @@ package com.mysite.sbb;
 
 import com.mysite.sbb.Model.Answer;
 import com.mysite.sbb.Model.Question;
+import com.mysite.sbb.Model.SiteUser;
 import com.mysite.sbb.Repository.AnswerRepository;
 import com.mysite.sbb.Repository.QuestionRepository;
+import com.mysite.sbb.Repository.UserRepository;
 import com.mysite.sbb.Service.QuestionService;
 import org.hibernate.boot.model.relational.QualifiedSequenceName;
 import org.junit.jupiter.api.Test;
@@ -30,6 +32,9 @@ class SbbApplicationTests {
 
     @Autowired
     private AnswerRepository answerRepository;
+
+    @Autowired
+    private UserRepository userRepository;
 
 //    public SbbApplicationTests(QuestionRepository questionRepository) {
 //        this.questionRepository = questionRepository;
@@ -114,6 +119,12 @@ class SbbApplicationTests {
             String content = "내용무";
             questionService.create(subject, content);
         }
+    }
+
+    @Test
+    void te() {
+        SiteUser st = new SiteUser("John", "1234", "leejongho9803@gmail.com");
+        userRepository.save(st);
     }
 
     @Test
