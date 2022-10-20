@@ -67,9 +67,4 @@ public class QuestionController {
         questionService.create(questionForm.getSubject(), questionForm.getContent());
         return "redirect:/question/list"; // 질문 저장후 질문목록으로 이동
     }
-
-    @RequestMapping("/")
-    public String root() {
-        return "redirect:/question/list";
-    }
 }
