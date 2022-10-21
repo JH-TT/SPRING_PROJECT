@@ -43,8 +43,13 @@ public class Question {
     @OneToMany(mappedBy = "question", cascade = CascadeType.REMOVE, fetch = FetchType.EAGER)
     private List<Answer> answerList;
 
-    public Question(String subject, String content) {
+    // 여러개의 질문이 한 명의 사용자에게 작성될 수 있으니 ManyToOne이다.
+    @ManyToOne
+    private SiteUser author;
+
+    public Question(String subject, String content, SiteUser author) {
         this.subject = subject;
         this.content = content;
+        this.author = author;
     }
 }

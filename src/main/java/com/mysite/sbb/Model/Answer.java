@@ -38,11 +38,12 @@ public class Answer {
     @ManyToOne
     private Question question;
 
-    public Answer(String content, Question question) {
+    @ManyToOne
+    private SiteUser author;
+
+    public Answer(String content, Question question, SiteUser author) {
         this.content = content;
         this.question = question;
+        this.author = author;
     }
-//    public Answer(String content) {
-//        this.content = content;
-//    }
 }

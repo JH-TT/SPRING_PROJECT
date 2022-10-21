@@ -2,6 +2,7 @@ package com.mysite.sbb.Service;
 
 import com.mysite.sbb.DTO.SiteUserDTO;
 import com.mysite.sbb.Enum.UserRole;
+import com.mysite.sbb.Model.SiteUser;
 import com.mysite.sbb.Repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
@@ -24,11 +25,11 @@ public class UserSecurityService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        Optional<SiteUserDTO> _siteUser = userRepository.findByusername(username);
+        Optional<SiteUser> _siteUser = userRepository.findByusername(username);
         if(_siteUser.isEmpty()){
             throw new UsernameNotFoundException("사용자를 찾을수 없습니다.");
         }
-        SiteUserDTO siteUser = _siteUser.get();
+        SiteUser siteUser = _siteUser.get();
         List<GrantedAuthority> authorities = new ArrayList<>();
         if("admin".equals(username)) {
             authorities.add(new SimpleGrantedAuthority(UserRole.ADMIN.getValue()));

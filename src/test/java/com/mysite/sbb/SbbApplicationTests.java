@@ -114,17 +114,19 @@ class SbbApplicationTests {
 
     @Test
     void testJpa4() {
-        for(int i=1; i<= 300; i++) {
+        for(int i=1; i<= 1; i++) {
             String subject = String.format("테스트 데이터입니다:[%03d]", i);
             String content = "내용무";
-            questionService.create(subject, content);
+            questionService.create(subject, content, null);
         }
     }
 
     @Test
     void te() {
-        SiteUser st = new SiteUser("John", "1234", "leejongho9803@gmail.com");
+        SiteUser st = new SiteUser("John2", "1234", "leejongho9807@gmail.com");
         userRepository.save(st);
+        Question q = new Question("Hi", "Hi", st);
+        questionRepository.save(q);
     }
 
     @Test

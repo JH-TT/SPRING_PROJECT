@@ -2,6 +2,7 @@ package com.mysite.sbb.DTO;
 
 import com.mysite.sbb.Model.Answer;
 import com.mysite.sbb.Model.Question;
+import com.mysite.sbb.Model.SiteUser;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -20,12 +21,15 @@ public class AnswerDTO {
     LocalDateTime modifiedDate;
     Question question;
 
-    public AnswerDTO(Integer id, String content, LocalDateTime createDate, LocalDateTime modifiedDate, Question question) {
+    SiteUser author;
+
+    public AnswerDTO(Integer id, String content, LocalDateTime createDate, LocalDateTime modifiedDate, Question question, SiteUser author) {
         this.id = id;
         this.content = content;
         this.createDate = createDate;
         this.modifiedDate = modifiedDate;
         this.question = question;
+        this.author = author;
     }
 
     public Answer toEntity() {
@@ -35,6 +39,7 @@ public class AnswerDTO {
                 .createDate(createDate)
                 .modifiedDate(modifiedDate)
                 .question(question)
+                .author(author)
                 .build();
     }
 
@@ -47,6 +52,7 @@ public class AnswerDTO {
                 .createDate(answer.getCreateDate())
                 .modifiedDate(answer.getModifiedDate())
                 .question(answer.getQuestion())
+                .author(answer.getAuthor())
                 .build();
     }
 }

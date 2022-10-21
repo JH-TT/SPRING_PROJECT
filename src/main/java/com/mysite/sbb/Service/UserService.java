@@ -1,9 +1,9 @@
 package com.mysite.sbb.Service;
 
-import com.mysite.sbb.Model.SiteUser;
+import com.mysite.sbb.DTO.SiteUserDTO;
 
 public interface UserService {
 
-    SiteUser create(String username, String email, String password);
-
+    SiteUserDTO create(String username, String email, String password);
+    SiteUserDTO getUser(String username);
 }

@@ -1,7 +1,9 @@
 package com.mysite.sbb.Service;
 
+import com.mysite.sbb.DTO.SiteUserDTO;
 import com.mysite.sbb.DataNotFoundException;
 import com.mysite.sbb.Model.Question;
+import com.mysite.sbb.Model.SiteUser;
 import com.mysite.sbb.Repository.QuestionRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -45,8 +47,8 @@ public class QuestionServiceImpl implements QuestionService{
     }
 
     @Override
-    public void create(String subject, String content) {
-        Question q = new Question(subject, content);
+    public void create(String subject, String content, SiteUserDTO author) {
+        Question q = new Question(subject, content, author.toEntity());
         questionRepository.save(q);
     }
 }

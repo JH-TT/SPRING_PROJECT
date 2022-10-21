@@ -2,6 +2,7 @@ package com.mysite.sbb.DTO;
 
 
 import com.mysite.sbb.Model.Question;
+import com.mysite.sbb.Model.SiteUser;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -20,12 +21,15 @@ public class QuestionDTO {
     LocalDateTime modifiedDate;
     String subject;
 
-    public QuestionDTO(Integer id, String content, LocalDateTime createDate, LocalDateTime modifiedDate, String subject) {
+    SiteUser author;
+
+    public QuestionDTO(Integer id, String content, LocalDateTime createDate, LocalDateTime modifiedDate, String subject, SiteUser author) {
         this.id = id;
         this.content = content;
         this.createDate = createDate;
         this.modifiedDate = modifiedDate;
         this.subject = subject;
+        this.author = author;
     }
 
     // DTO -> Entity
@@ -36,6 +40,7 @@ public class QuestionDTO {
                 .createDate(createDate)
                 .modifiedDate(modifiedDate)
                 .subject(subject)
+                .author(author)
                 .build();
     }
 
@@ -49,6 +54,7 @@ public class QuestionDTO {
                 .createDate(question.getCreateDate())
                 .modifiedDate(question.getModifiedDate())
                 .subject(question.getSubject())
+                .author(question.getAuthor())
                 .build();
     }
 }

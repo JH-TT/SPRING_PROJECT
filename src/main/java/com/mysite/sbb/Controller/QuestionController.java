@@ -1,17 +1,21 @@
 package com.mysite.sbb.Controller;
 
 import com.mysite.sbb.AnswerForm;
+import com.mysite.sbb.DTO.SiteUserDTO;
 import com.mysite.sbb.Model.Question;
 import com.mysite.sbb.QuestionForm;
 import com.mysite.sbb.Service.QuestionService;
+import com.mysite.sbb.Service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.security.Principal;
 import java.util.List;
 
 @RequiredArgsConstructor
@@ -20,6 +24,8 @@ import java.util.List;
 public class QuestionController {
 
     private final QuestionService questionService;
+
+    private final UserService userService;
 
 //    @RequestMapping("/list")
 //    public String list(Model model) {
@@ -45,6 +51,7 @@ public class QuestionController {
         return "question_detail";
     }
 
+    @PreAuthorize("isAuthenticated()")
     @GetMapping("/create")
     public String questionCreate(QuestionForm questionForm) {
         return "question_form";
@@ -58,13 +65,15 @@ public class QuestionController {
     // BindingResult 매개변수는 @Valid 애너테이션으로 인해 검증이 수행된 결과를 의미하는 객체이다.
     // BindingResult는 항상 @Valid 매개변수 바로 뒤에 있어야 한다.
     // 만약 2개의 매개변수의 위치가 맞지 않으면 @Valid만 적용돼 값 검증 실패 시 400오류뜬다.
+    @PreAuthorize("isAuthenticated()")
     @PostMapping("/create")
-    public String questionCreate(@Valid QuestionForm questionForm, BindingResult bindingResult) {
+    public String questionCreate(@Valid QuestionForm questionForm, BindingResult bindingResult, Principal principal) {
         // 오류가 있는 경우엔 다시 폼을 작성하는 화면을 렌더링하게한다.
         if (bindingResult.hasErrors()) {
             return "question_form";
         }
-        questionService.create(questionForm.getSubject(), questionForm.getContent());
+        SiteUserDTO siteUserDTO = userService.getUser(principal.getName());
+        questionService.create(questionForm.getSubject(), questionForm.getContent(), siteUserDTO);
         return "redirect:/question/list"; // 질문 저장후 질문목록으로 이동
     }
 }
