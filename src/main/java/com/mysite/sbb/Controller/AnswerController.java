@@ -1,6 +1,7 @@
 package com.mysite.sbb.Controller;
 
 import com.mysite.sbb.AnswerForm;
+import com.mysite.sbb.DTO.QuestionDTO;
 import com.mysite.sbb.DTO.SiteUserDTO;
 import com.mysite.sbb.Model.Question;
 import com.mysite.sbb.Service.AnswerService;

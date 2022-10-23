@@ -1,5 +1,6 @@
 package com.mysite.sbb.Service;
 
+import com.mysite.sbb.DTO.QuestionDTO;
 import com.mysite.sbb.DTO.SiteUserDTO;
 import com.mysite.sbb.DataNotFoundException;
 import com.mysite.sbb.Model.Question;
@@ -50,5 +51,12 @@ public class QuestionServiceImpl implements QuestionService{
     public void create(String subject, String content, SiteUserDTO author) {
         Question q = new Question(subject, content, author.toEntity());
         questionRepository.save(q);
+    }
+
+    @Override
+    public void modify(Question question, String subject, String content) {
+        question.setSubject(subject);
+        question.setContent(content);
+        questionRepository.save(question);
     }
 }

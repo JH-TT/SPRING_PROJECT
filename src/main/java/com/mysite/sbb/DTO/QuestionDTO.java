@@ -1,6 +1,7 @@
 package com.mysite.sbb.DTO;
 
 
+import com.mysite.sbb.Model.Answer;
 import com.mysite.sbb.Model.Question;
 import com.mysite.sbb.Model.SiteUser;
 import lombok.Builder;
@@ -9,6 +10,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Getter
 @Setter
@@ -20,7 +22,6 @@ public class QuestionDTO {
     LocalDateTime createDate;
     LocalDateTime modifiedDate;
     String subject;
-
     SiteUser author;
 
     public QuestionDTO(Integer id, String content, LocalDateTime createDate, LocalDateTime modifiedDate, String subject, SiteUser author) {

@@ -1,6 +1,7 @@
 package com.mysite.sbb.Controller;
 
 import com.mysite.sbb.AnswerForm;
+import com.mysite.sbb.DTO.QuestionDTO;
 import com.mysite.sbb.DTO.SiteUserDTO;
 import com.mysite.sbb.Model.Question;
 import com.mysite.sbb.QuestionForm;
@@ -8,11 +9,13 @@ import com.mysite.sbb.Service.QuestionService;
 import com.mysite.sbb.Service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 import javax.validation.Valid;
 import java.security.Principal;
@@ -75,5 +78,37 @@ public class QuestionController {
         SiteUserDTO siteUserDTO = userService.getUser(principal.getName());
         questionService.create(questionForm.getSubject(), questionForm.getContent(), siteUserDTO);
         return "redirect:/question/list"; // 질문 저장후 질문목록으로 이동
+    }
+
+    @PreAuthorize("isAuthenticated()")
+    @GetMapping("/modify/{id}")
+    public String questionModify(QuestionForm questionForm, @PathVariable("id") Integer id, Principal principal) {
+        Question question = questionService.getQuestion(id);
+        if(!question.getAuthor().getUsername().equals(principal.getName())) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "수정권한이 없습니다.");
+        }
+        // 수정할 질문의 제목과 내용을 화면에 보여주기 위해 Form객체에 값을 담아서 템플릿으로 전달한다.
+        // 이게 없으면 값이 채워지지 않는다.
+        questionForm.setSubject(question.getSubject());
+        questionForm.setContent(question.getContent());
+
+        // 질문 등록 템플릿을 그대로 사용하면 질문이 수정되는 것이아닌, 새로운 질문이 올라가게 된다.
+        // 그래서 템플릿 폼 태그의 action을 잘 활용하면 유연하게 대처할 수 있다.
+        return "question_form";
+    }
+
+    @PreAuthorize("isAuthenticated()")
+    @PostMapping("/modify/{id}")
+    public String questionModify(@Valid QuestionForm questionForm, @PathVariable("id") Integer id, BindingResult bindingResult
+            , Principal principal) {
+        if(bindingResult.hasErrors()) {
+            return "question_form";
+        }
+        Question question = questionService.getQuestion(id);
+        if(!question.getAuthor().getUsername().equals(principal.getName())) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "수정권한이 없습니다.");
+        }
+        questionService.modify(question, questionForm.getSubject(), questionForm.getContent());
+        return String.format("redirect:/question/detail/%s", id);
     }
 }

@@ -61,30 +61,30 @@ class SbbApplicationTests {
         }
     }
 
-    @Test
-    void testJpa() {
-        // Optional은 null을 좀 더 유연하게 처리하기 위함.
-        Optional<Question> oq = questionRepository.findById(5);
-        if(oq.isPresent()) {
-            Question q = oq.get();
-            assertEquals("sbb가 무엇인가요?", q.getSubject());
-        }
-
-        // findbysubject
-        Question q = questionRepository.findBySubject("sbb가 무엇인가요?");
-        assertEquals(5, q.getId());
-
-        // findbysubjectlike
-        List<Question> qList = questionRepository.findBySubjectLike("sbb%");
-        Question q2 = qList.get(0);
-        assertEquals("sbb가 무엇인가요?", q.getSubject());
-
-        // 데이터 삭제하기
-        Optional<Question> oq2 = questionRepository.findById(5);
-        assertTrue(oq2.isPresent());
-        Question q3 = oq.get();
-        questionRepository.delete(q3);
-    }
+//    @Test
+//    void testJpa() {
+//        // Optional은 null을 좀 더 유연하게 처리하기 위함.
+//        Optional<Question> oq = questionRepository.findById(5);
+//        if(oq.isPresent()) {
+//            Question q = oq.get();
+//            assertEquals("sbb가 무엇인가요?", q.getSubject());
+//        }
+//
+//        // findbysubject
+//        Question q = questionRepository.findBySubject("sbb가 무엇인가요?");
+//        assertEquals(5, q.getId());
+//
+//        // findbysubjectlike
+//        List<Question> qList = questionRepository.findBySubjectLike("sbb%");
+//        Question q2 = qList.get(0);
+//        assertEquals("sbb가 무엇인가요?", q.getSubject());
+//
+//        // 데이터 삭제하기
+//        Optional<Question> oq2 = questionRepository.findById(5);
+//        assertTrue(oq2.isPresent());
+//        Question q3 = oq.get();
+//        questionRepository.delete(q3);
+//    }
 
     @Test
     void testJpa2() {
