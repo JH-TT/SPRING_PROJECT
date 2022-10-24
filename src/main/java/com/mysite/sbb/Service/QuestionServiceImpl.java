@@ -59,4 +59,10 @@ public class QuestionServiceImpl implements QuestionService{
         question.setContent(content);
         questionRepository.save(question);
     }
+
+    @Override
+    public void delete(Question question) {
+        questionRepository.delete(question);
+    }
+
 }

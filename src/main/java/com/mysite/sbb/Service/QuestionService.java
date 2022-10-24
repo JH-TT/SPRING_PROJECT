@@ -13,4 +13,5 @@ public interface QuestionService {
     Question getQuestion(Integer id);
     void create(String subject, String content, SiteUserDTO author);
     void modify(Question question, String subject, String content);
+    void delete(Question question);
 }
