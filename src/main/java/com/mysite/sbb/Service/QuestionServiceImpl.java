@@ -65,4 +65,10 @@ public class QuestionServiceImpl implements QuestionService{
         questionRepository.delete(question);
     }
 
+    @Override
+    public void vote(Question question, SiteUserDTO siteUserDTO) {
+        question.getVoter().add(siteUserDTO.toEntity());
+        questionRepository.save(question);
+    }
+
 }

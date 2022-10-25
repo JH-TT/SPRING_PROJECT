@@ -11,4 +11,5 @@ public interface AnswerService {
     Answer getAnswer(Integer id);
     void modify(Answer answer, String content);
     void delete(Answer answer);
+    void vote(Answer answer, SiteUserDTO siteUserDTO);
 }

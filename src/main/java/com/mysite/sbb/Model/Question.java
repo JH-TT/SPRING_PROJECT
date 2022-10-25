@@ -9,6 +9,7 @@ import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -46,6 +47,9 @@ public class Question {
     // 여러개의 질문이 한 명의 사용자에게 작성될 수 있으니 ManyToOne이다.
     @ManyToOne
     private SiteUser author;
+
+    @ManyToMany(fetch = FetchType.EAGER)
+    Set<SiteUser> voter;
 
     public Question(String subject, String content, SiteUser author) {
         this.subject = subject;

@@ -8,6 +8,7 @@ import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -40,6 +41,9 @@ public class Answer {
 
     @ManyToOne
     private SiteUser author;
+
+    @ManyToMany(fetch = FetchType.EAGER)
+    Set<SiteUser> voter;
 
     public Answer(String content, Question question, SiteUser author) {
         this.content = content;

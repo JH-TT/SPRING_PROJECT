@@ -43,4 +43,10 @@ public class AnswerServiceImpl implements AnswerService{
     public void delete(Answer answer) {
         answerRepository.delete(answer);
     }
+
+    @Override
+    public void vote(Answer answer, SiteUserDTO siteUserDTO) {
+        answer.getVoter().add(siteUserDTO.toEntity());
+        answerRepository.save(answer);
+    }
 }

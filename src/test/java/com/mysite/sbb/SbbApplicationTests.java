@@ -45,20 +45,24 @@ class SbbApplicationTests {
         Question q1 = new Question();
         q1.setSubject("sbb가 무엇인가요?");
         q1.setContent("sbb에 대해서 알고 싶습니다");
+
+        SiteUser st = new SiteUser("aa", "1234", "lee@gmail.com");
+        q1.setAuthor(st);
+
         questionRepository.save(q1);
 
-        Question q2 = Question.builder()
-                .content("안녕")
-                .subject("안녕2")
-                .build();
-        questionRepository.save(q2);
-
-        try{
-            Thread.sleep(1000);
-            updateq(q2);
-        } catch(InterruptedException e) {
-            System.out.println(e);
-        }
+//        Question q2 = Question.builder()
+//                .content("안녕")
+//                .subject("안녕2")
+//                .build();
+//        questionRepository.save(q2);
+//
+//        try{
+//            Thread.sleep(1000);
+//            updateq(q2);
+//        } catch(InterruptedException e) {
+//            System.out.println(e);
+//        }
     }
 
 //    @Test
