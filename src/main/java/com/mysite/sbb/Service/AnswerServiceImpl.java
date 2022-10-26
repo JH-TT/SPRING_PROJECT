@@ -18,9 +18,10 @@ public class AnswerServiceImpl implements AnswerService{
 
     private final AnswerRepository answerRepository;
     @Override
-    public void create(Question question, String content, SiteUserDTO author) {
+    public Answer create(Question question, String content, SiteUserDTO author) {
         Answer answer = new Answer(content, question, author.toEntity());
         answerRepository.save(answer);
+        return answer;
     }
 
     @Override
