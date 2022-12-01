@@ -11,3 +11,4 @@
   - EnableJpaAuditing을 이용.
 - 엔티티와 DTO를 사용하려고 노력중.
   - Builder를 이용해서 구현하는 중.
+- DB는 H2가 아닌 MariaDB를 사용.
