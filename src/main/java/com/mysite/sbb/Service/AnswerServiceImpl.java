@@ -1,5 +1,6 @@
 package com.mysite.sbb.Service;
 
+import com.mysite.sbb.DTO.AnswerDTO;
 import com.mysite.sbb.DTO.QuestionDTO;
 import com.mysite.sbb.DTO.SiteUserDTO;
 import com.mysite.sbb.DataNotFoundException;
@@ -36,8 +37,9 @@ public class AnswerServiceImpl implements AnswerService{
 
     @Override
     public void modify(Answer answer, String content) {
-        answer.setContent(content);
-        answerRepository.save(answer);
+        AnswerDTO answerDTO = AnswerDTO.from(answer);
+        answerDTO.setContent(content);
+        answerRepository.save(answerDTO.toEntity());
     }
 
     @Override
