@@ -1,9 +1,12 @@
 package com.mysite.sbb;
 
+import com.mysite.sbb.DTO.SiteUserDTO;
 import com.mysite.sbb.Model.Answer;
+import com.mysite.sbb.Model.Comment;
 import com.mysite.sbb.Model.Question;
 import com.mysite.sbb.Model.SiteUser;
 import com.mysite.sbb.Repository.AnswerRepository;
+import com.mysite.sbb.Repository.CommentRepository;
 import com.mysite.sbb.Repository.QuestionRepository;
 import com.mysite.sbb.Repository.UserRepository;
 import com.mysite.sbb.Service.QuestionService;
@@ -35,6 +38,8 @@ class SbbApplicationTests {
 
     @Autowired
     private UserRepository userRepository;
+    @Autowired
+    private CommentRepository commentRepository;
 
 //    public SbbApplicationTests(QuestionRepository questionRepository) {
 //        this.questionRepository = questionRepository;
@@ -100,6 +105,12 @@ class SbbApplicationTests {
         a.setContent("네 자동으로 생성됩니다");
         a.setQuestion(q);
         answerRepository.save(a);
+
+        Comment c = Comment.builder()
+                .content("hi")
+                .answer(a)
+                .build();
+        commentRepository.save(c);
     }
 
     // DB세션을 유지하기 위함
@@ -118,10 +129,10 @@ class SbbApplicationTests {
 
     @Test
     void testJpa4() {
-        for(int i=1; i<= 1; i++) {
+        for(int i=1; i<= 100; i++) {
             String subject = String.format("테스트 데이터입니다:[%03d]", i);
             String content = "내용무";
-            questionService.create(subject, content, null);
+            questionService.create(subject, content, SiteUserDTO.from(userRepository.findByusername("dlwhdgh98").get()));
         }
     }
 

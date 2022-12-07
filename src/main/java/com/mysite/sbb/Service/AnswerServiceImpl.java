@@ -8,6 +8,7 @@ import com.mysite.sbb.Model.Answer;
 import com.mysite.sbb.Model.Question;
 import com.mysite.sbb.Model.SiteUser;
 import com.mysite.sbb.Repository.AnswerRepository;
+import com.mysite.sbb.Repository.QuestionRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -32,6 +33,16 @@ public class AnswerServiceImpl implements AnswerService{
             return answer.get();
         } else {
             throw new DataNotFoundException("answer not found");
+        }
+    }
+
+    @Override
+    public Integer getQuestionId(Integer id) {
+        Optional<Answer> answer = answerRepository.findById(id);
+        if(answer.isPresent()) {
+            return answer.get().getQuestion().getId();
+        } else {
+            throw new DataNotFoundException("Question not found");
         }
     }
 

@@ -9,6 +9,7 @@ import com.mysite.sbb.Model.SiteUser;
 public interface AnswerService {
     Answer create(Question question, String content, SiteUserDTO author);
     Answer getAnswer(Integer id);
+    Integer getQuestionId(Integer id);
     void modify(Answer answer, String content);
     void delete(Answer answer);
     void vote(Answer answer, SiteUserDTO siteUserDTO);

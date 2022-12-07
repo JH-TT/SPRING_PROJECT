@@ -83,12 +83,39 @@
                     sec:anthorize="isAuthenticated()"
                     th:if="${answer.author != null and #authentication.getPrincipal().getUsername() == answer.author.username}"
                     th:text="삭제"></a>
+                <button class="btn btn-sm btn-outline-secondary"
+                        sec:anthorize="isAuthenticated()"
+                        th:onclick="|comment_toggle(${answer.id})|">답변등록</button>
             </div>
+            <!-- 대댓글 작성 -->
+            <form th:action="@{|/comment/create/${answer.id}|}" method="post" class="my-3" th:id="|comment_textarea${answer.id}|" style="display: none">
+                <div class="input-group">
+                    <textarea sec:authorize="isAnonymous()" disabled =rows="6" class="form-control"></textarea>
+                    <textarea sec:authorize="isAuthenticated()" name="content" rows="4" class="form-control"></textarea>
+<!--                    <textarea name="content" id="content" rows="4"></textarea>-->
+                    <input type="submit" value="대댓글추가" class="input-group-text">
+                </div>
+            </form>
+            <!-- 지금 대댓글 개수만큼 댓글이 늘어남. 이 부분은 확인해 봐야할듯 N+1 문제 발생 -->
+            <!-- 대댓글 시작 -->
+            <block class="card my-3" th:each="comment : ${answer.commentList}">
+                <div th:text="${comment.content}"></div>
+            </block>
+            <!-- 대댓글 끝 -->
         </div>
     </div>
     <!-- 답변 반복 끝  -->
 </div>
 <script layout:fragment="script" type="text/javascript">
+
+    function comment_toggle(id) {
+        const comment_area = document.getElementById("comment_textarea" + id);
+        if(comment_area.style.display === 'none') {
+            comment_area.style.display = 'block';
+        } else {
+            comment_area.style.display = 'none';
+        }
+    }
 
     const delete_elements = document.getElementsByClassName("delete");
     Array.from(delete_elements).forEach(function(element) {
