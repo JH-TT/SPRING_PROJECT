@@ -42,7 +42,6 @@
     <form th:action="@{|/answer/create/${question.id}|}" th:object="${answerForm}" method="post" class="my-3">
         <div th:replace="form_errors :: formErrorsFragment"></div>
         <div class="input-group">
-<!--            <span class="input-group-text">With textarea</span>-->
             <textarea sec:authorize="isAnonymous()" disabled th:field="*{content}" rows="6" class="form-control"></textarea>
             <textarea sec:authorize="isAuthenticated()" th:field="*{content}" rows="6" class="form-control"></textarea>
             <input type="submit" value="답변등록" class="input-group-text">
@@ -53,7 +52,6 @@
     <div class="card my-3" th:each="answer : ${question.answerList}">
         <!-- 앵커추가 -->
         <a th:id="|answer_${answer.id}|"></a>
-        <!--  -->
         <div class="card-body">
             <div class="card-text" th:utext="${@commonUtil.markdown(answer.content)}"></div>
             <div class="d-flex justify-content-end">
@@ -80,11 +78,11 @@
                     th:text="수정"></a>
                 <a href="javascript:void(0);" th:data-uri="@{|/answer/delete/${answer.id}|}"
                     class="delete btn btn-sm btn-outline-secondary"
-                    sec:anthorize="isAuthenticated()"
+                    sec:authorize="isAuthenticated()"
                     th:if="${answer.author != null and #authentication.getPrincipal().getUsername() == answer.author.username}"
                     th:text="삭제"></a>
                 <button class="btn btn-sm btn-outline-secondary"
-                        sec:anthorize="isAuthenticated()"
+                        sec:authorize="isAuthenticated()"
                         th:onclick="|comment_toggle(${answer.id})|">답변등록</button>
             </div>
             <!-- 대댓글 작성 -->
@@ -98,9 +96,9 @@
             </form>
             <!-- 지금 대댓글 개수만큼 댓글이 늘어남. 이 부분은 확인해 봐야할듯 N+1 문제 발생 -->
             <!-- 대댓글 시작 -->
-            <block class="card my-3" th:each="comment : ${answer.commentList}">
+            <div class="card my-3" th:each="comment : ${answer.commentList}">
                 <div th:text="${comment.content}"></div>
-            </block>
+            </div>
             <!-- 대댓글 끝 -->
         </div>
     </div>
