@@ -28,3 +28,4 @@ spring:
       hibernate:
         format_sql: true #To beautify or pretty print the SQL
         show_sql: true #show sql
+        default_batch_fetch_size: 1000 # N+1 문제 관련 배치사이즈
