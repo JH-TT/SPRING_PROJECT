@@ -18,7 +18,8 @@ public interface QuestionRepository extends JpaRepository<Question, Integer> {
     QuestionDTO findBySubjectAndContent(String subject, String content);
 
     // N+1 문제를 해결하기 위함
-    @Query("select q from Question q join fetch q.answerList where :id = q.id")
+    // 그냥 join fetch로 하니 질문에 답변이 없으면 null을 뱉어버림. 그래서 left 추가.
+    @Query("select q from Question q left join fetch q.answerList where :id = q.id")
     Optional<Question> findById(Integer id);
     // 제목에 특정 문자열이 포함되어 있는 데이터 조회.
     List<Question> findBySubjectLike(String subject);
