@@ -33,4 +33,7 @@ public class Comment {
 
     @ManyToOne
     private Answer answer;
+
+    @ManyToOne
+    private SiteUser author;
 }

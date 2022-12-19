@@ -102,8 +102,8 @@ class SbbApplicationTests {
         Question q = oq.get();
 
         Answer a = new Answer();
-        a.setContent("네 자동으로 생성됩니다");
-        a.setQuestion(q);
+//        a.setContent("네 자동으로 생성됩니다");
+//        a.setQuestion(q);
         answerRepository.save(a);
 
         Comment c = Comment.builder()

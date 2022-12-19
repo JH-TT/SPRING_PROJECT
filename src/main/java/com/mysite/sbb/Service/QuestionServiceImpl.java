@@ -19,6 +19,7 @@ import javax.persistence.criteria.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -53,35 +54,38 @@ public class QuestionServiceImpl implements QuestionService{
             };
         };
     }
+
     @Override
-    public List<Question> getList() {
-        return questionRepository.findAll();
+    public List<QuestionDTO> getList() {
+        return questionRepository.findAll()
+                .stream().map(QuestionDTO::from)
+                .collect(Collectors.toList());
     }
 
     @Override
-    public Page<Question> getList(int page) {
+    public Page<QuestionDTO> getList(int page) {
         // 최근날짜로 데이터 가져옴
         List<Sort.Order> sorts = new ArrayList<>();
         sorts.add(Sort.Order.desc("createDate"));
         // page : 조회할 번호, size : 몇개씩 가져올건지
         Pageable pageable = PageRequest.of(page, 10, Sort.by(sorts));
-        return questionRepository.findAll(pageable);
+        return QuestionDTO.toDtoList(questionRepository.findAll(pageable));
     }
 
     @Override
-    public Page<Question> getList(int page, String kw) {
+    public Page<QuestionDTO> getList(int page, String kw) {
         List<Sort.Order> sorts = new ArrayList<>();
         sorts.add(Sort.Order.desc("createDate"));
         Pageable pageable = PageRequest.of(page, 10, Sort.by(sorts));
         Specification<Question> spec = search(kw);
-        return questionRepository.findAll(spec, pageable);
+        return QuestionDTO.toDtoList(questionRepository.findAll(spec, pageable));
     }
 
     @Override
-    public Question getQuestion(Integer id) {
+    public QuestionDTO getQuestion(Integer id) {
         Optional<Question> question = questionRepository.findById(id);
         if(question.isPresent()) {
-            return question.get();
+            return QuestionDTO.from(question.get());
         } else {
             throw new DataNotFoundException("question not found");
         }
@@ -89,27 +93,30 @@ public class QuestionServiceImpl implements QuestionService{
 
     @Override
     public void create(String subject, String content, SiteUserDTO author) {
-        Question q = new Question(subject, content, author.toEntity());
-        questionRepository.save(q);
+        QuestionDTO qDTO = QuestionDTO.builder()
+                .subject(subject)
+                .content(content)
+                .author(author.toEntity())
+                .build();
+        questionRepository.save(qDTO.toEntity());
     }
 
     @Override
-    public void modify(Question question, String subject, String content) {
-        QuestionDTO questionDTO = QuestionDTO.from(question);
+    public void modify(QuestionDTO questionDTO, String subject, String content) {
         questionDTO.setSubject(subject);
         questionDTO.setContent(content);
         questionRepository.save(questionDTO.toEntity());
     }
 
     @Override
-    public void delete(Question question) {
-        questionRepository.delete(question);
+    public void delete(QuestionDTO questionDTO) {
+        questionRepository.delete(questionDTO.toEntity());
     }
 
     @Override
-    public void vote(Question question, SiteUserDTO siteUserDTO) {
-        question.getVoter().add(siteUserDTO.toEntity());
-        questionRepository.save(question);
+    public void vote(QuestionDTO questionDTO, SiteUserDTO siteUserDTO) {
+        questionDTO.getVoter().add(siteUserDTO.toEntity());
+        questionRepository.save(questionDTO.toEntity());
     }
 
 }

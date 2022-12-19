@@ -56,12 +56,4 @@ public class Question {
         this.content = content;
         this.author = author;
     }
-
-    public int answer_cnt() {
-        int total = 0;
-        for(Answer a : answerList) {
-            total += a.getCommentList().size();
-        }
-        return total;
-    }
 }

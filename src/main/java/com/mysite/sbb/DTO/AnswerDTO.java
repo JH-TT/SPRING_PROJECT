@@ -1,36 +1,30 @@
 package com.mysite.sbb.DTO;
 
 import com.mysite.sbb.Model.Answer;
+import com.mysite.sbb.Model.Comment;
 import com.mysite.sbb.Model.Question;
 import com.mysite.sbb.Model.SiteUser;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Getter
 @Setter
 @Builder
 @NoArgsConstructor
+@AllArgsConstructor
 public class AnswerDTO {
     Integer id;
     String content;
     LocalDateTime createDate;
     LocalDateTime modifiedDate;
     Question question;
-
     SiteUser author;
-
-    public AnswerDTO(Integer id, String content, LocalDateTime createDate, LocalDateTime modifiedDate, Question question, SiteUser author) {
-        this.id = id;
-        this.content = content;
-        this.createDate = createDate;
-        this.modifiedDate = modifiedDate;
-        this.question = question;
-        this.author = author;
-    }
+    Set<SiteUser> voter;
+    List<Comment> commentList;
 
     public Answer toEntity() {
         return Answer.builder()
@@ -40,6 +34,8 @@ public class AnswerDTO {
                 .modifiedDate(modifiedDate)
                 .question(question)
                 .author(author)
+                .voter(voter)
+                .commentList(commentList)
                 .build();
     }
 
@@ -53,6 +49,8 @@ public class AnswerDTO {
                 .modifiedDate(answer.getModifiedDate())
                 .question(answer.getQuestion())
                 .author(answer.getAuthor())
+                .voter(answer.getVoter())
+                .commentList(answer.getCommentList())
                 .build();
     }
 }

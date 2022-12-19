@@ -1,7 +1,8 @@
 package com.mysite.sbb.Service;
 
-import com.mysite.sbb.Model.Answer;
-import com.mysite.sbb.Model.Comment;
+import com.mysite.sbb.DTO.AnswerDTO;
+import com.mysite.sbb.DTO.CommentDTO;
+import com.mysite.sbb.DTO.SiteUserDTO;
 import com.mysite.sbb.Repository.CommentRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -13,11 +14,12 @@ public class CommentServiceImpl implements CommentService {
 
 
     @Override
-    public void create(Answer answer, String content) {
-        Comment c = Comment.builder()
+    public void create(AnswerDTO answerDTO, String content, SiteUserDTO siteUserDTO) {
+        CommentDTO commentDTO = CommentDTO.builder()
+                .answer(answerDTO.toEntity())
                 .content(content)
-                .answer(answer)
+                .author(siteUserDTO.toEntity())
                 .build();
-        commentRepository.save(c);
+        commentRepository.save(commentDTO.toEntity());
     }
 }

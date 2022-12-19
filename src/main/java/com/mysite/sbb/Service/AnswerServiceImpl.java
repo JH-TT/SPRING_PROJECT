@@ -20,17 +20,21 @@ public class AnswerServiceImpl implements AnswerService{
 
     private final AnswerRepository answerRepository;
     @Override
-    public Answer create(Question question, String content, SiteUserDTO author) {
-        Answer answer = new Answer(content, question, author.toEntity());
-        answerRepository.save(answer);
-        return answer;
+    public AnswerDTO create(QuestionDTO questionDTO, String content, SiteUserDTO author) {
+        AnswerDTO answerDTO = AnswerDTO.builder()
+                .content(content)
+                .question(questionDTO.toEntity())
+                .author(author.toEntity())
+                .build();
+        answerRepository.save(answerDTO.toEntity());
+        return answerDTO;
     }
 
     @Override
-    public Answer getAnswer(Integer id) {
+    public AnswerDTO getAnswer(Integer id) {
         Optional<Answer> answer = answerRepository.findById(id);
         if(answer.isPresent()) {
-            return answer.get();
+            return AnswerDTO.from(answer.get());
         } else {
             throw new DataNotFoundException("answer not found");
         }
@@ -47,20 +51,19 @@ public class AnswerServiceImpl implements AnswerService{
     }
 
     @Override
-    public void modify(Answer answer, String content) {
-        AnswerDTO answerDTO = AnswerDTO.from(answer);
+    public void modify(AnswerDTO answerDTO, String content) {
         answerDTO.setContent(content);
         answerRepository.save(answerDTO.toEntity());
     }
 
     @Override
-    public void delete(Answer answer) {
-        answerRepository.delete(answer);
+    public void delete(AnswerDTO answerDTO) {
+        answerRepository.delete(answerDTO.toEntity());
     }
 
     @Override
-    public void vote(Answer answer, SiteUserDTO siteUserDTO) {
-        answer.getVoter().add(siteUserDTO.toEntity());
-        answerRepository.save(answer);
+    public void vote(AnswerDTO answerDTO, SiteUserDTO siteUserDTO) {
+        answerDTO.getVoter().add(siteUserDTO.toEntity());
+        answerRepository.save(answerDTO.toEntity());
     }
 }

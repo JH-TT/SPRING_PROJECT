@@ -42,7 +42,7 @@ public class QuestionController {
     @RequestMapping("/list")
     public String list(Model model, @RequestParam(value = "page", defaultValue = "0") int page,
                        @RequestParam(value = "kw", defaultValue = "") String kw) {
-        Page<Question> paging = questionService.getList(page, kw);
+        Page<QuestionDTO> paging = questionService.getList(page, kw);
         model.addAttribute("paging", paging);
         model.addAttribute("kw", kw);
         return "question_list";
@@ -51,8 +51,8 @@ public class QuestionController {
     @RequestMapping(value = "/detail/{id}")
     public String detail(Model model, @PathVariable("id") Integer id
                             , AnswerForm answerForm) {
-        Question question = questionService.getQuestion(id);
-        model.addAttribute("question", question);
+        QuestionDTO questionDTO = questionService.getQuestion(id);
+        model.addAttribute("question", questionDTO);
         return "question_detail";
     }
 
@@ -85,14 +85,14 @@ public class QuestionController {
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/modify/{id}")
     public String questionModify(QuestionForm questionForm, @PathVariable("id") Integer id, Principal principal) {
-        Question question = questionService.getQuestion(id);
-        if(!question.getAuthor().getUsername().equals(principal.getName())) {
+        QuestionDTO questionDTO = questionService.getQuestion(id);
+        if(!questionDTO.getAuthor().getUsername().equals(principal.getName())) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "수정권한이 없습니다.");
         }
         // 수정할 질문의 제목과 내용을 화면에 보여주기 위해 Form객체에 값을 담아서 템플릿으로 전달한다.
         // 이게 없으면 값이 채워지지 않는다.
-        questionForm.setSubject(question.getSubject());
-        questionForm.setContent(question.getContent());
+        questionForm.setSubject(questionDTO.getSubject());
+        questionForm.setContent(questionDTO.getContent());
 
         // 질문 등록 템플릿을 그대로 사용하면 질문이 수정되는 것이아닌, 새로운 질문이 올라가게 된다.
         // 그래서 템플릿 폼 태그의 action을 잘 활용하면 유연하게 대처할 수 있다.
@@ -106,31 +106,31 @@ public class QuestionController {
         if(bindingResult.hasErrors()) {
             return "question_form";
         }
-        Question question = questionService.getQuestion(id);
-        if(!question.getAuthor().getUsername().equals(principal.getName())) {
+        QuestionDTO questionDTO = questionService.getQuestion(id);
+        if(!questionDTO.getAuthor().getUsername().equals(principal.getName())) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "수정권한이 없습니다.");
         }
-        questionService.modify(question, questionForm.getSubject(), questionForm.getContent());
+        questionService.modify(questionDTO, questionForm.getSubject(), questionForm.getContent());
         return String.format("redirect:/question/detail/%s", id);
     }
 
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/delete/{id}")
     public String questionDelete(Principal principal, @PathVariable("id") Integer id) {
-        Question question = questionService.getQuestion(id);
-        if(!question.getAuthor().getUsername().equals(principal.getName())) {
+        QuestionDTO questionDTO = questionService.getQuestion(id);
+        if(!questionDTO.getAuthor().getUsername().equals(principal.getName())) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "삭제권한이 없습니다.");
         }
-        questionService.delete(question);
+        questionService.delete(questionDTO);
         return "redirect:/";
     }
 
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/vote/{id}")
     public String questionVote(Principal principal, @PathVariable("id") Integer id) {
-        Question question = questionService.getQuestion(id);
+        QuestionDTO questionDTO = questionService.getQuestion(id);
         SiteUserDTO siteUser = userService.getUser(principal.getName());
-        questionService.vote(question, siteUser);
+        questionService.vote(questionDTO, siteUser);
         return String.format("redirect:/question/detail/%s", id);
     }
 }

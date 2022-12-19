@@ -1,10 +1,9 @@
 package com.mysite.sbb.Controller;
 
 import com.mysite.sbb.AnswerForm;
+import com.mysite.sbb.DTO.AnswerDTO;
 import com.mysite.sbb.DTO.QuestionDTO;
 import com.mysite.sbb.DTO.SiteUserDTO;
-import com.mysite.sbb.Model.Answer;
-import com.mysite.sbb.Model.Question;
 import com.mysite.sbb.Service.AnswerService;
 import com.mysite.sbb.Service.QuestionService;
 import com.mysite.sbb.Service.UserService;
@@ -33,25 +32,25 @@ public class AnswerController {
     @PostMapping("/create/{id}")
     public String createAnswer(Model model, @PathVariable("id") Integer id
                                 , @Valid AnswerForm answerForm, BindingResult bindingResult, Principal principal){
-        Question question = questionService.getQuestion(id);
+        QuestionDTO questionDTO = questionService.getQuestion(id);
         SiteUserDTO siteUserDTO = userService.getUser(principal.getName());
 
         if(bindingResult.hasErrors()) {
-            model.addAttribute("question", question);
+            model.addAttribute("question", questionDTO);
             return "question_detail";
         }
-        Answer answer = answerService.create(question, answerForm.getContent(), siteUserDTO);
-        return String.format("redirect:/question/detail/%s#answer_%s", answer.getQuestion().getId(), answer.getId());
+        AnswerDTO answerDTO = answerService.create(questionDTO, answerForm.getContent(), siteUserDTO);
+        return String.format("redirect:/question/detail/%s#answer_%s", answerDTO.getQuestion().getId(), answerDTO.getId());
     }
 
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/modify/{id}")
     public String answerModify(AnswerForm answerForm, @PathVariable("id") Integer id, Principal principal) {
-        Answer answer = answerService.getAnswer(id);
-        if(!answer.getAuthor().getUsername().equals(principal.getName())) {
+        AnswerDTO answerDTO = answerService.getAnswer(id);
+        if(!answerDTO.getAuthor().getUsername().equals(principal.getName())) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "수정권한이 없습니다.");
         }
-        answerForm.setContent(answer.getContent());
+        answerForm.setContent(answerDTO.getContent());
         return "answer_form";
     }
 
@@ -62,18 +61,18 @@ public class AnswerController {
         if(bindingResult.hasErrors()) {
             return "answer_form";
         }
-        Answer answer = answerService.getAnswer(id);
-        if(!answer.getAuthor().getUsername().equals(principal.getName())) {
+        AnswerDTO answerDTO = answerService.getAnswer(id);
+        if(!answerDTO.getAuthor().getUsername().equals(principal.getName())) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "수정권한이 없습니다.");
         }
-        answerService.modify(answer, answerForm.getContent());
-        return String.format("redirect:/question/detail/%s#answer_%s", answer.getQuestion().getId(), answer.getId());
+        answerService.modify(answerDTO, answerForm.getContent());
+        return String.format("redirect:/question/detail/%s#answer_%s", answerDTO.getQuestion().getId(), answerDTO.getId());
     }
 
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/delete/{id}")
     public String answerDelete(Principal principal, @PathVariable("id") Integer id) {
-        Answer answer = answerService.getAnswer(id);
+        AnswerDTO answer = answerService.getAnswer(id);
         if(!answer.getAuthor().getUsername().equals(principal.getName())) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "삭제권한이 없습니다.");
         }
@@ -84,7 +83,7 @@ public class AnswerController {
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/vote/{id}")
     public String answerVote(Principal principal, @PathVariable("id") Integer id) {
-        Answer answer = answerService.getAnswer(id);
+        AnswerDTO answer = answerService.getAnswer(id);
         SiteUserDTO siteUserDTO = userService.getUser(principal.getName());
         answerService.vote(answer, siteUserDTO);
         return String.format("redirect:/question/detail/%s#answer_%s", answer.getQuestion().getId(), answer.getId());

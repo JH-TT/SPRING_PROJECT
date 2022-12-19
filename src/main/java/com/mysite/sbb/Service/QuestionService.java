@@ -10,12 +10,12 @@ import org.springframework.data.jpa.domain.Specification;
 import java.util.List;
 
 public interface QuestionService {
-    List<Question> getList();
-    Page<Question> getList(int page);
-    Page<Question> getList(int page, String kw);
-    Question getQuestion(Integer id);
+    List<QuestionDTO> getList();
+    Page<QuestionDTO> getList(int page);
+    Page<QuestionDTO> getList(int page, String kw);
+    QuestionDTO getQuestion(Integer id);
     void create(String subject, String content, SiteUserDTO author);
-    void modify(Question question, String subject, String content);
-    void delete(Question question);
-    void vote(Question question, SiteUserDTO siteUserDTO);
+    void modify(QuestionDTO questionDTO, String subject, String content);
+    void delete(QuestionDTO questionDTO);
+    void vote(QuestionDTO questionDTO, SiteUserDTO siteUserDTO);
 }

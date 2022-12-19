@@ -4,34 +4,27 @@ package com.mysite.sbb.DTO;
 import com.mysite.sbb.Model.Answer;
 import com.mysite.sbb.Model.Question;
 import com.mysite.sbb.Model.SiteUser;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
+import org.springframework.data.domain.Page;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Set;
 
 @Getter
 @Setter
 @Builder
 @NoArgsConstructor
+@AllArgsConstructor
 public class QuestionDTO {
     Integer id;
     String content;
     LocalDateTime createDate;
     LocalDateTime modifiedDate;
     String subject;
+    List<Answer> answerList;
     SiteUser author;
-
-    public QuestionDTO(Integer id, String content, LocalDateTime createDate, LocalDateTime modifiedDate, String subject, SiteUser author) {
-        this.id = id;
-        this.content = content;
-        this.createDate = createDate;
-        this.modifiedDate = modifiedDate;
-        this.subject = subject;
-        this.author = author;
-    }
+    Set<SiteUser> voter;
 
     // DTO -> Entity
     public Question toEntity() {
@@ -42,6 +35,8 @@ public class QuestionDTO {
                 .modifiedDate(modifiedDate)
                 .subject(subject)
                 .author(author)
+                .answerList(answerList)
+                .voter(voter)
                 .build();
     }
 
@@ -56,6 +51,34 @@ public class QuestionDTO {
                 .modifiedDate(question.getModifiedDate())
                 .subject(question.getSubject())
                 .author(question.getAuthor())
+                .answerList(question.getAnswerList())
+                .voter(question.getVoter())
                 .build();
+    }
+
+    public static Page<QuestionDTO> toDtoList(Page<Question> pg) {
+        return pg.map(QuestionDTO::from);
+    }
+
+    @Override
+    public String toString() {
+        return "QuestionDTO{" +
+                "id=" + id +
+                ", content='" + content + '\'' +
+                ", createDate=" + createDate +
+                ", modifiedDate=" + modifiedDate +
+                ", subject='" + subject + '\'' +
+                ", answerList=" + answerList +
+                ", author=" + author +
+                ", voter=" + voter +
+                '}';
+    }
+
+    public int answer_cnt() {
+        int total = 0;
+        for(Answer a : answerList) {
+            total += a.getCommentList().size();
+        }
+        return total;
     }
 }
