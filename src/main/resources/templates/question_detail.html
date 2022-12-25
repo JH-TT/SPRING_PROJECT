@@ -60,7 +60,8 @@
                 </div>
                 <div class="badge bg-light text-dark p-2 text-start">
                     <div class="mb-2">
-                        <span th:if="${answer.author != null}" th:text="${answer.author.username}"></span>
+                        <span class="answer_name" th:if="${answer.author != null && answer.author.username == question.author.username}" th:text="작성자"></span>
+                        <span th:if="${answer.author != null && answer.author.username != question.author.username}" th:text="${answer.author.username}"></span>
                     </div>
                     <div th:text="${#temporals.format(answer.createDate, 'yyyy-MM-dd HH:mm')}"></div>
                 </div>
@@ -104,7 +105,8 @@
                     </div>
                     <div class="badge bg-light text-dark p-2 text-start">
                         <div class="mb-2">
-                            <span th:if="${comment.author != null}" th:text="${comment.author.username}"></span>
+                            <span class="comment_name" th:if="${comment.author != null && comment.author.username == question.author.username}" th:text="작성자"></span>
+                            <span th:if="${comment.author != null && comment.author.username != question.author.username}" th:text="${comment.author.username}"></span>
                         </div>
                         <div th:text="${#temporals.format(comment.createDate, 'yyyy-MM-dd HH:mm')}"></div>
                     </div>
@@ -125,6 +127,8 @@
             comment_area.style.display = 'none';
         }
     }
+
+
 
     const delete_elements = document.getElementsByClassName("delete");
     Array.from(delete_elements).forEach(function(element) {
