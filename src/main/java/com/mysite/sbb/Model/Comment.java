@@ -7,6 +7,7 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.Set;
 
 @Entity
 @Getter
@@ -36,4 +37,7 @@ public class Comment {
 
     @ManyToOne
     private SiteUser author;
+
+    @ManyToMany(fetch = FetchType.EAGER)
+    Set<SiteUser> voter;
 }

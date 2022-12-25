@@ -9,6 +9,6 @@ import javax.validation.constraints.NotEmpty;
 @Setter
 public class CommentForm {
 
-    @NotEmpty(message = "내용을 써주세요.")
+    @NotEmpty(message = "내용은 필수항목입니다.")
     private String content;
 }

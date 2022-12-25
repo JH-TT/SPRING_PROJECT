@@ -6,6 +6,7 @@ import com.mysite.sbb.Model.SiteUser;
 import lombok.*;
 
 import java.time.LocalDateTime;
+import java.util.Set;
 
 @Builder
 @AllArgsConstructor
@@ -20,6 +21,7 @@ public class CommentDTO {
     LocalDateTime modifiedDate;
     Answer answer;
     SiteUser author;
+    Set<SiteUser> voter;
 
     public Comment toEntity() {
         return Comment.builder()
