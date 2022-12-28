@@ -1,4 +1,4 @@
-package com.mysite.sbb.jwt;
+package com.mysite.sbb.testJwt;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

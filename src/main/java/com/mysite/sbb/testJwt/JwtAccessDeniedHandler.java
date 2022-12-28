@@ -1,4 +1,4 @@
-package com.mysite.sbb.jwt;
+package com.mysite.sbb.testJwt;
 
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.web.access.AccessDeniedHandler;

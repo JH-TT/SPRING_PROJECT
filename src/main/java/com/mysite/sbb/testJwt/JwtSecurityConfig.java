@@ -1,4 +1,4 @@
-package com.mysite.sbb.jwt;
+package com.mysite.sbb.testJwt;
 
 import org.springframework.security.config.annotation.SecurityConfigurerAdapter;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;

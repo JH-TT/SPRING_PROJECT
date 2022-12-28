@@ -1,8 +1,7 @@
-package com.mysite.sbb.Model;
+package com.mysite.sbb.testEntity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
-import org.springframework.web.bind.annotation.GetMapping;
 
 import javax.persistence.*;
 import java.util.Set;

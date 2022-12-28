@@ -1,4 +1,4 @@
-package com.mysite.sbb.Model;
+package com.mysite.sbb.testEntity;
 
 import lombok.*;
 

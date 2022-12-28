@@ -1,4 +1,4 @@
-package com.mysite.sbb.jwt;
+package com.mysite.sbb.testJwt;
 
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
