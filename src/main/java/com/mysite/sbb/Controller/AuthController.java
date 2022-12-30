@@ -1,9 +1,9 @@
-package com.mysite.sbb.testController;
+package com.mysite.sbb.Controller;
 
 import com.mysite.sbb.testDto.LoginDTO;
 import com.mysite.sbb.testDto.TokenDTO;
-import com.mysite.sbb.testJwt.TestJwtFilter;
-import com.mysite.sbb.testJwt.TestTokenProvider;
+import com.mysite.sbb.jwt.JwtFilter;
+import com.mysite.sbb.jwt.TokenProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -23,7 +23,7 @@ import javax.validation.Valid;
 @RequiredArgsConstructor
 @RequestMapping("/api")
 public class AuthController {
-    private final TestTokenProvider tokenProvider;
+    private final TokenProvider tokenProvider;
     private final AuthenticationManagerBuilder authenticationManagerBuilder;
 
     @PostMapping("/authenticate")
@@ -38,7 +38,7 @@ public class AuthController {
         String jwt = tokenProvider.createToken(authentication);
 
         HttpHeaders httpHeaders = new HttpHeaders();
-        httpHeaders.add(TestJwtFilter.AUTHORIZATION_HEADER, "Bearer " + jwt);
+        httpHeaders.add(JwtFilter.AUTHORIZATION_HEADER, "Bearer " + jwt);
 
         return new ResponseEntity<>(new TokenDTO(jwt), httpHeaders, HttpStatus.OK);
     }

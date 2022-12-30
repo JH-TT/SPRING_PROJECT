@@ -1,5 +1,6 @@
-package com.mysite.sbb.testJwt;
+package com.mysite.sbb.jwt;
 
+import com.mysite.sbb.Repository.UserRepository;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
@@ -21,21 +22,23 @@ import java.util.Date;
 import java.util.stream.Collectors;
 
 @Component
-public class TestTokenProvider implements InitializingBean {
+public class TokenProvider implements InitializingBean {
 
-    private final Logger logger = LoggerFactory.getLogger(TestTokenProvider.class);
+    private final Logger logger = LoggerFactory.getLogger(TokenProvider.class);
     private static final String AUTHORITIES_KEY = "auth";
 
     private final String secret;
     private final long tokenValidityInMilliseconds;
     private Key key;
+    private final UserRepository userRepository;
 
-    public TestTokenProvider(
+    public TokenProvider(
         @Value("${jwt.secret}") String secret,
-        @Value("${jwt.token-validity-in-seconds}") long tokenValidityInseconds
-    ) {
+        @Value("${jwt.token-validity-in-seconds}") long tokenValidityInseconds,
+        UserRepository userRepository) {
         this.secret = secret;
         this.tokenValidityInMilliseconds = tokenValidityInseconds * 1000;
+        this.userRepository = userRepository;
     }
 
     // 빈이 생성이 되고 주입을 받은 후에 secret값을 Base64 Decode해서 key변수에 할당

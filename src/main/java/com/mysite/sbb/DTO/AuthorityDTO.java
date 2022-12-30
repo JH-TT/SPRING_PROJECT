@@ -1,4 +1,4 @@
-package com.mysite.sbb.testDto;
+package com.mysite.sbb.DTO;
 
 import lombok.*;
 

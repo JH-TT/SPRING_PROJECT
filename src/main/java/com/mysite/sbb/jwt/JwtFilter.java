@@ -1,4 +1,4 @@
-package com.mysite.sbb.testJwt;
+package com.mysite.sbb.jwt;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,13 +14,13 @@ import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 
-public class TestJwtFilter extends GenericFilterBean {
+public class JwtFilter extends GenericFilterBean {
 
-    private static final Logger logger = LoggerFactory.getLogger(TestJwtFilter.class);
+    private static final Logger logger = LoggerFactory.getLogger(JwtFilter.class);
     public static final String AUTHORIZATION_HEADER = "Authorization";
-    private TestTokenProvider tokenProvider;
+    private TokenProvider tokenProvider;
 
-    public TestJwtFilter(TestTokenProvider tokenProvider) {
+    public JwtFilter(TokenProvider tokenProvider) {
         this.tokenProvider = tokenProvider;
     }
 

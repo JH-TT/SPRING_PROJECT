@@ -1,4 +1,4 @@
-package com.mysite.sbb.testJwt;
+package com.mysite.sbb.jwt;
 
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.AuthenticationEntryPoint;

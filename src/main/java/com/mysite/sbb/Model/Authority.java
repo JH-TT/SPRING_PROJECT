@@ -1,4 +1,4 @@
-package com.mysite.sbb.testEntity;
+package com.mysite.sbb.Model;
 
 import lombok.*;
 
@@ -14,7 +14,7 @@ import javax.persistence.Table;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class TestAuthority {
+public class Authority {
 
     @Id
     @Column(name = "authority_name", length = 50)

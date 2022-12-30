@@ -1,6 +1,7 @@
 package com.mysite.sbb.testEntity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.mysite.sbb.Model.Authority;
 import lombok.*;
 
 import javax.persistence.*;
@@ -42,5 +43,5 @@ public class TestUser {
             joinColumns = {@JoinColumn(name = "user_id", referencedColumnName = "user_id")},
             inverseJoinColumns = {@JoinColumn(name = "authority_name", referencedColumnName = "authority_name")}
     )
-    private Set<TestAuthority> authorities;
+    private Set<Authority> authorities;
 }

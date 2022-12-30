@@ -1,6 +1,7 @@
 package com.mysite.sbb.testDto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.mysite.sbb.DTO.AuthorityDTO;
 import com.mysite.sbb.testEntity.TestUser;
 import lombok.*;
 

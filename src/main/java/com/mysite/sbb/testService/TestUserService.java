@@ -1,7 +1,7 @@
 package com.mysite.sbb.testService;
 
 import com.mysite.sbb.testDto.UserDTO;
-import com.mysite.sbb.testEntity.TestAuthority;
+import com.mysite.sbb.Model.Authority;
 import com.mysite.sbb.testEntity.TestUser;
 import com.mysite.sbb.testException.DuplicateMemberException;
 import com.mysite.sbb.testException.NotFoundMemberException;
@@ -26,7 +26,7 @@ public class TestUserService {
             throw new DuplicateMemberException("이미 가입되어 있는 유저입니다.");
         }
 
-        TestAuthority authority = TestAuthority.builder()
+        Authority authority = Authority.builder()
                 .authorityName("ROLE_USER")
                 .build();
         TestUser user = TestUser.builder()

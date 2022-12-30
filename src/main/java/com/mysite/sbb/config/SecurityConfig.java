@@ -1,12 +1,11 @@
-package com.mysite.sbb;
+package com.mysite.sbb.config;
 
 import com.mysite.sbb.Service.UserSecurityService;
-import com.mysite.sbb.testJwt.JwtAccessDeniedHandler;
-import com.mysite.sbb.testJwt.JwtAuthenticationEntryPoint;
-import com.mysite.sbb.testJwt.JwtSecurityConfig;
-import com.mysite.sbb.testJwt.TestTokenProvider;
+import com.mysite.sbb.jwt.JwtAccessDeniedHandler;
+import com.mysite.sbb.jwt.JwtAuthenticationEntryPoint;
+import com.mysite.sbb.jwt.JwtSecurityConfig;
+import com.mysite.sbb.jwt.TokenProvider;
 import lombok.RequiredArgsConstructor;
-import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -26,8 +25,9 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 @EnableGlobalMethodSecurity(prePostEnabled = true) // PreAuthorize, PostAuthorize 어노테이션 사용가능.
 public class SecurityConfig {
 
+    private final CorsConfig corsConfig;
     private final UserSecurityService userSecurityService;
-    private final TestTokenProvider tokenProvider;
+    private final TokenProvider tokenProvider;
     private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
     private final JwtAccessDeniedHandler jwtAccessDeniedHandler;
 
@@ -56,58 +56,18 @@ public class SecurityConfig {
 //
 //        return http.build();
 //    }
-//    @Bean
-//    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-//
-//        // 모든 인증되지 않은 요청을 허락.
-//        http
-//                // token을 사용하는 방식이기 때문에, csrf를 disable한다.
-//                .csrf().disable()
-//
-//                .exceptionHandling() // HttpServletRequest를 사용하는 요청들에 대한 접근제한을 설정하겠다는 의미
-//                .authenticationEntryPoint(jwtAuthenticationEntryPoint)
-//                .accessDeniedHandler(jwtAccessDeniedHandler)
-//
-//                // 세션을 사용하지 않기 때문에 STATELESS로 설정
-//                .and()
-//                .sessionManagement()
-//                .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-//
-//                .and()
-//                .authorizeHttpRequests()
-//                .antMatchers("/**").permitAll()
-//                .anyRequest().authenticated() // 나머지 요청은 인증받겠다.
-//                .and()
-//                    .formLogin()
-//                    .loginPage("/user/login")
-//                    .defaultSuccessUrl("/")
-//                .and()
-//                    .logout()
-//                    .logoutRequestMatcher(new AntPathRequestMatcher("/user/logout"))
-//                    .logoutSuccessUrl("/") // 루트URL로 이동
-//                    .invalidateHttpSession(true) // 세션삭제
-//                .and()
-//                .apply(new JwtSecurityConfig(tokenProvider))
-//                ;
-//
-//        return http.build();
-//    }
     @Bean
-    public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
-        httpSecurity
-                // token을 사용하는 방식이기 때문에 csrf를 disable합니다.
+    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+
+        // 모든 인증되지 않은 요청을 허락.
+        http
+                .addFilter(corsConfig.corsFilter())
+                // token을 사용하는 방식이기 때문에, csrf를 disable한다.
                 .csrf().disable()
 
-
-                .exceptionHandling()
+                .exceptionHandling() // HttpServletRequest를 사용하는 요청들에 대한 접근제한을 설정하겠다는 의미
                 .authenticationEntryPoint(jwtAuthenticationEntryPoint)
                 .accessDeniedHandler(jwtAccessDeniedHandler)
-
-                // enable h2-console
-                .and()
-                .headers()
-                .frameOptions()
-                .sameOrigin()
 
                 // 세션을 사용하지 않기 때문에 STATELESS로 설정
                 .and()
@@ -116,14 +76,22 @@ public class SecurityConfig {
 
                 .and()
                 .authorizeHttpRequests()
-                .antMatchers("/api/hello", "/api/authenticate", "/api/signup").permitAll()
-                .requestMatchers(PathRequest.toH2Console()).permitAll()
-                .anyRequest().authenticated()
-
+                .antMatchers("/**").permitAll()
+                .anyRequest().authenticated() // 나머지 요청은 인증받겠다.
                 .and()
-                .apply(new JwtSecurityConfig(tokenProvider));
+                    .formLogin()
+                    .loginPage("/user/login")
+                    .defaultSuccessUrl("/")
+                .and()
+                    .logout()
+                    .logoutRequestMatcher(new AntPathRequestMatcher("/user/logout"))
+                    .logoutSuccessUrl("/") // 루트URL로 이동
+                    .invalidateHttpSession(true) // 세션삭제
+                .and()
+                .apply(new JwtSecurityConfig(tokenProvider))
+                ;
 
-        return httpSecurity.build();
+        return http.build();
     }
 
     @Bean
@@ -131,9 +99,9 @@ public class SecurityConfig {
         return new BCryptPasswordEncoder();
     }
 
-//    @Bean
-//    public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration)
-//        throws Exception {
-//        return authenticationConfiguration.getAuthenticationManager();
-//    }
+    @Bean
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration)
+        throws Exception {
+        return authenticationConfiguration.getAuthenticationManager();
+    }
 }
