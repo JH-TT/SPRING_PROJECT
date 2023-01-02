@@ -1,4 +1,4 @@
-package com.mysite.sbb.testException;
+package com.mysite.sbb.exception;
 
 public class DuplicateMemberException extends RuntimeException{
 

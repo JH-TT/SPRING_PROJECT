@@ -1,10 +1,7 @@
 package com.mysite.sbb.config;
 
 import com.mysite.sbb.Service.UserSecurityService;
-import com.mysite.sbb.jwt.JwtAccessDeniedHandler;
-import com.mysite.sbb.jwt.JwtAuthenticationEntryPoint;
-import com.mysite.sbb.jwt.JwtSecurityConfig;
-import com.mysite.sbb.jwt.TokenProvider;
+import com.mysite.sbb.jwt.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -17,6 +14,7 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 @Configuration
@@ -78,17 +76,19 @@ public class SecurityConfig {
                 .authorizeHttpRequests()
                 .antMatchers("/**").permitAll()
                 .anyRequest().authenticated() // 나머지 요청은 인증받겠다.
-                .and()
-                    .formLogin()
-                    .loginPage("/user/login")
-                    .defaultSuccessUrl("/")
-                .and()
-                    .logout()
-                    .logoutRequestMatcher(new AntPathRequestMatcher("/user/logout"))
-                    .logoutSuccessUrl("/") // 루트URL로 이동
-                    .invalidateHttpSession(true) // 세션삭제
+//                .and()
+//                    .formLogin()
+//                    .loginPage("/user/login")
+//                    .defaultSuccessUrl("/")
+//                .and()
+//                    .logout()
+//                    .logoutRequestMatcher(new AntPathRequestMatcher("/user/logout"))
+//                    .logoutSuccessUrl("/") // 루트URL로 이동
+//                    .invalidateHttpSession(true) // 세션삭제
                 .and()
                 .apply(new JwtSecurityConfig(tokenProvider))
+                .and()
+                .addFilterBefore(new JwtFilter(tokenProvider), UsernamePasswordAuthenticationFilter.class)
                 ;
 
         return http.build();

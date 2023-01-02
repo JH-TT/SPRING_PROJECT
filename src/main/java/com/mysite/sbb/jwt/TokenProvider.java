@@ -1,6 +1,7 @@
 package com.mysite.sbb.jwt;
 
 import com.mysite.sbb.Repository.UserRepository;
+import com.mysite.sbb.DTO.TokenDTO;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
@@ -48,32 +49,42 @@ public class TokenProvider implements InitializingBean {
         this.key = Keys.hmacShaKeyFor(keyBytes);
     }
 
-    // Authentication객체의 권한정보를 이용해서 토큰을 생성하는 createToken 메서드 추가
-    public String createToken(Authentication authentication) {
+    public TokenDTO generateToken(Authentication authentication) {
         String authorities = authentication.getAuthorities().stream()
                 .map(GrantedAuthority::getAuthority)
                 .collect(Collectors.joining(","));
-
         long now = (new Date()).getTime();
-        Date validity = new Date(now + this.tokenValidityInMilliseconds);
 
-        return Jwts.builder()
+        //Access Token 생성
+        Date accessTokenExpiresIn = new Date(now + this.tokenValidityInMilliseconds);
+        String accessToken = Jwts.builder()
                 .setSubject(authentication.getName())
                 .claim(AUTHORITIES_KEY, authorities)
-                .signWith(SignatureAlgorithm.HS512, key)
-                .setExpiration(validity)
+                .setExpiration(accessTokenExpiresIn)
+                .signWith(key, SignatureAlgorithm.ES256)
                 .compact();
+        // refreshToken 생성
+        String refreshToken = Jwts.builder()
+                .setExpiration(new Date(now + this.tokenValidityInMilliseconds))
+                .signWith(key, SignatureAlgorithm.ES256)
+                .compact();
+        return TokenDTO.builder()
+                .token("Bearer")
+                .accessToken(accessToken)
+                .refreshToken(refreshToken)
+                .build();
     }
 
     // Token에 담겨있는 정보를 이용해 Authenticaton 객체를 리턴하는 메서드 생성
-    public Authentication getAuthentication(String token) {
-        // 토큰을 클레임으로 만든다.
-        Claims claims = Jwts
-                .parserBuilder()
-                .setSigningKey(key)
-                .build()
-                .parseClaimsJws(token)
-                .getBody();
+    // JWT 토큰을 복호화해 토큰에 들어있는 정보를 꺼내는 메서드
+    public Authentication getAuthentication(String accessToken) {
+        // 토큰을 복호화.
+        Claims claims = parseClaims(accessToken);
+
+        if (claims.get(AUTHORITIES_KEY) == null) {
+            throw new RuntimeException("권한 정보가 없는 토큰입니다.");
+        }
+
         Collection<? extends GrantedAuthority> authorities = Arrays.stream(claims.get(AUTHORITIES_KEY).toString().split(","))
                 .map(SimpleGrantedAuthority::new)
                 .collect(Collectors.toList());
@@ -81,7 +92,7 @@ public class TokenProvider implements InitializingBean {
         User principal = new User(claims.getSubject(), "", authorities);
 
         // Authentication 객체를 리턴
-        return new UsernamePasswordAuthenticationToken(principal, token, authorities);
+        return new UsernamePasswordAuthenticationToken(principal, accessToken, authorities);
     }
 
     // 토큰의 유효성 검증을 수행
@@ -99,5 +110,13 @@ public class TokenProvider implements InitializingBean {
             logger.info("JWT 토큰이 잘못되었습니다.");
         }
         return false;
+    }
+
+    private Claims parseClaims(String accessToken) {
+        try {
+            return Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(accessToken).getBody();
+        } catch (ExpiredJwtException e) {
+            return e.getClaims();
+        }
     }
 }

@@ -1,4 +1,4 @@
-package com.mysite.sbb.testDto;
+package com.mysite.sbb.DTO;
 
 import lombok.*;
 
@@ -9,4 +9,6 @@ import lombok.*;
 @NoArgsConstructor
 public class TokenDTO {
     private String token;
+    private String accessToken;
+    private String refreshToken;
 }

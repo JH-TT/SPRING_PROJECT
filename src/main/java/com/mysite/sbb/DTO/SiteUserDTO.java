@@ -1,10 +1,8 @@
 package com.mysite.sbb.DTO;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.mysite.sbb.Enum.UserRole;
 import com.mysite.sbb.Model.Authority;
 import com.mysite.sbb.Model.SiteUser;
-import com.mysite.sbb.Repository.UserRepository;
 import lombok.*;
 
 import javax.validation.constraints.NotNull;
@@ -29,7 +27,7 @@ public class SiteUserDTO {
     String email;
     LocalDateTime createDate;
     boolean activated;
-    private Set<AuthorityDTO> authorityDtoSet;
+    private Set<Authority> authorityDtoSet;
 
     public SiteUser toEntity() {
         return SiteUser.builder()
@@ -39,7 +37,7 @@ public class SiteUserDTO {
                 .email(email)
                 .createDate(createDate)
                 .activated(activated)
-                .authorities(authorityDtoSet.stream()
+                .roles(authorityDtoSet.stream()
                         .map(authorityDTO -> Authority.builder().authorityName(authorityDTO.getAuthorityName()).build())
                         .collect(Collectors.toSet()))
                 .build();
@@ -55,9 +53,7 @@ public class SiteUserDTO {
                 .email(siteUser.getEmail())
                 .createDate(siteUser.getCreateDate())
                 .activated(siteUser.isActivated())
-                .authorityDtoSet(siteUser.getAuthorities().stream()
-                        .map(authority -> AuthorityDTO.builder().authorityName(authority.getAuthorityName()).build())
-                        .collect(Collectors.toSet()))
+                .authorityDtoSet(siteUser.getRoles())
                 .build();
     }
 }

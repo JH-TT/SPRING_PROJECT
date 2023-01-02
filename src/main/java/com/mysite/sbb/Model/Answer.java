@@ -46,10 +46,4 @@ public class Answer {
 
     @OneToMany(mappedBy = "answer", cascade = CascadeType.REMOVE, fetch = FetchType.EAGER)
     private List<Comment> commentList;
-
-    public Answer(String content, Question question, SiteUser author) {
-        this.content = content;
-        this.question = question;
-        this.author = author;
-    }
 }

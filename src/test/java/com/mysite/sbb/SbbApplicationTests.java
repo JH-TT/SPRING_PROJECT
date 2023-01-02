@@ -47,14 +47,14 @@ class SbbApplicationTests {
 
     @Test
     void contextLoads() {
-        Question q1 = new Question();
-        q1.setSubject("sbb가 무엇인가요?");
-        q1.setContent("sbb에 대해서 알고 싶습니다");
+//        Question q1 = new Question();
+//        q1.setSubject("sbb가 무엇인가요?");
+//        q1.setContent("sbb에 대해서 알고 싶습니다");
 
-        SiteUser st = new SiteUser("aa", "1234", "lee@gmail.com");
-        q1.setAuthor(st);
+//        SiteUser st = new SiteUser("aa", "1234", "lee@gmail.com");
+//        q1.setAuthor(st);
 
-        questionRepository.save(q1);
+//        questionRepository.save(q1);
 
 //        Question q2 = Question.builder()
 //                .content("안녕")
@@ -138,16 +138,16 @@ class SbbApplicationTests {
 
     @Test
     void te() {
-        SiteUser st = new SiteUser("John2", "1234", "leejongho9807@gmail.com");
-        userRepository.save(st);
-        Question q = new Question("Hi", "Hi", st);
-        questionRepository.save(q);
+//        SiteUser st = new SiteUser("John2", "1234", "leejongho9807@gmail.com");
+//        userRepository.save(st);
+//        Question q = new Question("Hi", "Hi", st);
+//        questionRepository.save(q);
     }
 
-    @Test
-    void updateq(Question q){
-        q.setContent("안녕3");
-        questionRepository.save(q);
-    }
+//    @Test
+//    void updateq(Question q){
+//        q.setContent("안녕3");
+//        questionRepository.save(q);
+//    }
 
 }

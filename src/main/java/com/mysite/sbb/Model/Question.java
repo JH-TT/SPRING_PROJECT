@@ -12,7 +12,6 @@ import java.util.List;
 import java.util.Set;
 
 @Getter
-@Setter
 @Entity
 @NoArgsConstructor
 @EntityListeners(AuditingEntityListener.class)
