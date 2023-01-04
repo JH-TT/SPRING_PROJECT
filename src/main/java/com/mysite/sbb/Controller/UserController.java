@@ -3,15 +3,12 @@ package com.mysite.sbb.Controller;
 
 import com.mysite.sbb.Service.UserService;
 import com.mysite.sbb.UserCreateForm;
-import com.mysite.sbb.DTO.LoginDTO;
-import com.mysite.sbb.DTO.TokenDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.validation.Valid;
@@ -62,13 +59,5 @@ public class UserController {
     @GetMapping("/login")
     public String login() {
         return "login_form";
-    }
-
-    @PostMapping("/login")
-    public TokenDTO login(@RequestBody LoginDTO loginDTO) {
-        String userId = loginDTO.getUsername();
-        String password = loginDTO.getPassword();
-        TokenDTO tokenDTO = userService.login(userId, password);
-        return tokenDTO;
     }
 }

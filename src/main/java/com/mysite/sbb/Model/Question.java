@@ -49,10 +49,4 @@ public class Question {
 
     @ManyToMany(fetch = FetchType.EAGER)
     Set<SiteUser> voter;
-
-    public Question(String subject, String content, SiteUser author) {
-        this.subject = subject;
-        this.content = content;
-        this.author = author;
-    }
 }
