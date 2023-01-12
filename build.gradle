@@ -34,17 +34,18 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
     implementation 'nz.net.ultraq.thymeleaf:thymeleaf-layout-dialect'
 
+    // jwt
+    implementation 'io.jsonwebtoken:jjwt-api:0.11.2'
+    implementation 'io.jsonwebtoken:jjwt-impl:0.11.2'
+    implementation 'io.jsonwebtoken:jjwt-jackson:0.11.2'
+
     // mariadb
     runtimeOnly 'org.mariadb.jdbc:mariadb-java-client'
 
-    // Security
+    // Security, Oauth
     implementation 'org.springframework.boot:spring-boot-starter-security'
     implementation 'org.thymeleaf.extras:thymeleaf-extras-springsecurity5'
-
-    // jwt
-    implementation group: 'io.jsonwebtoken', name: 'jjwt-api', version: '0.11.5'
-    runtimeOnly group: 'io.jsonwebtoken', name: 'jjwt-impl', version: '0.11.5'
-    runtimeOnly group: 'io.jsonwebtoken', name: 'jjwt-jackson', version: '0.11.5'
+    implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
 
     // markdown
     implementation 'org.commonmark:commonmark:0.18.2'

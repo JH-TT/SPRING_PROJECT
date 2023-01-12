@@ -1,5 +1,6 @@
 package com.mysite.sbb.config;
 
+import com.mysite.sbb.OAuth.PrincipalOauth2UserService;
 import com.mysite.sbb.Service.UserSecurityService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -21,6 +22,7 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 public class SecurityConfig {
 
     private final UserSecurityService userSecurityService;
+    private final PrincipalOauth2UserService principalOauth2UserService;
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
@@ -36,14 +38,16 @@ public class SecurityConfig {
                 .logoutRequestMatcher(new AntPathRequestMatcher("/user/logout"))
                 .logoutSuccessUrl("/") // 루트URL로 이동
                 .invalidateHttpSession(true) // 세션삭제
+                .and()
+                .oauth2Login()
+                .loginPage("/user/login")
+                .defaultSuccessUrl("/")
+                .failureUrl("/user/login")
+                .userInfoEndpoint()
+                .userService(principalOauth2UserService)
         ;
 
         return http.build();
-    }
-
-    @Bean
-    public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
     }
 
     @Bean
