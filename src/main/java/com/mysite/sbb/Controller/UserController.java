@@ -1,17 +1,24 @@
 package com.mysite.sbb.Controller;
 
 
+import com.mysite.sbb.Model.PrincipalDetails;
+import com.mysite.sbb.Model.SiteUser;
 import com.mysite.sbb.Service.UserService;
 import com.mysite.sbb.UserCreateForm;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.validation.Valid;
+import java.util.Map;
 
 @Controller
 @RequestMapping("/user")
@@ -59,5 +66,44 @@ public class UserController {
     @GetMapping("/login")
     public String login() {
         return "login_form";
+    }
+
+    @GetMapping("/form/loginInfo")
+    @ResponseBody
+    public String formLoginInfo(Authentication authentication, @AuthenticationPrincipal PrincipalDetails principalDetails) {
+        PrincipalDetails principal = (PrincipalDetails) authentication.getPrincipal();
+        SiteUser siteUser = principal.getUser();
+        System.out.println("siteUser = " + siteUser);
+
+        SiteUser siteUser1 = principalDetails.getUser();
+        System.out.println("siteUser1 = " + siteUser1);
+
+        return siteUser.toString();
+    }
+
+    @GetMapping("/oauth/loginInfo")
+    @ResponseBody
+    public String oauthLoginInfo(Authentication authentication, @AuthenticationPrincipal OAuth2User oAuth2UserPrincipal) {
+        OAuth2User oAuth2User = (OAuth2User) authentication.getPrincipal();
+        Map<String, Object> attributes = oAuth2User.getAttributes();
+        System.out.println("attributes = " + attributes);
+
+        Map<String, Object> attributes1 = oAuth2UserPrincipal.getAttributes();
+
+        return attributes.toString(); // 세션에 담기 user 가져올 수 있다.
+    }
+
+    @GetMapping("/loginInfo")
+    @ResponseBody
+    public String loginInfo(Authentication authentication, @AuthenticationPrincipal PrincipalDetails principalDetails) {
+        String result = "";
+
+        PrincipalDetails principal = (PrincipalDetails) authentication.getPrincipal();
+        if (principal.getUser().getProvider() == null) {
+            result = result + "Form 로그인 : " + principal;
+        } else {
+            result = result + "OAuth2 로그인 : " + principal;
+        }
+        return result;
     }
 }

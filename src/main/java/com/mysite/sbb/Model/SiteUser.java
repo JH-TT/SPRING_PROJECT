@@ -1,22 +1,16 @@
 package com.mysite.sbb.Model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.mysite.sbb.Enum.UserRole;
 import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
-import java.util.Collection;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 
 @Getter
+@Setter
 @Entity
 @NoArgsConstructor
 @EntityListeners(AuditingEntityListener.class)
@@ -26,6 +20,7 @@ import java.util.stream.Collectors;
 public class SiteUser {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "siteuser_id")
     private Long id;
 
     @Column(unique = true)
@@ -41,4 +36,26 @@ public class SiteUser {
 
     @Enumerated(EnumType.STRING)
     private UserRole role;
+
+    private String provider; // 플랫폼 어디인지
+
+    private String providerId; // oauth2를 이용할 경우 아이디값
+
+    @Builder(builderClassName = "UserDetailRegister", builderMethodName = "userDetailRegister")
+    public SiteUser(String username, String password, String email, UserRole role) {
+        this.username = username;
+        this.password = password;
+        this.email = email;
+        this.role = role;
+    }
+
+    @Builder(builderClassName = "OAuth2Registor", builderMethodName = "oauth2Register")
+    public SiteUser(String username, String password, String email, UserRole role, String provider, String providerId) {
+        this.username = username;
+        this.password = password;
+        this.email = email;
+        this.role = role;
+        this.provider = provider;
+        this.providerId = providerId;
+    }
 }

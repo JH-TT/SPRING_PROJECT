@@ -14,18 +14,18 @@ import java.util.Map;
 @ToString
 public class PrincipalDetails implements UserDetails, OAuth2User {
 
-    private User user;
+    private SiteUser user;
     private Map<String, Object> attributes;
 
     // Form 로그인 시 사용???
 
-    public PrincipalDetails(User user) {
+    public PrincipalDetails(SiteUser user) {
         this.user = user;
     }
 
 
     // OAuth2 로그인 시 사용
-    public PrincipalDetails(User user, Map<String, Object> attributes) {
+    public PrincipalDetails(SiteUser user, Map<String, Object> attributes) {
         this.user = user;
         this.attributes = attributes;
     }

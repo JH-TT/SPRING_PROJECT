@@ -32,9 +32,9 @@ public class UserServiceImpl implements UserService{
     @Override
     @Transactional(readOnly = true)
     public SiteUserDTO getUser(String username) {
-        Optional<SiteUser> siteuser = userRepository.findByusername(username);
-        if(siteuser.isPresent()) {
-            return SiteUserDTO.from(siteuser.get());
+        SiteUser siteuser = userRepository.findByusername(username);
+        if(siteuser != null) {
+            return SiteUserDTO.from(siteuser);
         } else {
             throw new DataNotFoundException("siteuser not found");
         }
