@@ -1,6 +1,5 @@
 package com.mysite.sbb.Service;
 
-import com.mysite.sbb.DTO.SiteUserDTO;
 import com.mysite.sbb.Enum.UserRole;
 import com.mysite.sbb.Model.SiteUser;
 import com.mysite.sbb.Repository.UserRepository;
@@ -25,8 +24,8 @@ public class UserSecurityService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        SiteUser _siteUser = userRepository.findByusername(username);
-        if(_siteUser == null){
+        Optional<SiteUser> _siteUser = userRepository.findByemail(username);
+        if(_siteUser.isEmpty()){
             throw new UsernameNotFoundException("사용자를 찾을수 없습니다.");
         }
         List<GrantedAuthority> authorities = new ArrayList<>();
@@ -36,6 +35,6 @@ public class UserSecurityService implements UserDetailsService {
             authorities.add(new SimpleGrantedAuthority(UserRole.USER.getValue()));
         }
 
-        return new User(_siteUser.getUsername(), _siteUser.getPassword(), authorities);
+        return new User(_siteUser.get().getUsername(), _siteUser.get().getPassword(), authorities);
     }
 }

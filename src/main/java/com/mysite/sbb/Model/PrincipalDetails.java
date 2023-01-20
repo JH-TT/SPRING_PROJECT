@@ -14,11 +14,10 @@ import java.util.Map;
 @ToString
 public class PrincipalDetails implements UserDetails, OAuth2User {
 
-    private SiteUser user;
+    private final SiteUser user;
     private Map<String, Object> attributes;
 
     // Form 로그인 시 사용???
-
     public PrincipalDetails(SiteUser user) {
         this.user = user;
     }
@@ -32,8 +31,7 @@ public class PrincipalDetails implements UserDetails, OAuth2User {
 
     @Override
     public String getName() {
-        String sub = attributes.get("sub").toString();
-        return sub;
+        return attributes.get("sub").toString();
     }
 
     @Override
@@ -44,12 +42,7 @@ public class PrincipalDetails implements UserDetails, OAuth2User {
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         Collection<GrantedAuthority> collect = new ArrayList<>();
-        collect.add(new GrantedAuthority() {
-            @Override
-            public String getAuthority() {
-                return user.getRole().toString();
-            }
-        });
+        collect.add((GrantedAuthority) () -> user.getRole().toString());
         return collect;
     }
 

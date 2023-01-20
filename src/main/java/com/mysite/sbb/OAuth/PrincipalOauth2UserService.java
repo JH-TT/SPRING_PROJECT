@@ -16,6 +16,7 @@ import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
 
+import javax.swing.text.html.Option;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -48,16 +49,19 @@ public class PrincipalOauth2UserService extends DefaultOAuth2UserService {
         String email = oAuth2User.getAttribute("email");
         UserRole role = UserRole.USER;
 
-        SiteUser byUsername = userRepository.findByusername(username);
+        Optional<SiteUser> byUsername = userRepository.findByemail(email);
+        SiteUser user;
 
-        if (byUsername == null) {
-            byUsername = SiteUser.oauth2Register()
+        if (byUsername.isEmpty()) {
+            user = SiteUser.oauth2Register()
                     .username(username).password(password).email(email).role(role)
                     .provider(provider).providerId(providerId)
                     .build();
-            userRepository.save(byUsername);
+            userRepository.save(user);
+        } else {
+            user = byUsername.get();
         }
 
-        return new PrincipalDetails(byUsername, oAuth2User.getAttributes());
+        return new PrincipalDetails(user, oAuth2User.getAttributes());
     }
 }
