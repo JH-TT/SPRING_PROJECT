@@ -25,14 +25,15 @@ spring:
       client:
         registration:
           naver:
-            redirect-uri: http://localhost:8080/oauth/naver/callback
+            redirect-uri: http://localhost:8080/login/oauth2/code/naver
             client-id: _Ymbc8719odBfiC_6Gf8
             client-secret: fBOAxjRBLX
             client-name: Naver
             authorization-grant-type: authorization_code
             scope:
-              - nickname
+              - name
               - email
+              - nickname
           google:
             client-id: 54922705722-bord36gpq924li6n2ihohv2s4c1vgh6o.apps.googleusercontent.com
             client-secret: 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

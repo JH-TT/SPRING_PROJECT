@@ -4,6 +4,7 @@ import com.mysite.sbb.Enum.UserRole;
 import com.mysite.sbb.Model.PrincipalDetails;
 import com.mysite.sbb.Model.SiteUser;
 import com.mysite.sbb.Model.User;
+import com.mysite.sbb.OAuth.userinfo.GoogleUserInfo;
 import com.mysite.sbb.OAuth.userinfo.NaverUserInfo;
 import com.mysite.sbb.OAuth.userinfo.OAuth2UserInfo;
 import com.mysite.sbb.Repository.TestUserRepository;
@@ -32,21 +33,25 @@ public class PrincipalOauth2UserService extends DefaultOAuth2UserService {
 
         OAuth2User oAuth2User = super.loadUser(userRequest);
 
+        OAuth2UserInfo oAuth2UserInfo = null;
         String provider = userRequest.getClientRegistration().getRegistrationId();
+        String nickname = null;
 
-        String userNameAttriubuteName = userRequest.getClientRegistration()
-                .getProviderDetails()
-                .getUserInfoEndpoint()
-                .getUserNameAttributeName();
+        if (provider.equals("google")) {
+            oAuth2UserInfo = new GoogleUserInfo(oAuth2User.getAttributes());
+        } else if (provider.equals("naver")) {
+            oAuth2UserInfo = new NaverUserInfo(oAuth2User.getAttributes());
+        }
 
-        String providerId = oAuth2User.getAttribute("sub");
+        String providerId = oAuth2UserInfo.getProviderId();
 //        String username = provider + "_" + providerId;
-        String username = oAuth2User.getAttribute("name");
+        String username = oAuth2UserInfo.getName();
+
 
         String uuid = UUID.randomUUID().toString().substring(0, 6);
         String password = passwordEncoder.encode("패스워드" + uuid);
 
-        String email = oAuth2User.getAttribute("email");
+        String email = oAuth2UserInfo.getEmail();
         UserRole role = UserRole.USER;
 
         Optional<SiteUser> byUsername = userRepository.findByemail(email);
@@ -62,6 +67,6 @@ public class PrincipalOauth2UserService extends DefaultOAuth2UserService {
             user = byUsername.get();
         }
 
-        return new PrincipalDetails(user, oAuth2User.getAttributes());
+        return new PrincipalDetails(user, oAuth2UserInfo);
     }
 }
