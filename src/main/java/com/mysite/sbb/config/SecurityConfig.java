@@ -1,6 +1,8 @@
 package com.mysite.sbb.config;
 
+import com.mysite.sbb.Enum.UserRole;
 import com.mysite.sbb.OAuth.PrincipalOauth2UserService;
+import com.mysite.sbb.Service.CustomOAuth2UserService;
 import com.mysite.sbb.Service.UserSecurityService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -24,6 +26,8 @@ public class SecurityConfig {
     private final UserSecurityService userSecurityService;
     private final PrincipalOauth2UserService principalOauth2UserService;
 
+    private final CustomOAuth2UserService customOAuth2UserService;
+
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 
@@ -41,11 +45,27 @@ public class SecurityConfig {
                 .and()
                 .oauth2Login()
                 .loginPage("/user/login")
-                .defaultSuccessUrl("/")
+                .defaultSuccessUrl("/user/setNickName")
+//                .defaultSuccessUrl("/")
                 .failureUrl("/user/login")
                 .userInfoEndpoint()
                 .userService(principalOauth2UserService)
         ;
+/*
+        http.csrf().disable()
+                .headers().frameOptions().disable()
+
+                .and()
+                .authorizeRequests()
+                .antMatchers("/", "/css/**", "/images/**", "/js/**", "/h2/**", "/h2-console/**").permitAll()
+                .antMatchers("/api/v1/**").hasRole(UserRole.USER.getValue())
+                .anyRequest().authenticated()
+
+                .and()
+                .logout().logoutSuccessUrl("/")
+
+                .and()
+                .oauth2Login().userInfoEndpoint().userService(customOAuth2UserService);*/
 
         return http.build();
     }

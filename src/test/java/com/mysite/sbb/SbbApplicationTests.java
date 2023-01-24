@@ -132,17 +132,17 @@ class SbbApplicationTests {
         for(int i=1; i<= 100; i++) {
             String subject = String.format("테스트 데이터입니다:[%03d]", i);
             String content = "내용무";
-            questionService.create(subject, content, SiteUserDTO.from(userRepository.findByusername("dlwhdgh98").get()));
+//            questionService.create(subject, content, SiteUserDTO.from(userRepository.findByusername("dlwhdgh98")));
         }
     }
 
-    @Test
-    void te() {
+//    @Test
+//    void te() {
 //        SiteUser st = new SiteUser("John2", "1234", "leejongho9807@gmail.com");
 //        userRepository.save(st);
 //        Question q = new Question("Hi", "Hi", st);
 //        questionRepository.save(q);
-    }
+//    }
 
 //    @Test
 //    void updateq(Question q){

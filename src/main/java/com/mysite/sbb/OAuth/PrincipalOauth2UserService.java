@@ -35,7 +35,6 @@ public class PrincipalOauth2UserService extends DefaultOAuth2UserService {
 
         OAuth2UserInfo oAuth2UserInfo = null;
         String provider = userRequest.getClientRegistration().getRegistrationId();
-        String nickname = null;
 
         if (provider.equals("google")) {
             oAuth2UserInfo = new GoogleUserInfo(oAuth2User.getAttributes());
@@ -44,8 +43,8 @@ public class PrincipalOauth2UserService extends DefaultOAuth2UserService {
         }
 
         String providerId = oAuth2UserInfo.getProviderId();
-//        String username = provider + "_" + providerId;
-        String username = oAuth2UserInfo.getName();
+        String username = provider + "_" + providerId;
+//        String username = oAuth2UserInfo.getName();
 
 
         String uuid = UUID.randomUUID().toString().substring(0, 6);

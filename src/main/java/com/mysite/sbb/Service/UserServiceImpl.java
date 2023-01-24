@@ -7,9 +7,11 @@ import com.mysite.sbb.Repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.swing.text.html.Option;
 import java.util.Optional;
 
 @Service
@@ -32,9 +34,21 @@ public class UserServiceImpl implements UserService{
     @Override
     @Transactional(readOnly = true)
     public SiteUserDTO getUser(String username) {
-        SiteUser siteuser = userRepository.findByusername(username);
-        if(siteuser != null) {
-            return SiteUserDTO.from(siteuser);
+        Optional<SiteUser> siteuser = userRepository.findByusername(username);
+        if(siteuser.isPresent()) {
+            return SiteUserDTO.from(siteuser.get());
+        } else {
+            throw new DataNotFoundException("siteuser not found");
+        }
+    }
+
+    @Override
+    public void updateUserName(String username, String email) {
+        Optional<SiteUser> siteUser = userRepository.findByemail(email);
+        if (siteUser.isPresent()) {
+            SiteUserDTO siteUserDTO = SiteUserDTO.from(siteUser.get());
+            siteUserDTO.setUsername(username);
+            userRepository.save(siteUserDTO.toEntity());
         } else {
             throw new DataNotFoundException("siteuser not found");
         }

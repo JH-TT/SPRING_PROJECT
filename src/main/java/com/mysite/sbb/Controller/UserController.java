@@ -6,20 +6,22 @@ import com.mysite.sbb.Model.SiteUser;
 import com.mysite.sbb.Service.UserService;
 import com.mysite.sbb.UserCreateForm;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.validation.Valid;
 import java.util.Map;
 
+@Slf4j
 @Controller
 @RequestMapping("/user")
 @RequiredArgsConstructor
@@ -48,12 +50,9 @@ public class UserController {
         try {
             userService.create(userCreateForm.getUsername(), userCreateForm.getEmail(), userCreateForm.getPassword1());
         } catch (DataIntegrityViolationException e) {
-            e.printStackTrace();
-            ;
             bindingResult.reject("signupFailed", "이미 등록된 사용자입니다.");
             return "signup_form";
         } catch (Exception e) {
-            e.printStackTrace();
             bindingResult.reject("signupFailed", e.getMessage());
             return "signup_form";
         }
@@ -66,6 +65,26 @@ public class UserController {
     @GetMapping("/login")
     public String login() {
         return "login_form";
+    }
+
+    @PreAuthorize("isAuthenticated()")
+    @GetMapping("/setNickName")
+    public String goSettingNickNamePage() {
+        return "setnickname";
+    }
+
+    @PostMapping("/setNickName")
+    public String setNickName(@Validated @ModelAttribute("username") String username,
+                              @AuthenticationPrincipal OAuth2User oAuth2UserPrincipal,
+                              BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            return "setnickname";
+        }
+        String email = (String) oAuth2UserPrincipal.getAttributes().get("email");
+        log.info("email={}", email);
+        userService.updateUserName(username, email);
+
+        return "redirect:/";
     }
 
     @GetMapping("/form/loginInfo")

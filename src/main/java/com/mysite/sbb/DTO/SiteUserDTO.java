@@ -28,6 +28,9 @@ public class SiteUserDTO {
     LocalDateTime createDate;
     UserRole role;
 
+    String provider;
+    String providerId;
+
     public SiteUser toEntity() {
         return SiteUser.builder()
                 .id(id)
@@ -36,6 +39,8 @@ public class SiteUserDTO {
                 .email(email)
                 .createDate(createDate)
                 .role(UserRole.USER)
+                .provider(provider)
+                .providerId(providerId)
                 .build();
     }
 
@@ -49,6 +54,8 @@ public class SiteUserDTO {
                 .email(siteUser.getEmail())
                 .createDate(siteUser.getCreateDate())
                 .role(siteUser.getRole())
+                .provider(siteUser.getProvider())
+                .providerId(siteUser.getProviderId())
                 .build();
     }
 }
