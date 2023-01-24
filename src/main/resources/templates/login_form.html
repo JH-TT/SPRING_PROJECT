@@ -1,29 +1,6 @@
-<!--<html layout:decorate="~{layout}">-->
-<!--<div layout:fragment="content" class="container my-3">-->
-<!--  <form th:action="@{/user/login}" method="post">-->
-<!--    &lt;!&ndash; 로그인을 실패하면 로그인페이지로 리다이렉트되고 파라미터로 error를 보낸다. &ndash;&gt;-->
-<!--    &lt;!&ndash; 여기서 error를 받으면 아래 문구가 나온다. &ndash;&gt;-->
-<!--    <div th:if="${param.error}">-->
-<!--      <div class="alert alert-danger">-->
-<!--        사용자ID 또는 비밀번호를 확인해 주세요.-->
-<!--      </div>-->
-<!--    </div>-->
-<!--    <div class="mb-3">-->
-<!--      <label for="username" class="form-label">사용자ID</label>-->
-<!--      <input type="text" name="username" id="username" class="form-control">-->
-<!--    </div>-->
-<!--    <div class="mb-3">-->
-<!--      <label for="password" class="form-label">비밀번호</label>-->
-<!--      <input type="password" name="password" id="password" class="form-control">-->
-<!--    </div>-->
-<!--    <button type="submit" class="btn btn-primary">로그인</button>-->
-<!--  </form>-->
-<!--</div>-->
-<!--</html>-->
-
 <html layout:decorate="~{layout}">
 <head>
-  <link rel="stylesheet" type="text/css" th:href="@{/login.css}">
+  <link rel="stylesheet" type="text/css" th:href="@{/css/login.css}">
 </head>
 <div layout:fragment="content" class="container">
   <div th:if="${param.error}">
@@ -53,13 +30,21 @@
             </div>
             <div class="form-inline"> <input type="checkbox" name="remember" id="remember"> <label for="remember" class="text-muted">Remember me</label> <a href="#" id="forgot" class="font-weight-bold">Forgot password?</a> </div>
             <input type="submit" class="btn btn-primary btn-block mt-3" value="Login" />
-            <div class="text-center pt-4 text-muted">Don't have an account? <a href="#">Sign up</a> </div>
-            <a href="/oauth2/authorization/google">구글 로그인</a>
-            <a href="/oauth2/authorization/naver">네이버 로그인</a>
+            <div class="text-center pt-4 text-muted">Don't have an account? <a href="/user/signup">Sign up</a> </div>
           </form>
         </div>
         <div class="mx-3 my-2 py-2 bordert">
-          <div class="text-center py-3"> <a href="https://wwww.facebook.com" target="_blank" class="px-2"> <img src="https://www.dpreview.com/files/p/articles/4698742202/facebook.jpeg" alt=""> </a> <a href="https://www.google.com" target="_blank" class="px-2"> <img src="https://www.freepnglogos.com/uploads/google-logo-png/google-logo-png-suite-everything-you-need-know-about-google-newest-0.png" alt=""> </a> <a href="https://www.github.com" target="_blank" class="px-2"> <img src="https://www.freepnglogos.com/uploads/512x512-logo-png/512x512-logo-github-icon-35.png" alt=""> </a> </div>
+          <div class="text-center py-3">
+            <a href="/oauth2/authorization/naver" class="px-2">
+              <img th:src="@{/img/btnG_iconRound.png}" />
+            </a>
+            <a href="/oauth2/authorization/google" class="px-2">
+              <img src="https://www.freepnglogos.com/uploads/google-logo-png/google-logo-png-suite-everything-you-need-know-about-google-newest-0.png" alt="">
+            </a>
+            <a href="https://www.github.com" class="px-2">
+              <img src="https://www.freepnglogos.com/uploads/512x512-logo-png/512x512-logo-github-icon-35.png" alt="">
+            </a>
+          </div>
         </div>
       </div>
     </div>
