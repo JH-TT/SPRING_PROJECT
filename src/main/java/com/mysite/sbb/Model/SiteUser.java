@@ -40,6 +40,7 @@ public class SiteUser {
     private String provider; // 플랫폼 어디인지
 
     private String providerId; // oauth2를 이용할 경우 아이디값
+    private boolean isNameChange; // 소셜 로그인시 아이디를 바꿨는지 확인
 
     @Builder(builderClassName = "UserDetailRegister", builderMethodName = "userDetailRegister")
     public SiteUser(String username, String password, String email, UserRole role) {
@@ -50,12 +51,13 @@ public class SiteUser {
     }
 
     @Builder(builderClassName = "OAuth2Registor", builderMethodName = "oauth2Register")
-    public SiteUser(String username, String password, String email, UserRole role, String provider, String providerId) {
+    public SiteUser(String username, String password, String email, UserRole role, String provider, String providerId, boolean isNameChange) {
         this.username = username;
         this.password = password;
         this.email = email;
         this.role = role;
         this.provider = provider;
         this.providerId = providerId;
+        this.isNameChange = isNameChange;
     }
 }

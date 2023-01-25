@@ -30,6 +30,7 @@ public class SiteUserDTO {
 
     String provider;
     String providerId;
+    boolean isNameChange;
 
     public SiteUser toEntity() {
         return SiteUser.builder()
@@ -41,6 +42,7 @@ public class SiteUserDTO {
                 .role(UserRole.USER)
                 .provider(provider)
                 .providerId(providerId)
+                .isNameChange(isNameChange)
                 .build();
     }
 
@@ -56,6 +58,7 @@ public class SiteUserDTO {
                 .role(siteUser.getRole())
                 .provider(siteUser.getProvider())
                 .providerId(siteUser.getProviderId())
+                .isNameChange(siteUser.isNameChange())
                 .build();
     }
 }

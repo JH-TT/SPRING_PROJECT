@@ -1,5 +1,6 @@
 package com.mysite.sbb.Model;
 
+import com.mysite.sbb.DTO.SiteUserDTO;
 import com.mysite.sbb.OAuth.userinfo.OAuth2UserInfo;
 import lombok.Getter;
 import lombok.ToString;
@@ -15,12 +16,12 @@ import java.util.Map;
 @ToString
 public class PrincipalDetails implements UserDetails, OAuth2User {
 
-    private final SiteUser user;
+    private final SiteUserDTO user;
 //    private Map<String, Object> attributes;
     private OAuth2UserInfo oAuth2UserInfo;
 
     // Form 로그인 시 사용
-    public PrincipalDetails(SiteUser user) {
+    public PrincipalDetails(SiteUserDTO user) {
         this.user = user;
     }
 
@@ -30,7 +31,7 @@ public class PrincipalDetails implements UserDetails, OAuth2User {
 //        this.user = user;
 //        this.attributes = attributes;
 //    }
-    public PrincipalDetails(SiteUser user, OAuth2UserInfo oAuth2UserInfo) {
+    public PrincipalDetails(SiteUserDTO user, OAuth2UserInfo oAuth2UserInfo) {
         this.user = user;
         this.oAuth2UserInfo = oAuth2UserInfo;
     }

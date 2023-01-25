@@ -37,10 +37,10 @@ public class AnswerController {
 
         if(bindingResult.hasErrors()) {
             model.addAttribute("question", questionDTO);
-            return "question_detail";
+            return "/question/question_detail";
         }
         AnswerDTO answerDTO = answerService.create(questionDTO, answerForm.getContent(), siteUserDTO);
-        return String.format("redirect:/question/detail/%s#answer_%s", answerDTO.getQuestion().getId(), answerDTO.getId());
+        return String.format("redirect:/question/question/detail/%s#answer_%s", answerDTO.getQuestion().getId(), answerDTO.getId());
     }
 
     @PreAuthorize("isAuthenticated()")
@@ -51,7 +51,7 @@ public class AnswerController {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "수정권한이 없습니다.");
         }
         answerForm.setContent(answerDTO.getContent());
-        return "answer_form";
+        return "/answer/answer_form";
     }
 
     @PreAuthorize("isAuthenticated()")
@@ -59,14 +59,14 @@ public class AnswerController {
     public String answerModify(@Valid AnswerForm answerForm, BindingResult bindingResult
         ,@PathVariable("id") Integer id, Principal principal) {
         if(bindingResult.hasErrors()) {
-            return "answer_form";
+            return "/answer/answer_form";
         }
         AnswerDTO answerDTO = answerService.getAnswer(id);
         if(!answerDTO.getAuthor().getUsername().equals(principal.getName())) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "수정권한이 없습니다.");
         }
         answerService.modify(answerDTO, answerForm.getContent());
-        return String.format("redirect:/question/detail/%s#answer_%s", answerDTO.getQuestion().getId(), answerDTO.getId());
+        return String.format("redirect:/question/question/detail/%s#answer_%s", answerDTO.getQuestion().getId(), answerDTO.getId());
     }
 
     @PreAuthorize("isAuthenticated()")
@@ -77,7 +77,7 @@ public class AnswerController {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "삭제권한이 없습니다.");
         }
         answerService.delete(answer);
-        return String.format("redirect:/question/detail/%s", answer.getQuestion().getId());
+        return String.format("redirect:/question/question/detail/%s", answer.getQuestion().getId());
     }
 
     @PreAuthorize("isAuthenticated()")
@@ -86,6 +86,6 @@ public class AnswerController {
         AnswerDTO answer = answerService.getAnswer(id);
         SiteUserDTO siteUserDTO = userService.getUser(principal.getName());
         answerService.vote(answer, siteUserDTO);
-        return String.format("redirect:/question/detail/%s#answer_%s", answer.getQuestion().getId(), answer.getId());
+        return String.format("redirect:/question/question/detail/%s#answer_%s", answer.getQuestion().getId(), answer.getId());
     }
 }

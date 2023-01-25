@@ -27,6 +27,7 @@ public class UserServiceImpl implements UserService{
                 .username(username)
                 .email(email)
                 .password(passwordEncoder.encode(password))
+                .isNameChange(true) // 직접 아이디를 만든 유저는 바로 true로 넘긴다.
                 .build();
         return SiteUserDTO.from(userRepository.save(siteUserDTO.toEntity()));
     }
@@ -48,6 +49,7 @@ public class UserServiceImpl implements UserService{
         if (siteUser.isPresent()) {
             SiteUserDTO siteUserDTO = SiteUserDTO.from(siteUser.get());
             siteUserDTO.setUsername(username);
+            siteUserDTO.setNameChange(true);
             userRepository.save(siteUserDTO.toEntity());
         } else {
             throw new DataNotFoundException("siteuser not found");

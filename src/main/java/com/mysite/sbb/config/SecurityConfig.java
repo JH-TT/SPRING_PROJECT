@@ -1,8 +1,6 @@
 package com.mysite.sbb.config;
 
-import com.mysite.sbb.Enum.UserRole;
 import com.mysite.sbb.OAuth.PrincipalOauth2UserService;
-import com.mysite.sbb.Service.CustomOAuth2UserService;
 import com.mysite.sbb.Service.UserSecurityService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -12,8 +10,6 @@ import org.springframework.security.config.annotation.authentication.configurati
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
@@ -26,7 +22,6 @@ public class SecurityConfig {
     private final UserSecurityService userSecurityService;
     private final PrincipalOauth2UserService principalOauth2UserService;
 
-    private final CustomOAuth2UserService customOAuth2UserService;
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {

@@ -1,12 +1,14 @@
 package com.mysite.sbb.Controller;
 
 
+import com.mysite.sbb.DTO.SiteUserDTO;
 import com.mysite.sbb.Model.PrincipalDetails;
 import com.mysite.sbb.Model.SiteUser;
 import com.mysite.sbb.Service.UserService;
 import com.mysite.sbb.UserCreateForm;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.hibernate.Session;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
@@ -16,7 +18,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.validation.Valid;
 import java.util.Map;
@@ -32,29 +33,28 @@ public class UserController {
     // get요청시 회원가입 템플릿 렌더링
     @GetMapping("/signup")
     public String signup(UserCreateForm userCreateForm) {
-        return "signup_form";
+        return "login/signup_form";
     }
 
     // post요청시 회원가입
     @PostMapping("/signup")
     public String signup(@Valid UserCreateForm userCreateForm, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
-            return "signup_form";
+            return "login/signup_form";
         }
 
         if (!userCreateForm.getPassword1().equals(userCreateForm.getPassword2())) {
-            //
             bindingResult.rejectValue("password2", "passwordInCorrect", "2개의 패스워드가 일치하지 않습니다.");
-            return "signup_form";
+            return "login/signup_form";
         }
         try {
             userService.create(userCreateForm.getUsername(), userCreateForm.getEmail(), userCreateForm.getPassword1());
         } catch (DataIntegrityViolationException e) {
             bindingResult.reject("signupFailed", "이미 등록된 사용자입니다.");
-            return "signup_form";
+            return "login/signup_form";
         } catch (Exception e) {
             bindingResult.reject("signupFailed", e.getMessage());
-            return "signup_form";
+            return "login/signup_form";
         }
 
         return "redirect:/";
@@ -64,13 +64,20 @@ public class UserController {
     // 스프링 시큐리티가 대신 처리
     @GetMapping("/login")
     public String login() {
-        return "login_form";
+        return "login/login_form";
     }
 
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/setNickName")
-    public String goSettingNickNamePage() {
-        return "setnickname";
+    public String goSettingNickNamePage(Authentication authentication) {
+        PrincipalDetails principal = (PrincipalDetails) authentication.getPrincipal();
+        SiteUserDTO siteUser = principal.getUser();
+        log.info("siteUser={}", siteUser.toString());
+        boolean isCheck = siteUser.isNameChange();
+        if(isCheck) {
+            return "redirect:/";
+        }
+        return "login/setnickname";
     }
 
     @PostMapping("/setNickName")
@@ -78,7 +85,7 @@ public class UserController {
                               @AuthenticationPrincipal OAuth2User oAuth2UserPrincipal,
                               BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
-            return "setnickname";
+            return "login/setnickname";
         }
         String email = (String) oAuth2UserPrincipal.getAttributes().get("email");
         log.info("email={}", email);
@@ -91,10 +98,10 @@ public class UserController {
     @ResponseBody
     public String formLoginInfo(Authentication authentication, @AuthenticationPrincipal PrincipalDetails principalDetails) {
         PrincipalDetails principal = (PrincipalDetails) authentication.getPrincipal();
-        SiteUser siteUser = principal.getUser();
+        SiteUserDTO siteUser = principal.getUser();
         System.out.println("siteUser = " + siteUser);
 
-        SiteUser siteUser1 = principalDetails.getUser();
+        SiteUserDTO siteUser1 = principalDetails.getUser();
         System.out.println("siteUser1 = " + siteUser1);
 
         return siteUser.toString();

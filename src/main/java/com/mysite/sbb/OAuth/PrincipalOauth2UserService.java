@@ -1,5 +1,6 @@
 package com.mysite.sbb.OAuth;
 
+import com.mysite.sbb.DTO.SiteUserDTO;
 import com.mysite.sbb.Enum.UserRole;
 import com.mysite.sbb.Model.PrincipalDetails;
 import com.mysite.sbb.Model.SiteUser;
@@ -60,12 +61,13 @@ public class PrincipalOauth2UserService extends DefaultOAuth2UserService {
             user = SiteUser.oauth2Register()
                     .username(username).password(password).email(email).role(role)
                     .provider(provider).providerId(providerId)
+                    .isNameChange(false)
                     .build();
             userRepository.save(user);
         } else {
             user = byUsername.get();
         }
 
-        return new PrincipalDetails(user, oAuth2UserInfo);
+        return new PrincipalDetails(SiteUserDTO.from(user), oAuth2UserInfo);
     }
 }

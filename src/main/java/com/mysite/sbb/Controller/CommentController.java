@@ -1,14 +1,11 @@
 package com.mysite.sbb.Controller;
 
-import com.mysite.sbb.AnswerForm;
 import com.mysite.sbb.CommentForm;
 import com.mysite.sbb.DTO.AnswerDTO;
 import com.mysite.sbb.DTO.CommentDTO;
 import com.mysite.sbb.DTO.SiteUserDTO;
-import com.mysite.sbb.Model.Answer;
 import com.mysite.sbb.Service.AnswerService;
 import com.mysite.sbb.Service.CommentService;
-import com.mysite.sbb.Service.CommentServiceImpl;
 import com.mysite.sbb.Service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -19,7 +16,6 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.security.Principal;
 
@@ -40,7 +36,7 @@ public class CommentController {
         SiteUserDTO siteUserDTO = userService.getUser(principal.getName());
         // 바인딩 오류 추가예정
         commentService.create(answerDTO, content, siteUserDTO);
-        return String.format("redirect:/question/detail/%s#answer_%s", answerDTO.getQuestion().getId(), answerDTO.getId());
+        return String.format("redirect:/question/question/detail/%s#answer_%s", answerDTO.getQuestion().getId(), answerDTO.getId());
     }
 
     // 보통 html에서 href로 요청하는건 get방식인듯...
@@ -52,7 +48,7 @@ public class CommentController {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "수정권한이 없습니다.");
         }
         commentForm.setContent(commentDTO.getContent());
-        return "comment_form";
+        return "/comment/comment_form";
     }
 
     // 수정하고 제출할때는 post방식으로 넘어온다.
@@ -61,14 +57,14 @@ public class CommentController {
     public String commentModify(@Valid CommentForm commentForm, BindingResult bindingResult
             ,@PathVariable("id") Integer id, Principal principal) {
         if(bindingResult.hasErrors()) {
-            return "comment_form";
+            return "/comment/comment_form";
         }
         CommentDTO commentDTO = commentService.getComment(id);
         if(!commentDTO.getAuthor().getUsername().equals(principal.getName())) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "수정권한이 없습니다.");
         }
         commentService.modify(commentDTO, commentForm.getContent());
-        return String.format("redirect:/question/detail/%s#answer_%s", commentDTO.getAnswer().getQuestion().getId(), commentDTO.getAnswer().getId());
+        return String.format("redirect:/question/question/detail/%s#answer_%s", commentDTO.getAnswer().getQuestion().getId(), commentDTO.getAnswer().getId());
     }
 
     @PreAuthorize("isAuthenticated()")
@@ -79,7 +75,7 @@ public class CommentController {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "삭제권한이 없습니다.");
         }
         commentService.delete(commentDTO);
-        return String.format("redirect:/question/detail/%s#answer_%s", commentDTO.getAnswer().getQuestion().getId(), commentDTO.getAnswer().getId());
+        return String.format("redirect:/question/question/detail/%s#answer_%s", commentDTO.getAnswer().getQuestion().getId(), commentDTO.getAnswer().getId());
     }
 
     @PreAuthorize("isAuthenticated()")
@@ -88,6 +84,6 @@ public class CommentController {
         CommentDTO commentDTO = commentService.getComment(id);
         SiteUserDTO siteUserDTO = userService.getUser(principal.getName());
         commentService.vote(commentDTO, siteUserDTO);
-        return String.format("redirect:/question/detail/%s#answer_%s", commentDTO.getAnswer().getQuestion().getId(), commentDTO.getAnswer().getId());
+        return String.format("redirect:/question/question/detail/%s#answer_%s", commentDTO.getAnswer().getQuestion().getId(), commentDTO.getAnswer().getId());
     }
 }
