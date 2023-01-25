@@ -46,7 +46,7 @@ public class QuestionController {
         Page<QuestionDTO> paging = questionService.getList(page, kw);
         model.addAttribute("paging", paging);
         model.addAttribute("kw", kw);
-        return "/question/question_list";
+        return "question/question_list";
     }
 
     @RequestMapping(value = "/detail/{id}")
@@ -54,13 +54,13 @@ public class QuestionController {
                             , AnswerForm answerForm) {
         QuestionDTO questionDTO = questionService.getQuestion(id);
         model.addAttribute("question", questionDTO);
-        return "question_detail";
+        return "question/question_detail";
     }
 
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/create")
     public String questionCreate(QuestionForm questionForm) {
-        return "question_form";
+        return "question/question_form";
     }
 
     // @GetMapping시 사용했던 questionCreate 메서드명과 동일하게 사용할 수 있다.
@@ -76,7 +76,7 @@ public class QuestionController {
     public String questionCreate(@Valid QuestionForm questionForm, BindingResult bindingResult, Principal principal) {
         // 오류가 있는 경우엔 다시 폼을 작성하는 화면을 렌더링하게한다.
         if (bindingResult.hasErrors()) {
-            return "question_form";
+            return "question/question_form";
         }
         SiteUserDTO siteUserDTO = userService.getUser(principal.getName());
         questionService.create(questionForm.getSubject(), questionForm.getContent(), siteUserDTO);
@@ -112,7 +112,7 @@ public class QuestionController {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "수정권한이 없습니다.");
         }
         questionService.modify(questionDTO, questionForm.getSubject(), questionForm.getContent());
-        return String.format("redirect:/question/question/detail/%s", id);
+        return String.format("redirect:/question/detail/%s", id);
     }
 
     @PreAuthorize("isAuthenticated()")
@@ -132,6 +132,6 @@ public class QuestionController {
         QuestionDTO questionDTO = questionService.getQuestion(id);
         SiteUserDTO siteUser = userService.getUser(principal.getName());
         questionService.vote(questionDTO, siteUser);
-        return String.format("redirect:/question/question/detail/%s", id);
+        return String.format("redirect:/question/detail/%s", id);
     }
 }
