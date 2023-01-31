@@ -1,0 +1,11 @@
+<form
+      th:action="@{|/comment/create/${answer.id}|}" method="post" class="my-3"
+      th:id="|comment_textarea${answer.id}|"
+      style="display: none">
+  <div class="input-group">
+    <textarea sec:authorize="isAnonymous()" disabled =rows="6" class="form-control"></textarea>
+    <textarea sec:authorize="isAuthenticated()" name="content" rows="4" class="form-control"></textarea>
+    <!--                    <textarea name="content" id="content" rows="4"></textarea>-->
+    <input type="submit" value="대댓글추가" class="input-group-text">
+  </div>
+</form>
