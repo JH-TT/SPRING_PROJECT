@@ -1,27 +1,60 @@
 <html layout:decorate="~{layout}">
+<head>
+    <link href='https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css' rel='stylesheet'>
+    <link href='https://use.fontawesome.com/releases/v5.7.2/css/all.css' rel='stylesheet'>
+    <style>
+        .container {
+            max-width: 560px;
+        }
+        .field-error {
+            border-color: #dc3545;
+            color: #dc3545;
+        }
+    </style>
+</head>
 <div layout:fragment="content" class="container my-3">
     <div class="my-3 border-bottom">
         <div>
             <h4>회원가입</h4>
         </div>
     </div>
-    <form th:action="@{/user/signup}" th:object="${userCreateForm}" method="post">
+    <form th:action th:object="${userCreateForm}" method="post">
         <div th:replace="form_errors :: formErrorsFragment"></div>
         <div class="mb-3">
             <label for="username" class="form-label">사용자ID</label>
-            <input type="text" th:field="*{username}" class="form-control">
+            <input type="text" id="username" th:field="*{username}"
+                   th:errorclass="field-error"
+                   class="form-control">
+            <div class="field-error" th:errors="*{username}">
+                이름 오류
+            </div>
         </div>
         <div class="mb-3">
             <label for="password1" class="form-label">비밀번호</label>
-            <input type="password" th:field="*{password1}" class="form-control">
+            <input type="password" id="password1"
+                   th:errorclass="field-error"
+                   th:field="*{password1}" class="form-control">
+            <div class="field-error" th:errors="*{password1}">
+                비밀번호1 오류
+            </div>
         </div>
         <div class="mb-3">
             <label for="password2" class="form-label">비밀번호 확인</label>
-            <input type="password" th:field="*{password2}" class="form-control">
+            <input type="password" id="password2"
+                   th:errorclass="field-error"
+                   th:field="*{password2}" class="form-control">
+            <div class="field-error" th:errors="*{password2}">
+                비밀번호 확인 오류
+            </div>
         </div>
         <div class="mb-3">
             <label for="email" class="form-label">이메일</label>
-            <input type="email" th:field="*{email}" class="form-control">
+            <input type="email" th:field="*{email}"
+                   id="email" th:errorclass="field-error"
+                   class="form-control">
+            <div class="field-error" th:errors="*{email}">
+                이메일 오류
+            </div>
         </div>
         <button type="submit" class="btn btn-primary">회원가입</button>
     </form>

@@ -2,19 +2,23 @@ package com.mysite.sbb.Controller;
 
 
 import com.mysite.sbb.DTO.SiteUserDTO;
+import com.mysite.sbb.DataNotFoundException;
 import com.mysite.sbb.Model.PrincipalDetails;
 import com.mysite.sbb.Model.SiteUser;
 import com.mysite.sbb.Service.UserService;
 import com.mysite.sbb.UserCreateForm;
+import com.mysite.sbb.UsernameForm;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.hibernate.Session;
+import org.springframework.boot.Banner;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -69,7 +73,7 @@ public class UserController {
 
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/setNickName")
-    public String goSettingNickNamePage(Authentication authentication) {
+    public String goSettingNickNamePage(@ModelAttribute("usernameForm") UsernameForm usernameForm ,Authentication authentication) {
         PrincipalDetails principal = (PrincipalDetails) authentication.getPrincipal();
         SiteUserDTO siteUser = principal.getUser();
         log.info("siteUser={}", siteUser.toString());
@@ -81,15 +85,23 @@ public class UserController {
     }
 
     @PostMapping("/setNickName")
-    public String setNickName(@Validated @ModelAttribute("username") String username,
-                              @AuthenticationPrincipal OAuth2User oAuth2UserPrincipal,
-                              BindingResult bindingResult) {
+    public String setNickName(@Validated @ModelAttribute UsernameForm usernameForm,
+                              BindingResult bindingResult,
+                              @AuthenticationPrincipal OAuth2User oAuth2UserPrincipal) {
         if (bindingResult.hasErrors()) {
             return "login/setnickname";
         }
-        String email = (String) oAuth2UserPrincipal.getAttributes().get("email");
-        log.info("email={}", email);
-        userService.updateUserName(username, email);
+
+        try{
+            SiteUserDTO siteUserDTO = userService.getUser(usernameForm.getUsername());
+            bindingResult.rejectValue("username", "changeNameFailed", "중복되는 이름입니다.");
+            return "login/setnickname";
+        } catch (DataNotFoundException e) {
+            String email = (String) oAuth2UserPrincipal.getAttributes().get("email");
+            log.info("email={}", email);
+            log.info("username={}", usernameForm.getUsername());
+            userService.updateUserName(usernameForm.getUsername(), email);
+        }
 
         return "redirect:/";
     }
