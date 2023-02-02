@@ -1,5 +1,5 @@
 body {
-    background:#2c2c2c;
+    background:#001DFF;
     font-family:"Raleway";
 }
 .form {
@@ -74,22 +74,36 @@ body {
     border-right:10px solid transparent;
     border-bottom:10px solid #f5f5f5;
 }
-.form.signup .arrow {
+.form.signin .arrow {
     left:calc(calc(100% / 3) / 2);
 }
-.form.signin .arrow {
+.form.signup .arrow {
     left:calc(calc(100% / 3) + calc(calc(100% / 3) / 2.2)) ;
 }
 .form.reset .arrow {
     left:calc(calc(calc(100% / 3) * 2) + calc(calc(100% / 3) / 3)) ;
 }
 
-.form.signin .form-elements > div:nth-child(3) {
+.form.signin .form-elements > div:nth-child(1),
+.form.signin .form-elements > div:nth-child(4){
     height:0px;
     opacity:0;
 }
 .form.reset .form-elements > div:nth-child(2),
-.form.reset .form-elements > div:nth-child(3) {
+.form.reset .form-elements > div:nth-child(3),
+.form.reset .form-elements > div:nth-child(4){
     height:0px;
     opacity:0;
+}
+
+img {
+    width: 40px;
+    height: 40px;
+    object-fit: cover;
+    border-radius: 50%;
+    position: relative
+}
+.bordert {
+    border-top: 1px solid #aaa;
+    position: relative
 }

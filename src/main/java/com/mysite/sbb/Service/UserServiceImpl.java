@@ -2,6 +2,7 @@ package com.mysite.sbb.Service;
 
 import com.mysite.sbb.DTO.SiteUserDTO;
 import com.mysite.sbb.DataNotFoundException;
+import com.mysite.sbb.Enum.UserRole;
 import com.mysite.sbb.Model.SiteUser;
 import com.mysite.sbb.Repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -30,6 +31,20 @@ public class UserServiceImpl implements UserService{
                 .isNameChange(true) // 직접 아이디를 만든 유저는 바로 true로 넘긴다.
                 .build();
         return SiteUserDTO.from(userRepository.save(siteUserDTO.toEntity()));
+//        SiteUser user = SiteUser.oauth2Register()
+//                .username(username).password(password).email(email).role(UserRole.USER)
+//                .provider(null).providerId(null)
+//                .isNameChange(true)
+//                .build();
+//        return SiteUserDTO.from(userRepository.save(user));
+    }
+    public SiteUserDTO create2(String username, String email, String password) {
+        SiteUser user = SiteUser.oauth2Register()
+                .username(username).password(password).email(email).role(UserRole.USER)
+                .provider(null).providerId(null)
+                .isNameChange(true)
+                .build();
+        return SiteUserDTO.from(userRepository.save(user));
     }
 
     @Override

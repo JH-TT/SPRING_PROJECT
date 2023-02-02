@@ -1,41 +1,67 @@
-<!DOCTYPE html>
-<html lang="en">
+<html layout:decorate="~{layout}">
+<div layout:fragment="content" class="container">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
     <link rel="stylesheet" type="text/css" th:href="@{/login_and_signup2.css}"
         href="login_and_signup2.css">
+<!--    <link rel="stylesheet" type="text/css" th:href="@{/css/login.css}" href="../../static/css/login.css">-->
+<!--    <link th:href="@{/css/bootstrap.min.css}" href="../../static/css/bootstrap.min.css" rel="stylesheet">-->
+<!--    <link href='https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css' rel='stylesheet'>-->
+<!--    <link href='https://use.fontawesome.com/releases/v5.7.2/css/all.css' rel='stylesheet'>-->
 
     <title>Title</title>
 </head>
 <body>
-<div class="form signup">
-  <div class="form-header">
-    <div class="show-signup">Sign Up</div>
-    <div class="show-signin">Sign In</div>
-    <div class="show-reset">Reset</div>
-  </div>
-  <div class="arrow"></div>
-  <div class="form-elements">
-    <div class="form-element">
-      <input type="text" placeholder="Username">
-    </div>
-    <div class="form-element">
-      <input type="password" placeholder="Password">
-    </div>
-    <div class="form-element">
-      <input type="password" placeholder="Confirm password">
-    </div>
-    <div class="form-element">
-      <input type="email" placeholder="Email">
-    </div>
-    <div class="form-element">
-      <button id="submit-btn">Sign Up</button>
+<div class="row">
+  <div class="offset-md-2 col-lg-5 col-md-7 offset-lg-4 offset-md-3">
+    <div class="panel border bg-black">
+    <div class="form signup">
+      <div class="form-header">
+        <div class="show-signin">Sign In</div>
+        <div class="show-signup">Sign Up</div>
+        <div class="show-reset">Reset</div>
+      </div>
+      <div class="arrow"></div>
+        <form>
+          <div class="form-elements">
+            <div class="form-element">
+              <input type="text" placeholder="Username">
+            </div>
+            <div class="form-element">
+              <input type="email" placeholder="Email">
+            </div>
+            <div class="form-element">
+              <input type="password" placeholder="Password">
+            </div>
+            <div class="form-element">
+              <input type="password" placeholder="Confirm password">
+            </div>
+            <div class="form-element">
+              <button id="submit-btn">Sign Up</button>
+            </div>
+          </div>
+          <div class="mx-3 my-2 py-2 bordert">
+            <div class="text-center py-3">
+              <a href="/oauth2/authorization/naver" class="px-2">
+                <img th:src="@{/img/btnG_iconRound.png}"
+                      src="../../static/img/btnG_iconRound.png"/>
+              </a>
+              <a href="/oauth2/authorization/google" class="px-2">
+                <img src="https://www.freepnglogos.com/uploads/google-logo-png/google-logo-png-suite-everything-you-need-know-about-google-newest-0.png" alt="">
+              </a>
+              <a href="https://www.github.com" class="px-2">
+                <img src="https://www.freepnglogos.com/uploads/512x512-logo-png/512x512-logo-github-icon-35.png" alt="">
+              </a>
+            </div>
+          </div>
+        </form>
+      </div>
     </div>
   </div>
 </div>
-
+</div>
 <script th:src="@{/login_and_signup2.js}"
         src="login_and_signup2.js"></script>
 
