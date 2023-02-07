@@ -4,21 +4,17 @@ package com.mysite.sbb.Controller;
 import com.mysite.sbb.DTO.SiteUserDTO;
 import com.mysite.sbb.DataNotFoundException;
 import com.mysite.sbb.Model.PrincipalDetails;
-import com.mysite.sbb.Model.SiteUser;
 import com.mysite.sbb.Service.UserService;
 import com.mysite.sbb.UserCreateForm;
 import com.mysite.sbb.UsernameForm;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.hibernate.Session;
-import org.springframework.boot.Banner;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -111,10 +107,10 @@ public class UserController {
     public String formLoginInfo(Authentication authentication, @AuthenticationPrincipal PrincipalDetails principalDetails) {
         PrincipalDetails principal = (PrincipalDetails) authentication.getPrincipal();
         SiteUserDTO siteUser = principal.getUser();
-        System.out.println("siteUser = " + siteUser);
+        log.info("siteUser = " + siteUser.toString());
 
         SiteUserDTO siteUser1 = principalDetails.getUser();
-        System.out.println("siteUser1 = " + siteUser1);
+        log.info("siteUser1 = " + siteUser1.toString());
 
         return siteUser.toString();
     }
@@ -124,7 +120,7 @@ public class UserController {
     public String oauthLoginInfo(Authentication authentication, @AuthenticationPrincipal OAuth2User oAuth2UserPrincipal) {
         OAuth2User oAuth2User = (OAuth2User) authentication.getPrincipal();
         Map<String, Object> attributes = oAuth2User.getAttributes();
-        System.out.println("attributes = " + attributes);
+        log.info("attributes = " + attributes);
 
         Map<String, Object> attributes1 = oAuth2UserPrincipal.getAttributes();
 
@@ -142,6 +138,7 @@ public class UserController {
         } else {
             result = result + "OAuth2 로그인 : " + principal;
         }
+        log.info("result = {}", result);
         return result;
     }
 }
