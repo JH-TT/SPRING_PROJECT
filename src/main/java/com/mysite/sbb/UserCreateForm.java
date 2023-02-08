@@ -2,8 +2,10 @@ package com.mysite.sbb;
 
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.validator.constraints.Range;
 
 import javax.validation.constraints.Email;
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
 
@@ -11,13 +13,15 @@ import javax.validation.constraints.Size;
 @Setter
 public class UserCreateForm {
     @Size(min = 3, max = 25)
-    @NotEmpty(message = "사용자ID는 필수항목입니다.")
+    @NotBlank
     private String username;
 
     @NotEmpty(message = "비밀번호는 필수항목입니다.")
+    @NotBlank
     private String password1;
 
     @NotEmpty(message = "비밀번호 확인은 필수항목입니다.")
+    @NotBlank
     private String password2;
 
 

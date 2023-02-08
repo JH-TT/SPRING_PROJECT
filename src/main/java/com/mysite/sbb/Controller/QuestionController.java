@@ -3,13 +3,16 @@ package com.mysite.sbb.Controller;
 import com.mysite.sbb.AnswerForm;
 import com.mysite.sbb.DTO.QuestionDTO;
 import com.mysite.sbb.DTO.SiteUserDTO;
+import com.mysite.sbb.Model.PrincipalDetails;
 import com.mysite.sbb.QuestionForm;
 import com.mysite.sbb.Service.QuestionService;
 import com.mysite.sbb.Service.UserService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Controller;
@@ -21,6 +24,7 @@ import org.springframework.web.server.ResponseStatusException;
 import javax.validation.Valid;
 import java.security.Principal;
 
+@Slf4j
 @RequiredArgsConstructor
 @Controller
 @RequestMapping("/question")
@@ -29,14 +33,6 @@ public class QuestionController {
     private final QuestionService questionService;
 
     private final UserService userService;
-
-//    @RequestMapping("/list")
-//    public String list(Model model) {
-//        List<Question> questionList = questionService.getList();
-//        // questionList라는 이름으로 질문목록을 model객체에 저장한다.
-//        model.addAttribute("questionList", questionList);
-//        return "question_list";
-//    }
 
     // 스프링부트의 페이징은 첫페이지 번호가 1이 아닌 0이다.
     @RequestMapping("/list")
@@ -78,6 +74,7 @@ public class QuestionController {
         if (bindingResult.hasErrors()) {
             return "question/question_form";
         }
+        log.info("principal = {}", principal);
         SiteUserDTO siteUserDTO = userService.getUser(principal.getName());
         questionService.create(questionForm.getSubject(), questionForm.getContent(), siteUserDTO);
         return "redirect:/question/list"; // 질문 저장후 질문목록으로 이동

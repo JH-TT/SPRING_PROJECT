@@ -3,10 +3,14 @@ package com.mysite.sbb.Service;
 import com.mysite.sbb.DTO.SiteUserDTO;
 import com.mysite.sbb.DataNotFoundException;
 import com.mysite.sbb.Enum.UserRole;
+import com.mysite.sbb.Model.PrincipalDetails;
 import com.mysite.sbb.Model.SiteUser;
 import com.mysite.sbb.Repository.UserRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
@@ -21,6 +25,7 @@ public class UserServiceImpl implements UserService{
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private final AuthenticationManager authenticationManager;
 
     @Override
     public SiteUserDTO create(String username, String email, String password) {
@@ -37,6 +42,20 @@ public class UserServiceImpl implements UserService{
 //                .isNameChange(true)
 //                .build();
 //        return SiteUserDTO.from(userRepository.save(user));
+    }
+
+    @Override
+    public SiteUserDTO create(SiteUserDTO siteUserDTO) {
+        SiteUser user = SiteUser.builder()
+                .username(siteUserDTO.getUsername())
+                .password(siteUserDTO.getPassword())
+                .email(siteUserDTO.getEmail())
+                .role(siteUserDTO.getRole())
+                .provider(siteUserDTO.getProvider())
+                .providerId(siteUserDTO.getProviderId())
+                .isNameChange(siteUserDTO.isNameChange())
+                .build();
+        return SiteUserDTO.from(userRepository.save(user));
     }
     public SiteUserDTO create2(String username, String email, String password) {
         SiteUser user = SiteUser.oauth2Register()
@@ -59,6 +78,12 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
+    public Optional<SiteUser> getUserByEmail(String email) {
+        return userRepository.findByemail(email);
+    }
+
+    @Override
+    @Transactional
     public void updateUserName(String username, String email) {
         Optional<SiteUser> siteUser = userRepository.findByemail(email);
         if (siteUser.isPresent()) {

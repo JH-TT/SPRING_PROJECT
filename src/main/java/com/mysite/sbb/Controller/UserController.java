@@ -20,6 +20,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.security.Principal;
 import java.util.Map;
 
 @Slf4j
@@ -71,6 +72,7 @@ public class UserController {
     @GetMapping("/setNickName")
     public String goSettingNickNamePage(@ModelAttribute("usernameForm") UsernameForm usernameForm ,Authentication authentication) {
         PrincipalDetails principal = (PrincipalDetails) authentication.getPrincipal();
+        log.info("goSettingNickNamePage.name = {}", authentication.getName());
         SiteUserDTO siteUser = principal.getUser();
         log.info("siteUser={}", siteUser.toString());
         boolean isCheck = siteUser.isNameChange();
@@ -83,7 +85,7 @@ public class UserController {
     @PostMapping("/setNickName")
     public String setNickName(@Validated @ModelAttribute UsernameForm usernameForm,
                               BindingResult bindingResult,
-                              @AuthenticationPrincipal OAuth2User oAuth2UserPrincipal) {
+                              @AuthenticationPrincipal PrincipalDetails principalDetails) {
         if (bindingResult.hasErrors()) {
             return "login/setnickname";
         }
@@ -93,7 +95,7 @@ public class UserController {
             bindingResult.rejectValue("username", "changeNameFailed", "중복되는 이름입니다.");
             return "login/setnickname";
         } catch (DataNotFoundException e) {
-            String email = (String) oAuth2UserPrincipal.getAttributes().get("email");
+            String email = (String) principalDetails.getAttributes().get("email");
             log.info("email={}", email);
             log.info("username={}", usernameForm.getUsername());
             userService.updateUserName(usernameForm.getUsername(), email);
@@ -104,13 +106,10 @@ public class UserController {
 
     @GetMapping("/form/loginInfo")
     @ResponseBody
-    public String formLoginInfo(Authentication authentication, @AuthenticationPrincipal PrincipalDetails principalDetails) {
-        PrincipalDetails principal = (PrincipalDetails) authentication.getPrincipal();
-        SiteUserDTO siteUser = principal.getUser();
+    public String formLoginInfo(Principal principal) {
+//        PrincipalDetails principal = (PrincipalDetails) authentication.getPrincipal();
+        SiteUserDTO siteUser = userService.getUser(principal.getName());
         log.info("siteUser = " + siteUser.toString());
-
-        SiteUserDTO siteUser1 = principalDetails.getUser();
-        log.info("siteUser1 = " + siteUser1.toString());
 
         return siteUser.toString();
     }

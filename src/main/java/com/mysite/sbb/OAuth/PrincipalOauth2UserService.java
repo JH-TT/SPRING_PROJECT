@@ -10,6 +10,7 @@ import com.mysite.sbb.OAuth.userinfo.NaverUserInfo;
 import com.mysite.sbb.OAuth.userinfo.OAuth2UserInfo;
 import com.mysite.sbb.Repository.TestUserRepository;
 import com.mysite.sbb.Repository.UserRepository;
+import com.mysite.sbb.Service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
@@ -55,19 +56,21 @@ public class PrincipalOauth2UserService extends DefaultOAuth2UserService {
         UserRole role = UserRole.USER;
 
         Optional<SiteUser> byUsername = userRepository.findByemail(email);
-        SiteUser user;
+        SiteUserDTO user = new SiteUserDTO();
 
         if (byUsername.isEmpty()) {
-            user = SiteUser.oauth2Register()
-                    .username(username).password(password).email(email).role(role)
-                    .provider(provider).providerId(providerId)
-                    .isNameChange(false)
-                    .build();
-            userRepository.save(user);
+            user.setUsername(username);
+            user.setPassword(password);
+            user.setEmail(email);
+            user.setRole(role);
+            user.setProvider(provider);
+            user.setProviderId(providerId);
+            user.setNameChange(false);
+            userRepository.save(user.toEntity());
         } else {
-            user = byUsername.get();
+            user = SiteUserDTO.from(byUsername.get());
         }
 
-        return new PrincipalDetails(SiteUserDTO.from(user), oAuth2UserInfo);
+        return new PrincipalDetails(user, oAuth2UserInfo);
     }
 }
