@@ -1,6 +1,8 @@
 package com.mysite.sbb.Service;
 
+import com.mysite.sbb.DTO.SiteUserDTO;
 import com.mysite.sbb.Enum.UserRole;
+import com.mysite.sbb.Model.PrincipalDetails;
 import com.mysite.sbb.Model.SiteUser;
 import com.mysite.sbb.Repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -35,6 +37,6 @@ public class UserSecurityService implements UserDetailsService {
             authorities.add(new SimpleGrantedAuthority(UserRole.USER.getValue()));
         }
 
-        return new User(_siteUser.get().getUsername(), _siteUser.get().getPassword(), authorities);
+        return new PrincipalDetails(SiteUserDTO.from(_siteUser.get()));
     }
 }

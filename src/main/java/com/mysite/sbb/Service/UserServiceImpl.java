@@ -34,14 +34,9 @@ public class UserServiceImpl implements UserService{
                 .email(email)
                 .password(passwordEncoder.encode(password))
                 .isNameChange(true) // 직접 아이디를 만든 유저는 바로 true로 넘긴다.
+                .provider("EMAIL")
                 .build();
         return SiteUserDTO.from(userRepository.save(siteUserDTO.toEntity()));
-//        SiteUser user = SiteUser.oauth2Register()
-//                .username(username).password(password).email(email).role(UserRole.USER)
-//                .provider(null).providerId(null)
-//                .isNameChange(true)
-//                .build();
-//        return SiteUserDTO.from(userRepository.save(user));
     }
 
     @Override
@@ -54,14 +49,6 @@ public class UserServiceImpl implements UserService{
                 .provider(siteUserDTO.getProvider())
                 .providerId(siteUserDTO.getProviderId())
                 .isNameChange(siteUserDTO.isNameChange())
-                .build();
-        return SiteUserDTO.from(userRepository.save(user));
-    }
-    public SiteUserDTO create2(String username, String email, String password) {
-        SiteUser user = SiteUser.oauth2Register()
-                .username(username).password(password).email(email).role(UserRole.USER)
-                .provider(null).providerId(null)
-                .isNameChange(true)
                 .build();
         return SiteUserDTO.from(userRepository.save(user));
     }
@@ -84,13 +71,15 @@ public class UserServiceImpl implements UserService{
 
     @Override
     @Transactional
-    public void updateUserName(String username, String email) {
+    public void updateUserName(String username, String email, PrincipalDetails principalDetails) {
         Optional<SiteUser> siteUser = userRepository.findByemail(email);
         if (siteUser.isPresent()) {
-            SiteUserDTO siteUserDTO = SiteUserDTO.from(siteUser.get());
-            siteUserDTO.setUsername(username);
-            siteUserDTO.setNameChange(true);
-            userRepository.save(siteUserDTO.toEntity());
+//            SiteUserDTO siteUserDTO = SiteUserDTO.from(siteUser.get());
+//            siteUserDTO.setUsername(username);
+//            siteUserDTO.setNameChange(true);
+//            userRepository.save(siteUserDTO.toEntity());
+            siteUser.get().setUsername(username);
+            siteUser.get().setNameChange(true);
         } else {
             throw new DataNotFoundException("siteuser not found");
         }

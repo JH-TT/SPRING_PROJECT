@@ -98,7 +98,7 @@ public class UserController {
             String email = (String) principalDetails.getAttributes().get("email");
             log.info("email={}", email);
             log.info("username={}", usernameForm.getUsername());
-            userService.updateUserName(usernameForm.getUsername(), email);
+            userService.updateUserName(usernameForm.getUsername(), email, principalDetails);
         }
 
         return "redirect:/";

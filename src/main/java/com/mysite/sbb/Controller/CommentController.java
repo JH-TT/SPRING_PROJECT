@@ -36,7 +36,7 @@ public class CommentController {
         SiteUserDTO siteUserDTO = userService.getUser(principal.getName());
         // 바인딩 오류 추가예정
         commentService.create(answerDTO, content, siteUserDTO);
-        return String.format("redirect:/question/question/detail/%s#answer_%s", answerDTO.getQuestion().getId(), answerDTO.getId());
+        return String.format("redirect:/question/detail/%s#answer_%s", answerDTO.getQuestion().getId(), answerDTO.getId());
     }
 
     // 보통 html에서 href로 요청하는건 get방식인듯...
@@ -64,7 +64,7 @@ public class CommentController {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "수정권한이 없습니다.");
         }
         commentService.modify(commentDTO, commentForm.getContent());
-        return String.format("redirect:/question/question/detail/%s#answer_%s", commentDTO.getAnswer().getQuestion().getId(), commentDTO.getAnswer().getId());
+        return String.format("redirect:/question/detail/%s#answer_%s", commentDTO.getAnswer().getQuestion().getId(), commentDTO.getAnswer().getId());
     }
 
     @PreAuthorize("isAuthenticated()")
@@ -75,7 +75,7 @@ public class CommentController {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "삭제권한이 없습니다.");
         }
         commentService.delete(commentDTO);
-        return String.format("redirect:/question/question/detail/%s#answer_%s", commentDTO.getAnswer().getQuestion().getId(), commentDTO.getAnswer().getId());
+        return String.format("redirect:/question/detail/%s#answer_%s", commentDTO.getAnswer().getQuestion().getId(), commentDTO.getAnswer().getId());
     }
 
     @PreAuthorize("isAuthenticated()")
@@ -84,6 +84,6 @@ public class CommentController {
         CommentDTO commentDTO = commentService.getComment(id);
         SiteUserDTO siteUserDTO = userService.getUser(principal.getName());
         commentService.vote(commentDTO, siteUserDTO);
-        return String.format("redirect:/question/question/detail/%s#answer_%s", commentDTO.getAnswer().getQuestion().getId(), commentDTO.getAnswer().getId());
+        return String.format("redirect:/question/detail/%s#answer_%s", commentDTO.getAnswer().getQuestion().getId(), commentDTO.getAnswer().getId());
     }
 }
