@@ -83,12 +83,10 @@ public class QuestionServiceImpl implements QuestionService{
 
     @Override
     public QuestionDTO getQuestion(Integer id) {
-        Optional<Question> question = questionRepository.findById(id);
-        if(question.isPresent()) {
-            return QuestionDTO.from(question.get());
-        } else {
-            throw new DataNotFoundException("question not found");
-        }
+        Question q = questionRepository.findById(id).orElseThrow(
+                () -> new DataNotFoundException("question not found")
+        );
+        return QuestionDTO.from(q);
     }
 
     @Override

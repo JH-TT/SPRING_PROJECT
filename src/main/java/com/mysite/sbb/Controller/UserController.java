@@ -11,8 +11,11 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
@@ -30,6 +33,7 @@ import java.util.Map;
 public class UserController {
 
     private final UserService userService;
+    private final AuthenticationManager authenticationManager;
 
     // get요청시 회원가입 템플릿 렌더링
     @GetMapping("/signup")
@@ -99,6 +103,10 @@ public class UserController {
             log.info("email={}", email);
             log.info("username={}", usernameForm.getUsername());
             userService.updateUserName(usernameForm.getUsername(), email, principalDetails);
+            SiteUserDTO siteUserDTO = userService.getUser(usernameForm.getUsername());
+            Authentication authentication = authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(usernameForm.getUsername(), siteUserDTO.getPassword()));
+            SecurityContextHolder.getContext().setAuthentication(authentication);
         }
 
         return "redirect:/";

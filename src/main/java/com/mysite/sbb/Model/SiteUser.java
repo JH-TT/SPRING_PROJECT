@@ -1,5 +1,6 @@
 package com.mysite.sbb.Model;
 
+import com.mysite.sbb.DTO.SiteUserDTO;
 import com.mysite.sbb.Enum.UserRole;
 import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
@@ -59,5 +60,10 @@ public class SiteUser {
         this.provider = provider;
         this.providerId = providerId;
         this.isNameChange = isNameChange;
+    }
+
+    public void updateUserName(String username) {
+        this.username = username;
+        this.isNameChange = true;
     }
 }
