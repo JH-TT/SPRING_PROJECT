@@ -10,7 +10,7 @@ public interface UserService {
     SiteUserDTO create(String username, String email, String password);
     SiteUserDTO create(SiteUserDTO siteUserDTO);
     SiteUserDTO getUser(String username);
-    Optional<SiteUser> getUserByEmail(String email);
+    SiteUserDTO getUserByEmail(String email);
 
     void updateUserName(String username, String email, PrincipalDetails principalDetails);
 //    SiteUser updateUserName(String username, String email);

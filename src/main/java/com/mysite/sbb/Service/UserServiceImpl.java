@@ -58,8 +58,11 @@ public class UserServiceImpl implements UserService{
 
     @Override
     @Transactional(readOnly = true)
-    public Optional<SiteUser> getUserByEmail(String email) {
-        return userRepository.findByemail(email);
+    public SiteUserDTO getUserByEmail(String email) {
+        SiteUser siteUser = userRepository.findByemail(email).orElseThrow(
+                () -> new DataNotFoundException("해당 회원이 존재하지 않습니다.")
+        );
+        return SiteUserDTO.from(siteUser);
     }
 
     @Override

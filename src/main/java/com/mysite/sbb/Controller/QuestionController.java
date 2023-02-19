@@ -37,7 +37,7 @@ public class QuestionController {
     private final UserService userService;
 
     // 스프링부트의 페이징은 첫페이지 번호가 1이 아닌 0이다.
-    @RequestMapping("/list")
+    @GetMapping("/list")
     public String list(Model model, @RequestParam(value = "page", defaultValue = "0") int page,
                        @RequestParam(value = "kw", defaultValue = "") String kw,
                        @AuthenticationPrincipal OAuth2User oAuth2UserPrincipal) {
@@ -87,9 +87,7 @@ public class QuestionController {
     @GetMapping("/modify/{id}")
     public String questionModify(QuestionForm questionForm, @PathVariable("id") Integer id, Principal principal) {
         QuestionDTO questionDTO = questionService.getQuestion(id);
-        if(!questionDTO.getAuthor().getUsername().equals(principal.getName())) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "수정권한이 없습니다.");
-        }
+        userNameValidation(principal, questionDTO);
         // 수정할 질문의 제목과 내용을 화면에 보여주기 위해 Form객체에 값을 담아서 템플릿으로 전달한다.
         // 이게 없으면 값이 채워지지 않는다.
         questionForm.setSubject(questionDTO.getSubject());
@@ -108,9 +106,7 @@ public class QuestionController {
             return "/question/question_form";
         }
         QuestionDTO questionDTO = questionService.getQuestion(id);
-        if(!questionDTO.getAuthor().getUsername().equals(principal.getName())) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "수정권한이 없습니다.");
-        }
+        userNameValidation(principal, questionDTO);
         questionService.modify(questionDTO, questionForm.getSubject(), questionForm.getContent());
         return String.format("redirect:/question/detail/%s", id);
     }
@@ -133,5 +129,11 @@ public class QuestionController {
         SiteUserDTO siteUser = userService.getUser(principal.getName());
         questionService.vote(questionDTO, siteUser);
         return String.format("redirect:/question/detail/%s", id);
+    }
+
+    private void userNameValidation(Principal principal, QuestionDTO questionDTO) {
+        if(!questionDTO.getAuthor().getUsername().equals(principal.getName())) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "수정권한이 없습니다.");
+        }
     }
 }

@@ -35,7 +35,9 @@ public class Answer {
     private LocalDateTime modifiedDate;
 
     // 한 질문에 여러개의 댓글을 달 수 있으니 ManyToOne을 넣는다.
+//    @ManyToOne(fetch = FetchType.LAZY)
     @ManyToOne
+    @JoinColumn(name = "question_id")
     private Question question;
 
     @ManyToOne

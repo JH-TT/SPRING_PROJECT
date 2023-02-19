@@ -41,6 +41,7 @@ public class Question {
     // CascadeType.REMOVE -> 질문이 삭제되면 달린 답변들도 전부 삭제하기 위함.
     // FetchType.LAZY -> 필요시점에 데이터를 가져오기 위함.
     @OneToMany(mappedBy = "question", cascade = CascadeType.REMOVE, fetch = FetchType.EAGER)
+//    @OneToMany(mappedBy = "question", cascade = CascadeType.ALL)
     private List<Answer> answerList;
 
     // 여러개의 질문이 한 명의 사용자에게 작성될 수 있으니 ManyToOne이다.

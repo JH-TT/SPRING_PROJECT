@@ -36,16 +36,11 @@ public class AnswerController {
     @PreAuthorize("isAuthenticated()")
     @PostMapping("/create/{id}")
     public String createAnswer(Model model, @PathVariable("id") Integer id
-                                , @Valid AnswerForm answerForm, BindingResult bindingResult, @AuthenticationPrincipal OAuth2User oAuth2UserPrincipal, Principal principal){
+                                , @Valid AnswerForm answerForm, BindingResult bindingResult, @AuthenticationPrincipal PrincipalDetails principal){
         QuestionDTO questionDTO = questionService.getQuestion(id);
-        SiteUserDTO siteUserDTO;
-        if(oAuth2UserPrincipal == null) {
-            siteUserDTO = userService.getUser(principal.getName());
-        } else {
-            siteUserDTO = userService.getUser(((PrincipalDetails) oAuth2UserPrincipal).getUser().getUsername());
-        }
-        log.info("siteUserDTO={}", siteUserDTO.getUsername());
-
+        SiteUserDTO siteUserDTO = userService.getUserByEmail(principal.getUser().getEmail());
+        log.info("siteUser name = {}", siteUserDTO.getUsername());
+        log.info("siteUser email = {}", siteUserDTO.getEmail());
         if(bindingResult.hasErrors()) {
             model.addAttribute("question", questionDTO);
             return "/question/question_detail";
@@ -56,9 +51,10 @@ public class AnswerController {
 
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/modify/{id}")
-    public String answerModify(AnswerForm answerForm, @PathVariable("id") Integer id, Principal principal) {
+    public String answerModify(AnswerForm answerForm, @PathVariable("id") Integer id, @AuthenticationPrincipal PrincipalDetails principal) {
         AnswerDTO answerDTO = answerService.getAnswer(id);
-        if(!answerDTO.getAuthor().getUsername().equals(principal.getName())) {
+        String email = principal.getUser().getEmail();
+        if(!answerDTO.getAuthor().getUsername().equals(userService.getUserByEmail(email).getUsername())) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "수정권한이 없습니다.");
         }
         answerForm.setContent(answerDTO.getContent());
