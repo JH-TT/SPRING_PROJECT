@@ -79,6 +79,7 @@ public class QuestionController {
         }
         log.info("principal = {}", principal);
         SiteUserDTO siteUserDTO = userService.getUser(principal.getName());
+//        SiteUserDTO siteUserDTO = userService.getUserByEmail(principal.getUser().getEmail());
         questionService.create(questionForm.getSubject(), questionForm.getContent(), siteUserDTO);
         return "redirect:/question/list"; // 질문 저장후 질문목록으로 이동
     }
