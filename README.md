@@ -86,3 +86,10 @@
 - 엔티티 연관관계들을 보면 FetchType이 EAGER로 돼있는게 많은데, 가급적 LAZY로 하는것이 좋다고 해서 LAZY로 바꾸는중
   - 즉시로딩은 예상치 못한 쿼리가 나갈 수 있고, N+1 문제를 일으킨다.
   - 그런데 고치는 과정중에 LazyInitializationException이 발생하는데 이는 Service단에서 Transaction이 끝나기 전에 DTO에 설정해서 넘기는 방식을 한다.
+
+### 현재 다이어그램
+
+![image](https://user-images.githubusercontent.com/79801565/224798827-02fa237f-6b7b-447f-92fd-b819d575fee8.png)
+
+## 고칠 부분
+- 모든 FetchType을 Lazy로 고치기.(가장 중요)
