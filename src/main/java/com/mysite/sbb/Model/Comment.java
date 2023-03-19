@@ -7,6 +7,7 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.HashSet;
 import java.util.Set;
 
 @Entity
@@ -24,11 +25,19 @@ public class Comment extends BaseTimeEntity {
     private String content;
 
     @ManyToOne
+    @JoinColumn(name = "answer_id")
     private Answer answer;
 
     @ManyToOne
+    @JoinColumn(name = "siteuser_id")
     private SiteUser author;
 
-    @ManyToMany(fetch = FetchType.EAGER)
-    Set<SiteUser> voter;
+    @ManyToMany
+    Set<SiteUser> voter = new HashSet<>();
+
+    //==연관관계 메서드==//
+    public void setAnswer(Answer answer) {
+        answer.getCommentList().add(this);
+        this.answer = answer;
+    }
 }
