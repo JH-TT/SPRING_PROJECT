@@ -23,14 +23,6 @@ public class Comment extends BaseTimeEntity {
     @Column(columnDefinition = "TEXT")
     private String content;
 
-    @CreatedDate
-    @Column(name = "create_date")
-    private LocalDateTime createDate;
-
-    @LastModifiedDate
-    @Column(name = "modified_date")
-    private LocalDateTime modifiedDate;
-
     @ManyToOne
     private Answer answer;
 

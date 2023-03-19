@@ -4,13 +4,10 @@ import com.mysite.sbb.DTO.SiteUserDTO;
 import com.mysite.sbb.Enum.UserRole;
 import com.mysite.sbb.Model.PrincipalDetails;
 import com.mysite.sbb.Model.SiteUser;
-import com.mysite.sbb.Model.User;
 import com.mysite.sbb.OAuth.userinfo.GoogleUserInfo;
 import com.mysite.sbb.OAuth.userinfo.NaverUserInfo;
 import com.mysite.sbb.OAuth.userinfo.OAuth2UserInfo;
-import com.mysite.sbb.Repository.TestUserRepository;
 import com.mysite.sbb.Repository.UserRepository;
-import com.mysite.sbb.Service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
@@ -19,7 +16,6 @@ import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
 
-import javax.swing.text.html.Option;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -27,7 +23,6 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class PrincipalOauth2UserService extends DefaultOAuth2UserService {
 
-    private final TestUserRepository testUserRepository;
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
 

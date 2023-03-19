@@ -11,15 +11,18 @@ import com.mysite.sbb.Repository.AnswerRepository;
 import com.mysite.sbb.Repository.QuestionRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
 @RequiredArgsConstructor
 @Service
+@Transactional(readOnly = true)
 public class AnswerServiceImpl implements AnswerService{
 
     private final AnswerRepository answerRepository;
     @Override
+    @Transactional
     public AnswerDTO create(QuestionDTO questionDTO, String content, SiteUserDTO author) {
         AnswerDTO answerDTO = AnswerDTO.builder()
                 .content(content)
@@ -51,17 +54,20 @@ public class AnswerServiceImpl implements AnswerService{
     }
 
     @Override
+    @Transactional
     public void modify(AnswerDTO answerDTO, String content) {
         answerDTO.setContent(content);
         answerRepository.save(answerDTO.toEntity());
     }
 
     @Override
+    @Transactional
     public void delete(AnswerDTO answerDTO) {
         answerRepository.delete(answerDTO.toEntity());
     }
 
     @Override
+    @Transactional
     public void vote(AnswerDTO answerDTO, SiteUserDTO siteUserDTO) {
         answerDTO.getVoter().add(siteUserDTO.toEntity());
         answerRepository.save(answerDTO.toEntity());

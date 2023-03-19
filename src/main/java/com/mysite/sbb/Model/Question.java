@@ -1,5 +1,7 @@
 package com.mysite.sbb.Model;
 
+import com.mysite.sbb.DTO.AnswerDTO;
+import com.mysite.sbb.DTO.SiteUserDTO;
 import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
@@ -7,15 +9,18 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
+
+import static javax.persistence.FetchType.*;
+import static lombok.AccessLevel.*;
 
 @Getter
 @Entity
-@NoArgsConstructor
-@EntityListeners(AuditingEntityListener.class)
+@NoArgsConstructor(access = PROTECTED)
 @Builder
-@Table(name = "question")
 @AllArgsConstructor
 public class Question extends BaseTimeEntity {
     @Id

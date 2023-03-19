@@ -12,10 +12,8 @@ import java.util.Set;
 
 @Getter
 @Entity
-@NoArgsConstructor
-@EntityListeners(AuditingEntityListener.class)
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
-@Table(name = "answer")
 @Builder
 public class Answer extends BaseTimeEntity {
     @Id
@@ -25,14 +23,6 @@ public class Answer extends BaseTimeEntity {
 
     @Column(columnDefinition = "TEXT")
     private String content;
-
-    @CreatedDate
-    @Column(name = "create_date")
-    private LocalDateTime createDate;
-
-    @LastModifiedDate
-    @Column(name = "modified_date")
-    private LocalDateTime modifiedDate;
 
     // 한 질문에 여러개의 댓글을 달 수 있으니 ManyToOne을 넣는다.
 //    @ManyToOne(fetch = FetchType.LAZY)

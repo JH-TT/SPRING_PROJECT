@@ -8,11 +8,15 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+
+import static javax.persistence.CascadeType.*;
 
 
 @Getter
 @Entity
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @EntityListeners(AuditingEntityListener.class)
 @AllArgsConstructor
 @Table(name = "siteuser")
@@ -36,9 +40,7 @@ public class SiteUser {
 
     @Enumerated(EnumType.STRING)
     private UserRole role;
-
     private String provider; // 플랫폼 어디인지
-
     private String providerId; // oauth2를 이용할 경우 아이디값
     private boolean isNameChange; // 소셜 로그인시 아이디를 바꿨는지 확인
 

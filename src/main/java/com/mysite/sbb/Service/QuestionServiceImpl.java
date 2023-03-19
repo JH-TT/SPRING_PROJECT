@@ -7,6 +7,7 @@ import com.mysite.sbb.Model.Answer;
 import com.mysite.sbb.Model.Question;
 import com.mysite.sbb.Model.SiteUser;
 import com.mysite.sbb.Repository.QuestionRepository;
+import com.mysite.sbb.Repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -14,7 +15,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import javax.annotation.PostConstruct;
 import javax.persistence.criteria.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -23,6 +26,7 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class QuestionServiceImpl implements QuestionService{
 
     private final QuestionRepository questionRepository;
@@ -90,6 +94,7 @@ public class QuestionServiceImpl implements QuestionService{
     }
 
     @Override
+    @Transactional
     public void create(String subject, String content, SiteUserDTO author) {
         QuestionDTO qDTO = QuestionDTO.builder()
                 .subject(subject)
@@ -100,6 +105,7 @@ public class QuestionServiceImpl implements QuestionService{
     }
 
     @Override
+    @Transactional
     public void modify(QuestionDTO questionDTO, String subject, String content) {
         questionDTO.setSubject(subject);
         questionDTO.setContent(content);
@@ -107,9 +113,11 @@ public class QuestionServiceImpl implements QuestionService{
     }
 
     @Override
+    @Transactional
     public void delete(QuestionDTO questionDTO) {
         questionRepository.delete(questionDTO.toEntity());
     }
+
 
     @Override
     public void vote(QuestionDTO questionDTO, SiteUserDTO siteUserDTO) {
