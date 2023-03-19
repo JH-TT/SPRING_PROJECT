@@ -23,9 +23,10 @@ public class QuestionDTO {
     LocalDateTime createDate;
     LocalDateTime modifiedDate;
     String subject;
-    List<Answer> answerList;
-    SiteUser author;
-    Set<SiteUser> voter;
+    List<AnswerDTO> answerList;
+    SiteUserDTO author;
+    Set<SiteUserDTO> voter;
+    int countOfAnswerComment;
 
     // DTO -> Entity
     public Question toEntity() {
@@ -33,9 +34,9 @@ public class QuestionDTO {
                 .id(id)
                 .content(content)
                 .subject(subject)
-                .author(author)
-                .answerList(answerList)
-                .voter(voter)
+                .author(author.toEntity())
+                .answerList(answerList.stream().map(AnswerDTO::toEntity).collect(Collectors.toList()))
+                .voter(voter.stream().map(SiteUserDTO::toEntity).collect(Collectors.toSet()))
                 .build();
     }
 
@@ -49,9 +50,10 @@ public class QuestionDTO {
                 .createDate(question.getCreateDate())
                 .modifiedDate(question.getModifiedDate())
                 .subject(question.getSubject())
-                .author(question.getAuthor())
-                .answerList(question.getAnswerList())
-                .voter(question.getVoter())
+                .author(SiteUserDTO.from(question.getAuthor()))
+                .answerList(question.changeToAnswerListDTO())
+                .voter(question.getVoter().stream().map(SiteUserDTO::from).collect(Collectors.toSet()))
+                .countOfAnswerComment(question.getTotalCountOfAnswerAndComment())
                 .build();
     }
 
