@@ -138,4 +138,12 @@ public class QuestionController {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "수정권한이 없습니다.");
         }
     }
+
+    @PostConstruct
+    public void init() {
+        SiteUserDTO siteUserDTO = userService.create("ttt", "ttt@test.com", "1234");
+        for (int i = 0; i < 200; i++) {
+            questionService.create("테스트" + i, "테스트 내용입니다" + i, siteUserDTO);
+        }
+    }
 }

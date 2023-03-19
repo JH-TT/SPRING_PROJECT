@@ -148,4 +148,10 @@ public class UserController {
         log.info("result = {}", result);
         return result;
     }
+
+    @PostConstruct
+    public void init() {
+        userService.create("test", "test@test.com", "1234");
+        userService.create("tes1t", "test1@test.com", "1234");
+    }
 }
