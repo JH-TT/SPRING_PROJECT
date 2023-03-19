@@ -17,7 +17,7 @@ import java.util.stream.Collectors;
 @NoArgsConstructor
 @AllArgsConstructor
 public class AnswerDTO {
-    Integer id;
+    Long id;
     String content;
     LocalDateTime createDate;
     LocalDateTime modifiedDate;
@@ -30,8 +30,6 @@ public class AnswerDTO {
         return Answer.builder()
                 .id(id)
                 .content(content)
-                .createDate(createDate)
-                .modifiedDate(modifiedDate)
                 .question(question)
                 .author(author)
                 .voter(voter)

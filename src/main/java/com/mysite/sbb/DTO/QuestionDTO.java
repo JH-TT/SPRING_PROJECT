@@ -10,6 +10,7 @@ import org.springframework.data.domain.Page;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Getter
 @Setter
@@ -17,7 +18,7 @@ import java.util.Set;
 @NoArgsConstructor
 @AllArgsConstructor
 public class QuestionDTO {
-    Integer id;
+    Long id;
     String content;
     LocalDateTime createDate;
     LocalDateTime modifiedDate;
@@ -31,8 +32,6 @@ public class QuestionDTO {
         return Question.builder()
                 .id(id)
                 .content(content)
-                .createDate(createDate)
-                .modifiedDate(modifiedDate)
                 .subject(subject)
                 .author(author)
                 .answerList(answerList)
@@ -72,13 +71,5 @@ public class QuestionDTO {
                 ", author=" + author +
                 ", voter=" + voter +
                 '}';
-    }
-
-    public int answer_cnt() {
-        int total = 0;
-        for(Answer a : answerList) {
-            total += a.getCommentList().size();
-        }
-        return total;
     }
 }

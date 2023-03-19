@@ -28,7 +28,7 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
-    public CommentDTO getComment(Integer id) {
+    public CommentDTO getComment(Long id) {
         Optional<Comment> comment = commentRepository.findById(id);
         if (comment.isPresent()) {
             return CommentDTO.from(comment.get());

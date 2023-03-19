@@ -82,7 +82,7 @@ public class QuestionServiceImpl implements QuestionService{
     }
 
     @Override
-    public QuestionDTO getQuestion(Integer id) {
+    public QuestionDTO getQuestion(Long id) {
         Question q = questionRepository.findById(id).orElseThrow(
                 () -> new DataNotFoundException("question not found")
         );

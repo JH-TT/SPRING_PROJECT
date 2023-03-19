@@ -14,12 +14,11 @@ import java.util.Set;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@EntityListeners(AuditingEntityListener.class)
-public class Comment {
+public class Comment extends BaseTimeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "comment_id")
-    private Integer id;
+    private Long id;
 
     @Column(columnDefinition = "TEXT")
     private String content;

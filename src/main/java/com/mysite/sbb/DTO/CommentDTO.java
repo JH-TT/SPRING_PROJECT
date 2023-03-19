@@ -15,7 +15,7 @@ import java.util.Set;
 @Setter
 public class CommentDTO {
 
-    Integer id;
+    Long id;
     String content;
     LocalDateTime createDate;
     LocalDateTime modifiedDate;
@@ -27,8 +27,6 @@ public class CommentDTO {
         return Comment.builder()
                 .id(id)
                 .content(content)
-                .createDate(createDate)
-                .modifiedDate(modifiedDate)
                 .answer(answer)
                 .author(author)
                 .build();

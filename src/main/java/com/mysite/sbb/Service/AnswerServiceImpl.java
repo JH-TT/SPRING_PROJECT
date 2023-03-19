@@ -31,7 +31,7 @@ public class AnswerServiceImpl implements AnswerService{
     }
 
     @Override
-    public AnswerDTO getAnswer(Integer id) {
+    public AnswerDTO getAnswer(Long id) {
         Optional<Answer> answer = answerRepository.findById(id);
         if(answer.isPresent()) {
             return AnswerDTO.from(answer.get());
@@ -41,7 +41,7 @@ public class AnswerServiceImpl implements AnswerService{
     }
 
     @Override
-    public Integer getQuestionId(Integer id) {
+    public Long getQuestionId(Long id) {
         Optional<Answer> answer = answerRepository.findById(id);
         if(answer.isPresent()) {
             return answer.get().getQuestion().getId();

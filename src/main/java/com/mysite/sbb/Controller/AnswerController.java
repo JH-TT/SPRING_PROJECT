@@ -35,10 +35,10 @@ public class AnswerController {
 
     @PreAuthorize("isAuthenticated()")
     @PostMapping("/create/{id}")
-    public String createAnswer(Model model, @PathVariable("id") Integer id
+    public String createAnswer(Model model, @PathVariable("id") Long id
                                 , @Valid AnswerForm answerForm, BindingResult bindingResult, @AuthenticationPrincipal PrincipalDetails principal){
         QuestionDTO questionDTO = questionService.getQuestion(id);
-        SiteUserDTO siteUserDTO = userService.getUserByEmail(principal.getUser().getEmail());
+        SiteUserDTO siteUserDTO = principal.getUser();
         log.info("siteUser name = {}", siteUserDTO.getUsername());
         log.info("siteUser email = {}", siteUserDTO.getEmail());
         if(bindingResult.hasErrors()) {
@@ -51,7 +51,7 @@ public class AnswerController {
 
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/modify/{id}")
-    public String answerModify(AnswerForm answerForm, @PathVariable("id") Integer id, @AuthenticationPrincipal PrincipalDetails principal) {
+    public String answerModify(AnswerForm answerForm, @PathVariable("id") Long id, @AuthenticationPrincipal PrincipalDetails principal) {
         AnswerDTO answerDTO = answerService.getAnswer(id);
         String email = principal.getUser().getEmail();
         if(!answerDTO.getAuthor().getUsername().equals(userService.getUserByEmail(email).getUsername())) {
@@ -64,7 +64,7 @@ public class AnswerController {
     @PreAuthorize("isAuthenticated()")
     @PostMapping("/modify/{id}")
     public String answerModify(@Valid AnswerForm answerForm, BindingResult bindingResult
-        ,@PathVariable("id") Integer id, Principal principal) {
+        ,@PathVariable("id") Long id, Principal principal) {
         if(bindingResult.hasErrors()) {
             return "/answer/answer_form";
         }
@@ -78,7 +78,7 @@ public class AnswerController {
 
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/delete/{id}")
-    public String answerDelete(Principal principal, @PathVariable("id") Integer id) {
+    public String answerDelete(Principal principal, @PathVariable("id") Long id) {
         AnswerDTO answer = answerService.getAnswer(id);
         if(!answer.getAuthor().getUsername().equals(principal.getName())) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "삭제권한이 없습니다.");
@@ -89,7 +89,7 @@ public class AnswerController {
 
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/vote/{id}")
-    public String answerVote(Principal principal, @PathVariable("id") Integer id) {
+    public String answerVote(Principal principal, @PathVariable("id") Long id) {
         AnswerDTO answer = answerService.getAnswer(id);
         SiteUserDTO siteUserDTO = userService.getUser(principal.getName());
         answerService.vote(answer, siteUserDTO);

@@ -23,19 +23,19 @@ public class CommentTest {
 
     @Test
     public void create() {
-        AnswerDTO answerDTO = answerService.getAnswer(14);
+        AnswerDTO answerDTO = answerService.getAnswer(14L);
         SiteUserDTO siteUserDTO = userService.getUser("test123");
         commentService.create(answerDTO, "테스트 대댓글2", siteUserDTO);
     }
 
     @Test
     public void modity(){
-        CommentDTO commentDTO = commentService.getComment(23);
+        CommentDTO commentDTO = commentService.getComment(23L);
         commentService.modify(commentDTO, "후후2");
     }
     @Test
     public void delete() {
-        CommentDTO commentDTO = commentService.getComment(23);
+        CommentDTO commentDTO = commentService.getComment(23L);
         commentService.delete(commentDTO);
     }
 }

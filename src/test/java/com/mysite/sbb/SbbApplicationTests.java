@@ -95,29 +95,11 @@ class SbbApplicationTests {
 //        questionRepository.delete(q3);
 //    }
 
-    @Test
-    void testJpa2() {
-        Optional<Question> oq = questionRepository.findById(18);
-        assertTrue(oq.isPresent());
-        Question q = oq.get();
-
-        Answer a = new Answer();
-//        a.setContent("네 자동으로 생성됩니다");
-//        a.setQuestion(q);
-        answerRepository.save(a);
-
-        Comment c = Comment.builder()
-                .content("hi")
-                .answer(a)
-                .build();
-        commentRepository.save(c);
-    }
-
     // DB세션을 유지하기 위함
     @Transactional
     @Test
     void testJpa3() {
-        Optional<Question> oq = questionRepository.findById(18);
+        Optional<Question> oq = questionRepository.findById(18L);
         assertTrue(oq.isPresent());
         Question q = oq.get();
 

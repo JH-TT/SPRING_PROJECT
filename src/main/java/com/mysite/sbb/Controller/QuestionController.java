@@ -49,9 +49,10 @@ public class QuestionController {
     }
 
     @RequestMapping(value = "/detail/{id}")
-    public String detail(Model model, @PathVariable("id") Integer id
+    public String detail(Model model, @PathVariable("id") Long id
                             , AnswerForm answerForm) {
         QuestionDTO questionDTO = questionService.getQuestion(id);
+        System.out.println("questionDTO.getVoter() = " + questionDTO.getVoter());
         model.addAttribute("question", questionDTO);
         return "question/question_detail";
     }
@@ -79,14 +80,13 @@ public class QuestionController {
         }
         log.info("principal = {}", principal);
         SiteUserDTO siteUserDTO = userService.getUser(principal.getName());
-//        SiteUserDTO siteUserDTO = userService.getUserByEmail(principal.getUser().getEmail());
         questionService.create(questionForm.getSubject(), questionForm.getContent(), siteUserDTO);
         return "redirect:/question/list"; // 질문 저장후 질문목록으로 이동
     }
 
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/modify/{id}")
-    public String questionModify(QuestionForm questionForm, @PathVariable("id") Integer id, Principal principal) {
+    public String questionModify(QuestionForm questionForm, @PathVariable("id") Long id, Principal principal) {
         QuestionDTO questionDTO = questionService.getQuestion(id);
         userNameValidation(principal, questionDTO);
         // 수정할 질문의 제목과 내용을 화면에 보여주기 위해 Form객체에 값을 담아서 템플릿으로 전달한다.
@@ -101,7 +101,7 @@ public class QuestionController {
 
     @PreAuthorize("isAuthenticated()")
     @PostMapping("/modify/{id}")
-    public String questionModify(@Valid QuestionForm questionForm, @PathVariable("id") Integer id, BindingResult bindingResult
+    public String questionModify(@Valid QuestionForm questionForm, @PathVariable("id") Long id, BindingResult bindingResult
             , Principal principal) {
         if(bindingResult.hasErrors()) {
             return "/question/question_form";
@@ -114,7 +114,7 @@ public class QuestionController {
 
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/delete/{id}")
-    public String questionDelete(Principal principal, @PathVariable("id") Integer id) {
+    public String questionDelete(Principal principal, @PathVariable("id") Long id) {
         QuestionDTO questionDTO = questionService.getQuestion(id);
         if(!questionDTO.getAuthor().getUsername().equals(principal.getName())) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "삭제권한이 없습니다.");
@@ -125,10 +125,8 @@ public class QuestionController {
 
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/vote/{id}")
-    public String questionVote(Principal principal, @PathVariable("id") Integer id) {
-        QuestionDTO questionDTO = questionService.getQuestion(id);
-        SiteUserDTO siteUser = userService.getUser(principal.getName());
-        questionService.vote(questionDTO, siteUser);
+    public String questionVote(Principal principal, @PathVariable("id") Long id) {
+        questionService.vote(id, principal.getName());
         return String.format("redirect:/question/detail/%s", id);
     }
 

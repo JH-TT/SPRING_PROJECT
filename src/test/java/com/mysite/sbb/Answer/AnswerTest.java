@@ -24,7 +24,7 @@ public class AnswerTest {
     @Test
     @Transactional
     public void create() {
-        QuestionDTO questionDTO = questionService.getQuestion(17);
+        QuestionDTO questionDTO = questionService.getQuestion(17L);
         System.out.println("댓글달기 전");
         System.out.println(questionDTO.toString());;
 
@@ -32,7 +32,7 @@ public class AnswerTest {
         answerService.create(questionDTO, "테스트댓글2", siteUserDTO);
 
         System.out.println("댓글단 후");
-        QuestionDTO questionDTO1 = questionService.getQuestion(17);
+        QuestionDTO questionDTO1 = questionService.getQuestion(17L);
         System.out.println(questionDTO1.toString());;
     }
 }

@@ -17,11 +17,11 @@ import java.util.Set;
 @AllArgsConstructor
 @Table(name = "answer")
 @Builder
-public class Answer {
+public class Answer extends BaseTimeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "answer_id")
-    private Integer id;
+    private Long id;
 
     @Column(columnDefinition = "TEXT")
     private String content;

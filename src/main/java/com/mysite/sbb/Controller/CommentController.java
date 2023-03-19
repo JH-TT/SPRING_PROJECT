@@ -30,7 +30,7 @@ public class CommentController {
 
     @PostMapping("/create/{id}")
     @PreAuthorize("isAuthenticated()")
-    public String createComment(Model model, @PathVariable("id") Integer id
+    public String createComment(Model model, @PathVariable("id") Long id
                                 , @RequestParam String content, @Valid CommentForm commentForm, BindingResult bindingResult, Principal principal) {
         AnswerDTO answerDTO = this.answerService.getAnswer(id);
         SiteUserDTO siteUserDTO = userService.getUser(principal.getName());
@@ -42,7 +42,7 @@ public class CommentController {
     // 보통 html에서 href로 요청하는건 get방식인듯...
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/modify/{id}")
-    public String commentModify(CommentForm commentForm, @PathVariable("id") Integer id, Principal principal) {
+    public String commentModify(CommentForm commentForm, @PathVariable("id") Long id, Principal principal) {
         CommentDTO commentDTO = commentService.getComment(id);
         if(!commentDTO.getAuthor().getUsername().equals(principal.getName())) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "수정권한이 없습니다.");
@@ -55,7 +55,7 @@ public class CommentController {
     @PreAuthorize("isAuthenticated()")
     @PostMapping("/modify/{id}")
     public String commentModify(@Valid CommentForm commentForm, BindingResult bindingResult
-            ,@PathVariable("id") Integer id, Principal principal) {
+            ,@PathVariable("id") Long id, Principal principal) {
         if(bindingResult.hasErrors()) {
             return "/comment/comment_form";
         }
@@ -69,7 +69,7 @@ public class CommentController {
 
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/delete/{id}")
-    public String commentDelete(Principal principal, @PathVariable("id") Integer id) {
+    public String commentDelete(Principal principal, @PathVariable("id") Long id) {
         CommentDTO commentDTO = commentService.getComment(id);
         if(!commentDTO.getAuthor().getUsername().equals(principal.getName())) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "삭제권한이 없습니다.");
@@ -80,7 +80,7 @@ public class CommentController {
 
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/vote/{id}")
-    public String commentVote(Principal principal, @PathVariable("id") Integer id) {
+    public String commentVote(Principal principal, @PathVariable("id") Long id) {
         CommentDTO commentDTO = commentService.getComment(id);
         SiteUserDTO siteUserDTO = userService.getUser(principal.getName());
         commentService.vote(commentDTO, siteUserDTO);

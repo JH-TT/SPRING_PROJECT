@@ -13,7 +13,7 @@ public interface QuestionService {
     List<QuestionDTO> getList();
     Page<QuestionDTO> getList(int page);
     Page<QuestionDTO> getList(int page, String kw);
-    QuestionDTO getQuestion(Integer id);
+    QuestionDTO getQuestion(Long id);
     void create(String subject, String content, SiteUserDTO author);
     void modify(QuestionDTO questionDTO, String subject, String content);
     void delete(QuestionDTO questionDTO);

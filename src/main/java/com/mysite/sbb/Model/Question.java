@@ -17,24 +17,16 @@ import java.util.Set;
 @Builder
 @Table(name = "question")
 @AllArgsConstructor
-public class Question {
+public class Question extends BaseTimeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "question_id")
-    private Integer id;
+    private Long id;
 
     @Column(columnDefinition = "TEXT")
     private String content;
 
-    @CreatedDate
-    @Column(name = "create_date")
-    private LocalDateTime createDate;
-
-    @LastModifiedDate
-    @Column(name = "modified_date")
-    private LocalDateTime modifiedDate;
-
-    @Column(length = 200)
+    @Column(length = 100)
     private String subject;
 
     // Question에선 여러개의 답글이 생길 수 있으니 One to Many로 지정한다.
