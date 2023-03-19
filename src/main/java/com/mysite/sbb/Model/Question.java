@@ -45,6 +45,39 @@ public class Question extends BaseTimeEntity {
     @JoinColumn(name = "siteuser_id")
     private SiteUser author;
 
-    @ManyToMany(fetch = FetchType.EAGER)
-    Set<SiteUser> voter;
+    @ManyToMany
+    Set<SiteUser> voter = new HashSet<>();
+    private int countOfAnswerAndComment;
+
+    //==비즈니스 로직==//
+    public int getTotalCountOfAnswerAndComment() {
+        return answerList
+                .stream()
+                .mapToInt(Answer::getCountOfComment)
+                .sum();
+    }
+
+    public List<AnswerDTO> changeToAnswerListDTO() {
+        return answerList.stream().map(AnswerDTO::from)
+                .collect(Collectors.toList());
+    }
+
+    public Question(String subject, String content, SiteUserDTO userDTO) {
+        this.subject = subject;
+        this.content = content;
+        this.author = userDTO.toEntity();
+    }
+
+    public Question(String subject, String content, SiteUser user) {
+        this.subject = subject;
+        this.content = content;
+        author = user;
+    }
+
+    public void addRecommand(SiteUser siteUser) {
+        if (voter.contains(siteUser)) {
+            throw new IllegalStateException("이미 추천을 하였습니다.");
+        }
+        voter.add(siteUser);
+    }
 }

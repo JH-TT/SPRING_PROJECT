@@ -37,7 +37,7 @@
     </div>
     <!-- 답변의 갯수 표시 -->
     <h5 class="border-bottom my-3 py-2"
-        th:text="|${question.answer_cnt() + #lists.size(question.answerList)}개의 답변이 있습니다.|"></h5>
+        th:text="|${question.countOfAnswerComment}개의 답변이 있습니다.|"></h5>
     <!-- 답변 작성 -->
     <form th:action="@{|/answer/create/${question.id}|}" th:object="${answerForm}" method="post" class="my-3">
         <div th:replace="form_errors :: formErrorsFragment"></div>
