@@ -44,6 +44,23 @@ public class SiteUser {
     private String providerId; // oauth2를 이용할 경우 아이디값
     private boolean isNameChange; // 소셜 로그인시 아이디를 바꿨는지 확인
 
+    public SiteUser(String username, String password, String email) {
+        this.username = username;
+        this.password = password;
+        this.email = email;
+        role = UserRole.USER;
+        provider = "EMAIL";
+        isNameChange = true;
+    }
+
+    // 만약 작성자가 회원 탈퇴를 하는 경우가 생겨도 글들은 남겨둔다
+    @OneToMany(mappedBy = "author")
+    private List<Question> questionList = new ArrayList<>();
+    @OneToMany(mappedBy = "author")
+    private List<Answer> AnswerList = new ArrayList<>();
+    @OneToMany(mappedBy = "author")
+    private List<Comment> commentList = new ArrayList<>();
+
     @Builder(builderClassName = "UserDetailRegister", builderMethodName = "userDetailRegister")
     public SiteUser(String username, String password, String email, UserRole role) {
         this.username = username;
