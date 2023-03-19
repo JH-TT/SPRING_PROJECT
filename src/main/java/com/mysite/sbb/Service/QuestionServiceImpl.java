@@ -97,12 +97,8 @@ public class QuestionServiceImpl implements QuestionService{
     @Override
     @Transactional
     public void create(String subject, String content, SiteUserDTO author) {
-        QuestionDTO qDTO = QuestionDTO.builder()
-                .subject(subject)
-                .content(content)
-                .author(author.toEntity())
-                .build();
-        questionRepository.save(qDTO.toEntity());
+        Question question = new Question(subject, content, author);
+        questionRepository.save(question);
     }
 
     @Override
@@ -131,5 +127,4 @@ public class QuestionServiceImpl implements QuestionService{
         );
         question.addRecommand(siteUser);
     }
-
 }
