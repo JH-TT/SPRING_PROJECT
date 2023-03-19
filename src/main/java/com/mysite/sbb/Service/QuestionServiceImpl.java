@@ -30,6 +30,7 @@ import java.util.stream.Collectors;
 public class QuestionServiceImpl implements QuestionService{
 
     private final QuestionRepository questionRepository;
+    private final UserRepository userRepository;
 
     private Specification<Question> search(String kw) {
         return new Specification<>() {
@@ -69,10 +70,10 @@ public class QuestionServiceImpl implements QuestionService{
     @Override
     public Page<QuestionDTO> getList(int page) {
         // 최근날짜로 데이터 가져옴
-        List<Sort.Order> sorts = new ArrayList<>();
-        sorts.add(Sort.Order.desc("createDate"));
+//        List<Sort.Order> sorts = new ArrayList<>();
+//        sorts.add(Sort.Order.desc("createDate"));
         // page : 조회할 번호, size : 몇개씩 가져올건지
-        Pageable pageable = PageRequest.of(page, 10, Sort.by(sorts));
+        Pageable pageable = PageRequest.of(page, 10, Sort.by(Sort.Direction.DESC, "createDate"));
         return QuestionDTO.toDtoList(questionRepository.findAll(pageable));
     }
 
