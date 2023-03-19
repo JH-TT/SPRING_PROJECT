@@ -6,6 +6,7 @@ import com.mysite.sbb.Enum.UserRole;
 import com.mysite.sbb.Model.PrincipalDetails;
 import com.mysite.sbb.Model.SiteUser;
 import com.mysite.sbb.Repository.UserRepository;
+import com.mysite.sbb.UserCreateForm;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -27,6 +28,18 @@ public class UserServiceImpl implements UserService{
                 .username(username)
                 .email(email)
                 .password(passwordEncoder.encode(password))
+                .isNameChange(true) // 직접 아이디를 만든 유저는 바로 true로 넘긴다.
+                .provider("EMAIL")
+                .build();
+        return SiteUserDTO.from(userRepository.save(siteUserDTO.toEntity()));
+    }
+
+    @Override
+    public SiteUserDTO create(UserCreateForm userCreateForm) {
+        SiteUserDTO siteUserDTO = SiteUserDTO.builder()
+                .username(userCreateForm.getUsername())
+                .email(userCreateForm.getEmail())
+                .password(passwordEncoder.encode(userCreateForm.getPassword1()))
                 .isNameChange(true) // 직접 아이디를 만든 유저는 바로 true로 넘긴다.
                 .provider("EMAIL")
                 .build();
