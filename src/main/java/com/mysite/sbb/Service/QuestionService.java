@@ -17,5 +17,5 @@ public interface QuestionService {
     void create(String subject, String content, SiteUserDTO author);
     void modify(QuestionDTO questionDTO, String subject, String content);
     void delete(QuestionDTO questionDTO);
-    void vote(QuestionDTO questionDTO, SiteUserDTO siteUserDTO);
+    void vote(Long id, String username);
 }

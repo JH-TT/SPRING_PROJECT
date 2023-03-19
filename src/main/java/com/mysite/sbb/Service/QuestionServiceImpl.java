@@ -120,9 +120,15 @@ public class QuestionServiceImpl implements QuestionService{
 
 
     @Override
-    public void vote(QuestionDTO questionDTO, SiteUserDTO siteUserDTO) {
-        questionDTO.getVoter().add(siteUserDTO.toEntity());
-        questionRepository.save(questionDTO.toEntity());
+    @Transactional
+    public void vote(Long id, String username) {
+        Question question = questionRepository.findById(id).orElseThrow(
+                () -> new DataNotFoundException("존재하지 않는 게시글 입니다.")
+        );
+        SiteUser siteUser = userRepository.findByusername(username).orElseThrow(
+                () -> new DataNotFoundException("존재하지 않는 유저입니다.")
+        );
+        question.addRecommand(siteUser);
     }
 
 }
