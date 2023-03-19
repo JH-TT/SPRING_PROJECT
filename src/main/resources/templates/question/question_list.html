@@ -30,8 +30,8 @@
                     <!-- 문자열과 ${}를 합칠 떈 | 기호를 이용한다. -->
                     <a th:href="@{|/question/detail/${question.id}|}" th:text="${question.subject}"></a>
                     <span class="text-danger small ms-2"
-                        th:if="${#lists.size(question.answerList) > 0}"
-                        th:text="|[${question.answer_cnt() + #lists.size(question.answerList)}]|">
+                        th:if="${question.countOfAnswerComment > 0}"
+                        th:text="|[${question.countOfAnswerComment}]|">
                     </span>
                 </td>
                 <td><span th:if="${question.author != null}" th:text="${question.author.username}"></span></td>
@@ -45,7 +45,7 @@
             <ul class="pagination justify-content-center">
                 <li class="page-item" th:if="${paging.number >= 5}">
                     <a class="page-link"
-                       th:href="@{|?page=0|}">
+                       href="javascript:void(0)" th:data-page="${0}">
                         <span>처음</span>
                     </a>
                 </li>
