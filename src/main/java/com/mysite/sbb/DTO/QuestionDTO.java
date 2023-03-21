@@ -25,20 +25,8 @@ public class QuestionDTO {
     String subject;
     List<AnswerDTO> answerList;
     SiteUserDTO author;
-    Set<SiteUserDTO> voter;
+    int voter;
     int countOfAnswerComment;
-
-    // DTO -> Entity
-    public Question toEntity() {
-        return Question.builder()
-                .id(id)
-                .content(content)
-                .subject(subject)
-                .author(author.toEntity())
-                .answerList(answerList.stream().map(AnswerDTO::toEntity).collect(Collectors.toList()))
-                .voter(voter.stream().map(SiteUserDTO::toEntity).collect(Collectors.toSet()))
-                .build();
-    }
 
     // Entity -> DTO
     public static QuestionDTO from(Question question) {
@@ -52,7 +40,7 @@ public class QuestionDTO {
                 .subject(question.getSubject())
                 .author(SiteUserDTO.from(question.getAuthor()))
                 .answerList(question.changeToAnswerListDTO())
-                .voter(question.getVoter().stream().map(SiteUserDTO::from).collect(Collectors.toSet()))
+                .voter(question.countOfVoter())
                 .countOfAnswerComment(question.getTotalCountOfAnswerAndComment())
                 .build();
     }

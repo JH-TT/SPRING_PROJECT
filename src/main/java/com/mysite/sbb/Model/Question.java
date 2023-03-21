@@ -54,7 +54,7 @@ public class Question extends BaseTimeEntity {
         return answerList
                 .stream()
                 .mapToInt(Answer::getCountOfComment)
-                .sum();
+                .sum() + answerList.size();
     }
 
     public List<AnswerDTO> changeToAnswerListDTO() {
@@ -79,5 +79,14 @@ public class Question extends BaseTimeEntity {
             throw new IllegalStateException("이미 추천을 하였습니다.");
         }
         voter.add(siteUser);
+    }
+
+    public int countOfVoter() {
+        return voter.size();
+    }
+
+    public void updateQuestion(String subject, String content) {
+        this.subject = subject;
+        this.content = content;
     }
 }
