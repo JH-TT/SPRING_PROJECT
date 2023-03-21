@@ -45,8 +45,8 @@ public class AnswerController {
             model.addAttribute("question", questionDTO);
             return "/question/question_detail";
         }
-        AnswerDTO answerDTO = answerService.create(questionDTO, answerForm.getContent(), siteUserDTO);
-        return String.format("redirect:/question/detail/%s#answer_%s", answerDTO.getQuestion().getId(), answerDTO.getId());
+        AnswerDTO answerDTO = answerService.create(id, answerForm.getContent(), siteUserDTO);
+        return String.format("redirect:/question/detail/%s#answer_%s", id, answerDTO.getId());
     }
 
     @PreAuthorize("isAuthenticated()")

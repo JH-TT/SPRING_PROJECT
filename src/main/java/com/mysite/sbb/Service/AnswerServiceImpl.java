@@ -21,12 +21,16 @@ import java.util.Optional;
 public class AnswerServiceImpl implements AnswerService{
 
     private final AnswerRepository answerRepository;
+    private final QuestionRepository questionRepository;
     @Override
     @Transactional
-    public AnswerDTO create(QuestionDTO questionDTO, String content, SiteUserDTO author) {
+    public AnswerDTO create(Long id, String content, SiteUserDTO author) {
+        Question question = questionRepository.findById(id).orElseThrow(
+                () -> new DataNotFoundException("해당 질문이 존재하지 않습니다.")
+        );
         AnswerDTO answerDTO = AnswerDTO.builder()
                 .content(content)
-                .question(questionDTO.toEntity())
+                .question(question)
                 .author(author.toEntity())
                 .build();
         answerRepository.save(answerDTO.toEntity());

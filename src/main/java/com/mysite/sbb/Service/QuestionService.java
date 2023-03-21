@@ -1,6 +1,7 @@
 package com.mysite.sbb.Service;
 
 import com.mysite.sbb.DTO.QuestionDTO;
+import com.mysite.sbb.DTO.QuestionListDTO;
 import com.mysite.sbb.DTO.SiteUserDTO;
 import com.mysite.sbb.Model.Question;
 import com.mysite.sbb.Model.SiteUser;
@@ -13,9 +14,10 @@ public interface QuestionService {
     List<QuestionDTO> getList();
     Page<QuestionDTO> getList(int page);
     Page<QuestionDTO> getList(int page, String kw);
+    Page<QuestionListDTO> getListV1(int page, String kw);
     QuestionDTO getQuestion(Long id);
     void create(String subject, String content, SiteUserDTO author);
-    void modify(QuestionDTO questionDTO, String subject, String content);
-    void delete(QuestionDTO questionDTO);
+    void modify(Long id, String subject, String content);
+    void delete(Long id);
     void vote(Long id, String username);
 }

@@ -111,7 +111,7 @@ public class QuestionController {
         }
         QuestionDTO questionDTO = questionService.getQuestion(id);
         userNameValidation(principal, questionDTO);
-        questionService.modify(questionDTO, questionForm.getSubject(), questionForm.getContent());
+        questionService.modify(id, questionForm.getSubject(), questionForm.getContent());
         return String.format("redirect:/question/detail/%s", id);
     }
 
@@ -122,7 +122,7 @@ public class QuestionController {
         if(!questionDTO.getAuthor().getUsername().equals(principal.getName())) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "삭제권한이 없습니다.");
         }
-        questionService.delete(questionDTO);
+        questionService.delete(id);
         return "redirect:/";
     }
 

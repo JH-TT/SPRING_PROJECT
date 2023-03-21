@@ -103,16 +103,20 @@ public class QuestionServiceImpl implements QuestionService{
 
     @Override
     @Transactional
-    public void modify(QuestionDTO questionDTO, String subject, String content) {
-        questionDTO.setSubject(subject);
-        questionDTO.setContent(content);
-        questionRepository.save(questionDTO.toEntity());
+    public void modify(Long id, String subject, String content) {
+        Question question = questionRepository.findById(id).orElseThrow(
+                () -> new DataNotFoundException("해당 질문글이 존재하지 않습니다.")
+        );
+        question.updateQuestion(subject, content);
     }
 
     @Override
     @Transactional
-    public void delete(QuestionDTO questionDTO) {
-        questionRepository.delete(questionDTO.toEntity());
+    public void delete(Long id) {
+        Question question = questionRepository.findById(id).orElseThrow(
+                () -> new DataNotFoundException("해당 질문이 존재하지 않습니다.")
+        );
+        questionRepository.delete(question);
     }
 
 

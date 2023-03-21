@@ -8,7 +8,7 @@ import com.mysite.sbb.Model.Question;
 import com.mysite.sbb.Model.SiteUser;
 
 public interface AnswerService {
-    AnswerDTO create(QuestionDTO questionDTO, String content, SiteUserDTO author);
+    AnswerDTO create(Long id, String content, SiteUserDTO author);
     AnswerDTO getAnswer(Long id);
     Long getQuestionId(Long id);
     void modify(AnswerDTO answerDTO, String content);
