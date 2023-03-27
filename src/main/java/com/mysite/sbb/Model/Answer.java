@@ -99,6 +99,5 @@ public class Answer extends BaseTimeEntity {
 
     public void vote(SiteUserDTO siteUserDTO) {
         voter.add(siteUserDTO.toEntity());
-        System.out.println("voter = " + voter.size());
     }
 }

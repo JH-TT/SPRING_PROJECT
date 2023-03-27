@@ -28,13 +28,9 @@ public class AnswerServiceImpl implements AnswerService{
         Question question = questionRepository.findById(id).orElseThrow(
                 () -> new DataNotFoundException("해당 질문이 존재하지 않습니다.")
         );
-        AnswerDTO answerDTO = AnswerDTO.builder()
-                .content(content)
-                .question(question)
-                .author(author.toEntity())
-                .build();
-        answerRepository.save(answerDTO.toEntity());
-        return answerDTO;
+        Answer answer = Answer.createAnswer(content, question, author);
+
+        return AnswerDTO.from(answerRepository.save(answer));
     }
 
     @Override
@@ -80,7 +76,6 @@ public class AnswerServiceImpl implements AnswerService{
     @Override
     @Transactional
     public void vote(AnswerDTO answerDTO, SiteUserDTO siteUserDTO) {
-        answerDTO.getVoter().add(siteUserDTO.toEntity());
-        answerRepository.save(answerDTO.toEntity());
+        answerDTO.toEntity().vote(siteUserDTO);
     }
 }
