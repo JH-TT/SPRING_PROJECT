@@ -8,6 +8,7 @@ import lombok.*;
 import org.springframework.data.domain.Page;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -42,6 +43,16 @@ public class QuestionDTO {
                 .answerList(question.changeToAnswerListDTO())
                 .voter(question.countOfVoter())
                 .countOfAnswerComment(question.getTotalCountOfAnswerAndComment())
+                .build();
+    }
+
+    // DTO -> Entity
+    public Question toEntity() {
+        return Question.builder()
+                .content(content)
+                .subject(subject)
+                .answerList(answerList.stream().map(AnswerDTO::toEntity).collect(Collectors.toList()))
+                .author(author.toEntity())
                 .build();
     }
 
