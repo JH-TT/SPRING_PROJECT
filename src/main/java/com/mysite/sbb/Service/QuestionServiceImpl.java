@@ -1,6 +1,7 @@
 package com.mysite.sbb.Service;
 
 import com.mysite.sbb.DTO.QuestionDTO;
+import com.mysite.sbb.DTO.QuestionListDTO;
 import com.mysite.sbb.DTO.SiteUserDTO;
 import com.mysite.sbb.DataNotFoundException;
 import com.mysite.sbb.Model.Answer;
@@ -87,6 +88,15 @@ public class QuestionServiceImpl implements QuestionService{
     }
 
     @Override
+    public Page<QuestionListDTO> getListV1(int page, String kw) {
+        List<Sort.Order> sorts = new ArrayList<>();
+        sorts.add(Sort.Order.desc("createDate"));
+        Pageable pageable = PageRequest.of(page, 10, Sort.by(sorts));
+        Specification<Question> spec = search(kw);
+        return QuestionListDTO.toDtoList(questionRepository.findAll(spec, pageable));
+    }
+
+    @Override
     public QuestionDTO getQuestion(Long id) {
         Question q = questionRepository.findById(id).orElseThrow(
                 () -> new DataNotFoundException("question not found")
@@ -96,9 +106,9 @@ public class QuestionServiceImpl implements QuestionService{
 
     @Override
     @Transactional
-    public void create(String subject, String content, SiteUserDTO author) {
+    public Long create(String subject, String content, SiteUserDTO author) {
         Question question = new Question(subject, content, author);
-        questionRepository.save(question);
+        return questionRepository.save(question).getId();
     }
 
     @Override
