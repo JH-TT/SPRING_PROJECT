@@ -83,8 +83,8 @@ public class AnswerController {
         if(!answer.getAuthor().getUsername().equals(principal.getName())) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "삭제권한이 없습니다.");
         }
-        answerService.delete(answer);
-        return String.format("redirect:/question/detail/%s", answer.getQuestion().getId());
+        answerService.delete(id);
+        return String.format("redirect:/question/detail/%s", answer.getQuestion());
     }
 
     @PreAuthorize("isAuthenticated()")

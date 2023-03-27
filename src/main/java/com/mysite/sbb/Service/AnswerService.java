@@ -12,6 +12,6 @@ public interface AnswerService {
     AnswerDTO getAnswer(Long id);
     Long getQuestionId(Long id);
     void modify(AnswerDTO answerDTO, String content);
-    void delete(AnswerDTO answerDTO);
+    void delete(Long id);
     void vote(AnswerDTO answerDTO, SiteUserDTO siteUserDTO);
 }

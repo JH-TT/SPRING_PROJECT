@@ -66,8 +66,15 @@ public class AnswerServiceImpl implements AnswerService{
 
     @Override
     @Transactional
-    public void delete(AnswerDTO answerDTO) {
-        answerRepository.delete(answerDTO.toEntity());
+    public void delete(Long id) {
+        Answer answer = answerRepository.findById(id).orElseThrow(
+                () -> new DataNotFoundException("해당 댓글이 존재하지 않습니다.")
+        );
+        Question question = questionRepository.findById(answer.getQuestion().getId()).orElseThrow(
+                () -> new DataNotFoundException("해당 게시글이 존재하지 않습니다.")
+        );
+        question.removeAnswer(answer);
+        answerRepository.delete(answer);
     }
 
     @Override
