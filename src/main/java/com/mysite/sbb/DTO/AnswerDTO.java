@@ -7,6 +7,8 @@ import com.mysite.sbb.Model.SiteUser;
 import lombok.*;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -21,21 +23,10 @@ public class AnswerDTO {
     String content;
     LocalDateTime createDate;
     LocalDateTime modifiedDate;
-    Question question;
-    SiteUser author;
-    Set<SiteUser> voter;
-    List<Comment> commentList;
-
-    public Answer toEntity() {
-        return Answer.builder()
-                .id(id)
-                .content(content)
-                .question(question)
-                .author(author)
-                .voter(voter)
-                .commentList(commentList)
-                .build();
-    }
+    Long question;
+    SiteUserDTO author;
+    Set<SiteUserDTO> voter;
+    List<CommentDTO> commentList;
 
     public static AnswerDTO from(Answer answer) {
         if(answer == null) return null;
@@ -45,10 +36,19 @@ public class AnswerDTO {
                 .content(answer.getContent())
                 .createDate(answer.getCreateDate())
                 .modifiedDate(answer.getModifiedDate())
-                .question(answer.getQuestion())
-                .author(answer.getAuthor())
-                .voter(answer.getVoter())
-                .commentList(answer.getCommentList())
+                .question(answer.getQuestion().getId())
+                .author(SiteUserDTO.from(answer.getAuthor()))
+                .voter(answer.changeToSiteUserDTOSet())
+                .commentList(answer.changeToCommentDTOList())
+                .build();
+    }
+
+    public Answer toEntity() {
+        return Answer.builder()
+                .content(content)
+                .author(author.toEntity())
+                .voter(voter.stream().map(SiteUserDTO::toEntity).collect(Collectors.toSet()))
+                .commentList(commentList.stream().map(CommentDTO::toEntity).collect(Collectors.toList()))
                 .build();
     }
 }

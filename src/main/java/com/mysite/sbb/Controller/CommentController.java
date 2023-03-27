@@ -36,7 +36,7 @@ public class CommentController {
         SiteUserDTO siteUserDTO = userService.getUser(principal.getName());
         // 바인딩 오류 추가예정
         commentService.create(answerDTO, content, siteUserDTO);
-        return String.format("redirect:/question/detail/%s#answer_%s", answerDTO.getQuestion().getId(), answerDTO.getId());
+        return String.format("redirect:/question/detail/%s#answer_%s", answerDTO.getQuestion(), answerDTO.getId());
     }
 
     // 보통 html에서 href로 요청하는건 get방식인듯...

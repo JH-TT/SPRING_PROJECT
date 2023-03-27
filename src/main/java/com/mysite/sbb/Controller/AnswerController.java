@@ -73,7 +73,7 @@ public class AnswerController {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "수정권한이 없습니다.");
         }
         answerService.modify(answerDTO, answerForm.getContent());
-        return String.format("redirect:/question/detail/%s#answer_%s", answerDTO.getQuestion().getId(), answerDTO.getId());
+        return String.format("redirect:/question/detail/%s#answer_%s", answerDTO.getQuestion(), answerDTO.getId());
     }
 
     @PreAuthorize("isAuthenticated()")
@@ -92,7 +92,8 @@ public class AnswerController {
     public String answerVote(Principal principal, @PathVariable("id") Long id) {
         AnswerDTO answer = answerService.getAnswer(id);
         SiteUserDTO siteUserDTO = userService.getUser(principal.getName());
+        System.out.println("siteUserDTO = " + siteUserDTO);
         answerService.vote(answer, siteUserDTO);
-        return String.format("redirect:/question/detail/%s#answer_%s", answer.getQuestion().getId(), answer.getId());
+        return String.format("redirect:/question/detail/%s#answer_%s", answer.getQuestion(), answer.getId());
     }
 }
