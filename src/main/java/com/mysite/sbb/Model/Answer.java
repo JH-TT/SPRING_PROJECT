@@ -1,6 +1,8 @@
 package com.mysite.sbb.Model;
 
 import com.mysite.sbb.DTO.AnswerDTO;
+import com.mysite.sbb.DTO.CommentDTO;
+import com.mysite.sbb.DTO.SiteUserDTO;
 import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
@@ -19,8 +21,6 @@ import static javax.persistence.FetchType.*;
 @Getter
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@AllArgsConstructor
-@Builder
 public class Answer extends BaseTimeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -46,6 +46,35 @@ public class Answer extends BaseTimeEntity {
     @OneToMany(mappedBy = "answer", cascade = CascadeType.ALL)
     private List<Comment> commentList = new ArrayList<>();
 
+    //==생성 메서드==//
+    @Builder
+    public Answer(String content, Question question, SiteUser author, Set<SiteUser> voter, List<Comment> commentList) {
+        this.content = content;
+        this.question = question;
+        this.author = author;
+        this.voter = voter;
+        this.commentList = commentList;
+    }
+
+    @Builder
+    public Answer(String content, Question question, SiteUser author) {
+        this.content = content;
+        this.question = question;
+        this.author = author;
+    }
+
+    @Builder
+    public Answer(String content, SiteUser author) {
+        this.content = content;
+        this.author = author;
+    }
+
+    public static Answer createAnswer(String content, Question question, SiteUserDTO author) {
+        Answer answer = new Answer(content, author.toEntity());
+        question.addAnswer(answer);
+        return answer;
+    }
+
     //==연관관계 메서드==//
     public void setQuestion(Question question) {
         this.question = question;
@@ -54,5 +83,22 @@ public class Answer extends BaseTimeEntity {
 
     public void addComment() {
         countOfComment++;
+    }
+
+    public Set<SiteUserDTO> changeToSiteUserDTOSet() {
+        System.out.println("changeToSiteUserDTOSet 실행");
+        return voter.stream().map(SiteUserDTO::from)
+                .collect(Collectors.toSet());
+    }
+
+    public List<CommentDTO> changeToCommentDTOList() {
+        System.out.println("changeToCommentDTOList 실행");
+        return commentList.stream().map(CommentDTO::from)
+                .collect(Collectors.toList());
+    }
+
+    public void vote(SiteUserDTO siteUserDTO) {
+        voter.add(siteUserDTO.toEntity());
+        System.out.println("voter = " + voter.size());
     }
 }
