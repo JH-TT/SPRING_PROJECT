@@ -1,12 +1,15 @@
 package com.mysite.sbb.Controller;
 
 import com.mysite.sbb.AnswerForm;
+import com.mysite.sbb.DTO.AnswerDTO;
 import com.mysite.sbb.DTO.QuestionDTO;
 import com.mysite.sbb.DTO.SiteUserDTO;
 import com.mysite.sbb.Model.PrincipalDetails;
 import com.mysite.sbb.Model.Question;
 import com.mysite.sbb.Model.SiteUser;
 import com.mysite.sbb.QuestionForm;
+import com.mysite.sbb.Service.AnswerService;
+import com.mysite.sbb.Service.CommentService;
 import com.mysite.sbb.Service.QuestionService;
 import com.mysite.sbb.Service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -37,6 +40,9 @@ public class QuestionController {
 
     private final QuestionService questionService;
 
+    //==init용 서비스==//
+    private final AnswerService answerService;
+    private final CommentService commentService;
     private final UserService userService;
 
     // 스프링부트의 페이징은 첫페이지 번호가 1이 아닌 0이다.
@@ -142,8 +148,11 @@ public class QuestionController {
     @PostConstruct
     public void init() {
         SiteUserDTO siteUserDTO = userService.create("ttt", "ttt@test.com", "1234");
-        for (int i = 0; i < 200; i++) {
-            questionService.create("테스트" + i, "테스트 내용입니다" + i, siteUserDTO);
+
+        for (int i = 0; i < 50; i++) {
+            Long aLong = questionService.create("테스트" + i, "테스트 내용입니다" + i, siteUserDTO);
+            AnswerDTO answerDTO = answerService.create(aLong, "테스트 댓글 입니다.", siteUserDTO);
+            commentService.create(answerDTO.getId(), "테스트 대댓글 입니다.", "ttt");
         }
     }
 }

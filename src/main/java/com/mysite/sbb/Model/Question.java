@@ -91,11 +91,6 @@ public class Question extends BaseTimeEntity {
         voter.add(siteUser);
     }
 
-    public void addAnswer(Answer answer) {
-        answerList.add(answer);
-        answer.setQuestion(this);
-    }
-
     public int countOfVoter() {
         return voter.size();
     }
