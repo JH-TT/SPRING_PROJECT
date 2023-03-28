@@ -6,7 +6,7 @@ import com.mysite.sbb.DTO.SiteUserDTO;
 import com.mysite.sbb.Model.Answer;
 
 public interface CommentService {
-    void create(AnswerDTO answerDTO, String content, SiteUserDTO siteUserDTO);
+    Long create(Long id, String content, String username);
     CommentDTO getComment(Long id);
     void modify(CommentDTO commentDTO, String content);
     void delete(CommentDTO commentDTO);

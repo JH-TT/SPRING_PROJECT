@@ -13,18 +13,22 @@ import java.util.Optional;
 
 @RequiredArgsConstructor
 @Service
+@Transactional
 public class CommentServiceImpl implements CommentService {
     private final CommentRepository commentRepository;
-
+    private final AnswerRepository answerRepository;
+    private final UserRepository userRepository;
 
     @Override
-    public void create(AnswerDTO answerDTO, String content, SiteUserDTO siteUserDTO) {
-        CommentDTO commentDTO = CommentDTO.builder()
-                .answer(answerDTO.toEntity())
-                .content(content)
-                .author(siteUserDTO.toEntity())
-                .build();
-        commentRepository.save(commentDTO.toEntity());
+    public Long create(Long id, String content, String username) {
+        Answer answer = answerRepository.findById(id).orElseThrow(
+                () -> new DataNotFoundException("해당 댓글이 존재하지 않습니다.")
+        );
+        SiteUser siteUser = userRepository.findByusername(username).orElseThrow(
+                () -> new DataNotFoundException("해당 유저가 존재하지 않습니다.")
+        );
+        Comment comment = Comment.createComment(answer, content, siteUser);
+        return commentRepository.save(comment).getId();
     }
 
     @Override

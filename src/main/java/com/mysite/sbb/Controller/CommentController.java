@@ -32,10 +32,9 @@ public class CommentController {
     @PreAuthorize("isAuthenticated()")
     public String createComment(Model model, @PathVariable("id") Long id
                                 , @RequestParam String content, @Valid CommentForm commentForm, BindingResult bindingResult, Principal principal) {
-        AnswerDTO answerDTO = this.answerService.getAnswer(id);
-        SiteUserDTO siteUserDTO = userService.getUser(principal.getName());
+        AnswerDTO answerDTO = answerService.getAnswer(id);
         // 바인딩 오류 추가예정
-        commentService.create(answerDTO, content, siteUserDTO);
+        commentService.create(id, content, principal.getName());
         return String.format("redirect:/question/detail/%s#answer_%s", answerDTO.getQuestion(), answerDTO.getId());
     }
 
