@@ -76,19 +76,17 @@ public class Answer extends BaseTimeEntity {
         countOfComment++;
     }
 
-    public Set<SiteUserDTO> changeToSiteUserDTOSet() {
-        System.out.println("changeToSiteUserDTOSet 실행");
-        return voter.stream().map(SiteUserDTO::from)
-                .collect(Collectors.toSet());
-    }
-
     public List<CommentDTO> changeToCommentDTOList() {
         System.out.println("changeToCommentDTOList 실행");
         return commentList.stream().map(CommentDTO::from)
                 .collect(Collectors.toList());
     }
 
-    public void vote(SiteUserDTO siteUserDTO) {
-        voter.add(siteUserDTO.toEntity());
+    public void vote(SiteUser siteUser) {
+        voter.add(siteUser);
+    }
+
+    public int countOfVoter() {
+        return voter.size();
     }
 }
