@@ -36,6 +36,18 @@ public class Comment extends BaseTimeEntity {
     @ManyToMany
     Set<SiteUser> voter = new HashSet<>();
 
+    //==생성 메서드==//
+    @Builder
+    public Comment(String content, SiteUser author) {
+        this.content = content;
+        this.author = author;
+    }
+    public static Comment createComment(Answer answer, String content, SiteUser author) {
+        Comment comment = new Comment(content, author);
+        comment.setAnswer(answer);
+        return comment;
+    }
+
     //==연관관계 메서드==//
     public void setAnswer(Answer answer) {
         this.answer = answer;
