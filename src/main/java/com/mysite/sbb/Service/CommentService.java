@@ -9,6 +9,6 @@ public interface CommentService {
     Long create(Long id, String content, String username);
     CommentDTO getComment(Long id);
     void modify(CommentDTO commentDTO, String content);
-    void delete(CommentDTO commentDTO);
-    void vote(CommentDTO commentDTO, SiteUserDTO siteUserDTO);
+    void delete(Long id);
+    void vote(Long id, String username);
 }

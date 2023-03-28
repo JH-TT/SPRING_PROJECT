@@ -52,9 +52,10 @@ public class CommentController {
 
     // 수정하고 제출할때는 post방식으로 넘어온다.
     @PreAuthorize("isAuthenticated()")
-    @PostMapping("/modify/{id}")
-    public String commentModify(@Valid CommentForm commentForm, BindingResult bindingResult
-            ,@PathVariable("id") Long id, Principal principal) {
+    @PostMapping("/modify/{questionId}/{id}")
+    public String commentModify(@Valid CommentForm commentForm, BindingResult bindingResult,
+                                @PathVariable("questionId") Long questionId, @PathVariable("id") Long id,
+                                Principal principal) {
         if(bindingResult.hasErrors()) {
             return "/comment/comment_form";
         }
@@ -63,26 +64,26 @@ public class CommentController {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "수정권한이 없습니다.");
         }
         commentService.modify(commentDTO, commentForm.getContent());
-        return String.format("redirect:/question/detail/%s#answer_%s", commentDTO.getAnswer().getQuestion().getId(), commentDTO.getAnswer().getId());
+        return String.format("redirect:/question/detail/%s#answer_%s", questionId, commentDTO.getAnswer());
     }
 
     @PreAuthorize("isAuthenticated()")
-    @GetMapping("/delete/{id}")
-    public String commentDelete(Principal principal, @PathVariable("id") Long id) {
+    @GetMapping("/delete/{questionId}/{id}")
+    public String commentDelete(Principal principal, @PathVariable("questionId") Long questionId, @PathVariable("id") Long id) {
         CommentDTO commentDTO = commentService.getComment(id);
         if(!commentDTO.getAuthor().getUsername().equals(principal.getName())) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "삭제권한이 없습니다.");
         }
-        commentService.delete(commentDTO);
-        return String.format("redirect:/question/detail/%s#answer_%s", commentDTO.getAnswer().getQuestion().getId(), commentDTO.getAnswer().getId());
+        commentService.delete(id);
+        return String.format("redirect:/question/detail/%s#answer_%s", questionId, commentDTO.getAnswer());
     }
 
     @PreAuthorize("isAuthenticated()")
-    @GetMapping("/vote/{id}")
-    public String commentVote(Principal principal, @PathVariable("id") Long id) {
+    @GetMapping("/vote/{questionId}/{id}")
+    public String commentVote(Principal principal, @PathVariable("questionId") Long questionId, @PathVariable("id") Long id) {
         CommentDTO commentDTO = commentService.getComment(id);
         SiteUserDTO siteUserDTO = userService.getUser(principal.getName());
-        commentService.vote(commentDTO, siteUserDTO);
-        return String.format("redirect:/question/detail/%s#answer_%s", commentDTO.getAnswer().getQuestion().getId(), commentDTO.getAnswer().getId());
+        commentService.vote(id, principal.getName());
+        return String.format("redirect:/question/detail/%s#answer_%s", questionId, commentDTO.getAnswer());
     }
 }
