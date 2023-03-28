@@ -1,5 +1,6 @@
 package com.mysite.sbb.Model;
 
+import com.mysite.sbb.DTO.SiteUserDTO;
 import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
@@ -37,7 +38,20 @@ public class Comment extends BaseTimeEntity {
 
     //==연관관계 메서드==//
     public void setAnswer(Answer answer) {
-        answer.getCommentList().add(this);
         this.answer = answer;
+        answer.getCommentList().add(this);
+        answer.addComment();
+    }
+
+    public int countOfVoter() {
+        return voter.size();
+    }
+
+    public void removeComment() {
+        answer.getCommentList().remove(this);
+    }
+
+    public void vote(SiteUser siteUser) {
+        voter.add(siteUser);
     }
 }
