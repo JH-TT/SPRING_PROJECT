@@ -19,16 +19,15 @@ public class CommentDTO {
     String content;
     LocalDateTime createDate;
     LocalDateTime modifiedDate;
-    Answer answer;
-    SiteUser author;
-    Set<SiteUser> voter;
+    Long answer;
+    SiteUserDTO author;
+    int voter;
 
     public Comment toEntity() {
         return Comment.builder()
                 .id(id)
                 .content(content)
-                .answer(answer)
-                .author(author)
+                .author(author.toEntity())
                 .build();
     }
 
@@ -40,8 +39,9 @@ public class CommentDTO {
                 .content(comment.getContent())
                 .createDate(comment.getCreateDate())
                 .modifiedDate(comment.getModifiedDate())
-                .answer(comment.getAnswer())
-                .author(comment.getAuthor())
+                .answer(comment.getAnswer().getId())
+                .author(SiteUserDTO.from(comment.getAuthor()))
+                .voter(comment.countOfVoter())
                 .build();
     }
 }
