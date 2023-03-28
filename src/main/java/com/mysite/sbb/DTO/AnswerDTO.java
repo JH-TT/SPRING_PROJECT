@@ -25,7 +25,7 @@ public class AnswerDTO {
     LocalDateTime modifiedDate;
     Long question;
     SiteUserDTO author;
-    Set<SiteUserDTO> voter;
+    int voter;
     List<CommentDTO> commentList;
 
     public static AnswerDTO from(Answer answer) {
@@ -38,7 +38,7 @@ public class AnswerDTO {
                 .modifiedDate(answer.getModifiedDate())
                 .question(answer.getQuestion().getId())
                 .author(SiteUserDTO.from(answer.getAuthor()))
-                .voter(answer.changeToSiteUserDTOSet())
+                .voter(answer.countOfVoter())
                 .commentList(answer.changeToCommentDTOList())
                 .build();
     }
@@ -47,7 +47,6 @@ public class AnswerDTO {
         return Answer.builder()
                 .content(content)
                 .author(author.toEntity())
-                .voter(voter.stream().map(SiteUserDTO::toEntity).collect(Collectors.toSet()))
                 .commentList(commentList.stream().map(CommentDTO::toEntity).collect(Collectors.toList()))
                 .build();
     }
