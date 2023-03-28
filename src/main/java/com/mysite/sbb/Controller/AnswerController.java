@@ -93,7 +93,7 @@ public class AnswerController {
         AnswerDTO answer = answerService.getAnswer(id);
         SiteUserDTO siteUserDTO = userService.getUser(principal.getName());
         System.out.println("siteUserDTO = " + siteUserDTO);
-        answerService.vote(answer, siteUserDTO);
+        answerService.vote(id, principal.getName());
         return String.format("redirect:/question/detail/%s#answer_%s", answer.getQuestion(), answer.getId());
     }
 }

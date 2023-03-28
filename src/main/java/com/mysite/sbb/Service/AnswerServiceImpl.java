@@ -9,6 +9,7 @@ import com.mysite.sbb.Model.Question;
 import com.mysite.sbb.Model.SiteUser;
 import com.mysite.sbb.Repository.AnswerRepository;
 import com.mysite.sbb.Repository.QuestionRepository;
+import com.mysite.sbb.Repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -22,6 +23,7 @@ public class AnswerServiceImpl implements AnswerService{
 
     private final AnswerRepository answerRepository;
     private final QuestionRepository questionRepository;
+    private final UserRepository userRepository;
     @Override
     @Transactional
     public AnswerDTO create(Long id, String content, SiteUserDTO author) {
@@ -75,7 +77,13 @@ public class AnswerServiceImpl implements AnswerService{
 
     @Override
     @Transactional
-    public void vote(AnswerDTO answerDTO, SiteUserDTO siteUserDTO) {
-        answerDTO.toEntity().vote(siteUserDTO);
+    public void vote(Long id, String username) {
+        Answer answer = answerRepository.findById(id).orElseThrow(
+                () -> new DataNotFoundException("해당 댓글이 존재하지 않습니다.")
+        );
+        SiteUser siteUser = userRepository.findByusername(username).orElseThrow(
+                () -> new DataNotFoundException("해당 유저가 존재하지 않습니다.")
+        );
+        answer.vote(siteUser);
     }
 }
