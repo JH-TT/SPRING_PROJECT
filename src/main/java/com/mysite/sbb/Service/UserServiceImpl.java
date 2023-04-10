@@ -28,45 +28,28 @@ public class UserServiceImpl implements UserService{
                 .username(username)
                 .email(email)
                 .password(passwordEncoder.encode(password))
-                .isNameChange(true) // 직접 아이디를 만든 유저는 바로 true로 넘긴다.
-                .provider("EMAIL")
                 .build();
         return SiteUserDTO.from(userRepository.save(siteUserDTO.toEntity()));
     }
 
     @Override
     public SiteUserDTO create(UserCreateForm userCreateForm) {
-        SiteUserDTO siteUserDTO = SiteUserDTO.builder()
-                .username(userCreateForm.getUsername())
-                .email(userCreateForm.getEmail())
-                .password(passwordEncoder.encode(userCreateForm.getPassword1()))
-                .isNameChange(true) // 직접 아이디를 만든 유저는 바로 true로 넘긴다.
-                .provider("EMAIL")
-                .build();
-        return SiteUserDTO.from(userRepository.save(siteUserDTO.toEntity()));
+        userCreateForm.setPassword1(passwordEncoder.encode(userCreateForm.getPassword1()));
+        return SiteUserDTO.from(userRepository.save(userCreateForm.toEntity()));
     }
 
     @Override
     public SiteUserDTO create(SiteUserDTO siteUserDTO) {
-//        SiteUser user = SiteUser.builder()
-//                .username(siteUserDTO.getUsername())
-//                .password(siteUserDTO.getPassword())
-//                .email(siteUserDTO.getEmail())
-//                .role(siteUserDTO.getRole())
-//                .provider(siteUserDTO.getProvider())
-//                .providerId(siteUserDTO.getProviderId())
-//                .isNameChange(siteUserDTO.isNameChange())
-//                .build();
         return SiteUserDTO.from(userRepository.save(siteUserDTO.toEntity()));
     }
 
     @Override
     @Transactional(readOnly = true)
-    public SiteUserDTO getUser(String username) {
+    public SiteUser getUser(String username) {
         SiteUser siteUser = userRepository.findByusername(username).orElseThrow(
                 () -> new DataNotFoundException("해당 회원이 존재하지 않습니다.")
         );
-        return SiteUserDTO.from(siteUser);
+        return siteUser;
     }
 
     @Override

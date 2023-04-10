@@ -4,6 +4,7 @@ package com.mysite.sbb.Controller;
 import com.mysite.sbb.DTO.SiteUserDTO;
 import com.mysite.sbb.DataNotFoundException;
 import com.mysite.sbb.Model.PrincipalDetails;
+import com.mysite.sbb.Model.SiteUser;
 import com.mysite.sbb.Service.UserService;
 import com.mysite.sbb.UserCreateForm;
 import com.mysite.sbb.UsernameForm;
@@ -78,7 +79,7 @@ public class UserController {
     public String goSettingNickNamePage(@ModelAttribute("usernameForm") UsernameForm usernameForm ,Authentication authentication) {
         PrincipalDetails principal = (PrincipalDetails) authentication.getPrincipal();
         log.info("goSettingNickNamePage.name = {}", authentication.getName());
-        SiteUserDTO siteUser = principal.getUser();
+        SiteUser siteUser = principal.getUser();
         log.info("siteUser={}", siteUser.toString());
         boolean isCheck = siteUser.isNameChange();
         if(isCheck) {
@@ -96,58 +97,21 @@ public class UserController {
         }
 
         try{
-            SiteUserDTO siteUserDTO = userService.getUser(usernameForm.getUsername());
+            SiteUser siteUserDTO = userService.getUser(usernameForm.getUsername());
             bindingResult.rejectValue("username", "changeNameFailed", "중복되는 이름입니다.");
             return "login/setnickname";
         } catch (DataNotFoundException e) {
-            String email = (String) principalDetails.getAttributes().get("email");
+            String email = principalDetails.getUser().getEmail();
             log.info("email={}", email);
             log.info("username={}", usernameForm.getUsername());
             userService.updateUserName(usernameForm.getUsername(), email, principalDetails);
-            SiteUserDTO siteUserDTO = userService.getUser(usernameForm.getUsername());
+            SiteUser siteUserDTO = userService.getUser(usernameForm.getUsername());
             Authentication authentication = authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(usernameForm.getUsername(), siteUserDTO.getPassword()));
             SecurityContextHolder.getContext().setAuthentication(authentication);
         }
 
         return "redirect:/";
-    }
-
-    @GetMapping("/form/loginInfo")
-    @ResponseBody
-    public String formLoginInfo(Principal principal) {
-//        PrincipalDetails principal = (PrincipalDetails) authentication.getPrincipal();
-        SiteUserDTO siteUser = userService.getUser(principal.getName());
-        log.info("siteUser = " + siteUser.toString());
-
-        return siteUser.toString();
-    }
-
-    @GetMapping("/oauth/loginInfo")
-    @ResponseBody
-    public String oauthLoginInfo(Authentication authentication, @AuthenticationPrincipal OAuth2User oAuth2UserPrincipal) {
-        OAuth2User oAuth2User = (OAuth2User) authentication.getPrincipal();
-        Map<String, Object> attributes = oAuth2User.getAttributes();
-        log.info("attributes = " + attributes);
-
-        Map<String, Object> attributes1 = oAuth2UserPrincipal.getAttributes();
-
-        return attributes.toString(); // 세션에 담기 user 가져올 수 있다.
-    }
-
-    @GetMapping("/loginInfo")
-    @ResponseBody
-    public String loginInfo(Authentication authentication, @AuthenticationPrincipal PrincipalDetails principalDetails) {
-        String result = "";
-
-        PrincipalDetails principal = (PrincipalDetails) authentication.getPrincipal();
-        if (principal.getUser().getProvider() == null) {
-            result = result + "Form 로그인 : " + principal;
-        } else {
-            result = result + "OAuth2 로그인 : " + principal;
-        }
-        log.info("result = {}", result);
-        return result;
     }
 
     @PostConstruct

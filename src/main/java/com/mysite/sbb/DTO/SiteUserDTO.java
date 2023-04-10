@@ -17,48 +17,31 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 public class SiteUserDTO {
     @NotNull
-    Long id;
-    @NotNull
     String username;
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     @NotNull
     String password;
     @NotNull
     String email;
-    LocalDateTime createDate;
     UserRole role;
-
-    String provider;
-    String providerId;
-    boolean isNameChange;
 
     public SiteUser toEntity() {
         return SiteUser.builder()
-                .id(id)
                 .username(username)
                 .password(password)
                 .email(email)
-                .createDate(createDate)
+                .isNameChange(true)
                 .role(UserRole.USER)
-                .provider(provider)
-                .providerId(providerId)
-                .isNameChange(isNameChange)
                 .build();
     }
 
     public static SiteUserDTO from(SiteUser siteUser) {
-        if(siteUser == null) return null;
 
         return SiteUserDTO.builder()
-                .id(siteUser.getId())
                 .username(siteUser.getUsername())
                 .password(siteUser.getPassword())
                 .email(siteUser.getEmail())
-                .createDate(siteUser.getCreateDate())
                 .role(siteUser.getRole())
-                .provider(siteUser.getProvider())
-                .providerId(siteUser.getProviderId())
-                .isNameChange(siteUser.isNameChange())
                 .build();
     }
 }

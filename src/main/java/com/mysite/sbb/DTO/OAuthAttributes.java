@@ -1,6 +1,7 @@
 package com.mysite.sbb.DTO;
 
 import com.mysite.sbb.Enum.UserRole;
+import com.mysite.sbb.Model.SiteUser;
 import com.mysite.sbb.Model.User;
 import lombok.Builder;
 import lombok.Getter;
@@ -11,22 +12,24 @@ import java.util.Map;
 public class OAuthAttributes {
 
     private Map<String, Object> attributes;
-    private String nameAttributeKey, name, email, picture;
+    private String nameAttributeKey, name, email;
 
     @Builder
     public OAuthAttributes(Map<String, Object> attributes,
                            String nameAttributeKey,
-                           String name, String email, String picture) {
+                           String name, String email) {
         this.attributes = attributes;
         this.nameAttributeKey = nameAttributeKey;
         this.name = name;
         this.email = email;
-        this.picture = picture;
     }
 
     public static OAuthAttributes of(String registrationId,
                                      String userNameAttributeName,
                                      Map<String, Object> attributes) {
+        if (registrationId.equals("naver")) {
+            return ofNaver("id", attributes);
+        }
         return ofGoogle(userNameAttributeName, attributes);
     }
 
@@ -35,18 +38,35 @@ public class OAuthAttributes {
         return OAuthAttributes.builder()
                 .name((String) attributes.get("name"))
                 .email((String) attributes.get("email"))
-                .picture((String) attributes.get("picture"))
                 .attributes(attributes)
                 .nameAttributeKey(userNameAttributeName)
                 .build();
     }
 
-    public User toEntity() {
-        return User.builder()
+    public static OAuthAttributes ofNaver(String userNameAttributeName,
+                                           Map<String, Object> attributes) {
+        Map<String, Object> response = (Map<String, Object>) attributes.get("response");
+
+        return OAuthAttributes.builder()
+                .name((String) attributes.get("name"))
+                .email((String) attributes.get("email"))
+                .attributes(response)
+                .nameAttributeKey(userNameAttributeName)
+                .build();
+    }
+
+    // 최초가입시
+    public SiteUser toEntity() {
+        return SiteUser.builder()
                 .username(name)
                 .email(email)
-                .picture(picture)
-                .role(UserRole.USER)
+                .isNameChange(false)
+                .role(UserRole.SNS)
+                .emailCheck(true)
                 .build();
+    }
+
+    public void updateName(String name) {
+        this.name = name;
     }
 }

@@ -2,6 +2,7 @@ package com.mysite.sbb.Model;
 
 import com.mysite.sbb.DTO.SiteUserDTO;
 import com.mysite.sbb.OAuth.userinfo.OAuth2UserInfo;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.ToString;
 import org.springframework.security.core.GrantedAuthority;
@@ -12,39 +13,13 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Map;
 
-@Getter
+
 @ToString
-public class PrincipalDetails implements UserDetails, OAuth2User {
+@Getter
+@AllArgsConstructor
+public class PrincipalDetails implements UserDetails {
 
-    private final SiteUserDTO user;
-//    private Map<String, Object> attributes;
-    private OAuth2UserInfo oAuth2UserInfo;
-
-    // Form 로그인 시 사용
-    public PrincipalDetails(SiteUserDTO user) {
-        this.user = user;
-    }
-
-
-    // OAuth2 로그인 시 사용
-//    public PrincipalDetails(SiteUser user, Map<String, Object> attributes) {
-//        this.user = user;
-//        this.attributes = attributes;
-//    }
-    public PrincipalDetails(SiteUserDTO user, OAuth2UserInfo oAuth2UserInfo) {
-        this.user = user;
-        this.oAuth2UserInfo = oAuth2UserInfo;
-    }
-
-    @Override
-    public String getName() {
-        return oAuth2UserInfo.getName();
-    }
-
-    @Override
-    public Map<String, Object> getAttributes() {
-        return oAuth2UserInfo.getAttributes();
-    }
+    private final SiteUser user;
 
     /**
      * UserDetails 구현

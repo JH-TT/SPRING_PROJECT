@@ -11,7 +11,7 @@ public interface UserService {
     SiteUserDTO create(String username, String email, String password);
     SiteUserDTO create(UserCreateForm createForm);
     SiteUserDTO create(SiteUserDTO siteUserDTO);
-    SiteUserDTO getUser(String username);
+    SiteUser getUser(String username);
     SiteUserDTO getUserByEmail(String email);
 
     void updateUserName(String username, String email, PrincipalDetails principalDetails);
