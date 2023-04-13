@@ -66,4 +66,8 @@ public class Comment extends BaseTimeEntity {
     public void vote(SiteUser siteUser) {
         voter.add(siteUser);
     }
+
+    public void updateContent(String content) {
+        this.content = content;
+    }
 }

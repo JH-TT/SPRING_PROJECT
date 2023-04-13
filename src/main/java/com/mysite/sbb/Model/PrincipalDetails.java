@@ -1,17 +1,13 @@
 package com.mysite.sbb.Model;
 
-import com.mysite.sbb.DTO.SiteUserDTO;
-import com.mysite.sbb.OAuth.userinfo.OAuth2UserInfo;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.ToString;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.oauth2.core.user.OAuth2User;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Map;
 
 
 @ToString
