@@ -25,12 +25,12 @@
             </a>
             <a th:href="@{|/answer/modify/${answer.id}|}" class="btn btn-sm btn-outline-secondary"
                sec:authorize="isAuthenticated()"
-               th:if="${answer.author != null and #authentication.getPrincipal().getUsername() == answer.author.username}"
+               th:if="${answer.author != null and session.user.getName() == answer.author.username}"
                th:text="수정"></a>
             <a href="javascript:void(0);" th:data-uri="@{|/answer/delete/${answer.id}|}"
                class="delete btn btn-sm btn-outline-secondary"
                sec:authorize="isAuthenticated()"
-               th:if="${answer.author != null and #authentication.getPrincipal().getUsername() == answer.author.username}"
+               th:if="${answer.author != null and session.user.getName() == answer.author.username}"
                th:text="삭제"></a>
             <button class="btn btn-sm btn-outline-secondary"
                     sec:authorize="isAuthenticated()"
@@ -70,12 +70,12 @@
                 </a>
                 <a th:href="@{|/comment/modify/${question.id}/${comment.id}|}" class="btn btn-sm btn-outline-secondary"
                    sec:authorize="isAuthenticated()"
-                   th:if="${comment.author != null and #authentication.getPrincipal().getUsername() == comment.author.username}"
+                   th:if="${comment.author != null and session.user.getName() == comment.author.username}"
                    th:text="수정"></a>
                 <a href="javascript:void(0);" th:data-uri="@{|/comment/delete/${question.id}/${comment.id}|}"
                    class="delete btn btn-sm btn-outline-secondary"
                    sec:authorize="isAuthenticated()"
-                   th:if="${comment.author != null and #authentication.getPrincipal().getUsername() == comment.author.username}"
+                   th:if="${comment.author != null and session.user.getName() == comment.author.username}"
                    th:text="삭제"></a>
             </div>
         </div>

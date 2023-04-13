@@ -19,6 +19,7 @@
           <h3 class="pt-3 font-weight-bold">Login</h3>
         </div>
         <div class="panel-body p-3">
+          <!--<form th:action="@{/loginProcess}" method="post">-->
           <form th:action="@{/user/login}" method="post">
             <div class="form-group py-2">
               <div class="input-field"> <span class="far fa-user p-2"></span> <input type="text" name="username" id="username" placeholder="Username or Email" required> </div>
