@@ -24,11 +24,16 @@ public class AnswerServiceImpl implements AnswerService{
     private final AnswerRepository answerRepository;
     private final QuestionRepository questionRepository;
     private final UserRepository userRepository;
+
+    // 유저 이메일만 넘어올 경우
     @Override
     @Transactional
-    public AnswerDTO create(Long id, String content, SiteUserDTO author) {
+    public AnswerDTO create(Long id, String content, String email) {
         Question question = questionRepository.findById(id).orElseThrow(
                 () -> new DataNotFoundException("해당 질문이 존재하지 않습니다.")
+        );
+        SiteUser author = userRepository.findByemail(email).orElseThrow(
+                () -> new DataNotFoundException("해당 유저가 존재하지 않습니다.")
         );
         Answer answer = Answer.createAnswer(content, question, author);
 
@@ -47,29 +52,27 @@ public class AnswerServiceImpl implements AnswerService{
 
     @Override
     public AnswerDTO getAnswer(Long id) {
-        Optional<Answer> answer = answerRepository.findById(id);
-        if(answer.isPresent()) {
-            return AnswerDTO.from(answer.get());
-        } else {
-            throw new DataNotFoundException("answer not found");
-        }
+        Answer answer = answerRepository.findById(id).orElseThrow(
+                () -> new DataNotFoundException("해당 댓글이 존재하지 않습니다")
+        );
+        return AnswerDTO.from(answer);
     }
 
     @Override
     public Long getQuestionId(Long id) {
-        Optional<Answer> answer = answerRepository.findById(id);
-        if(answer.isPresent()) {
-            return answer.get().getQuestion().getId();
-        } else {
-            throw new DataNotFoundException("Question not found");
-        }
+        Answer answer = answerRepository.findById(id).orElseThrow(
+                () -> new DataNotFoundException("해당 댓글이 존재하지 않습니다")
+        );
+        return answer.getQuestion().getId();
     }
 
     @Override
     @Transactional
     public void modify(AnswerDTO answerDTO, String content) {
-        answerDTO.setContent(content);
-        answerRepository.save(answerDTO.toEntity());
+        Answer answer = answerRepository.findById(answerDTO.getId()).orElseThrow(
+                () -> new DataNotFoundException("해당 댓글이 존재하지 않습니다.")
+        );
+        answer.updateContent(content); // 변경감지 이용
     }
 
     @Override

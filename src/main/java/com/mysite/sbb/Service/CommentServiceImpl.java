@@ -49,8 +49,10 @@ public class CommentServiceImpl implements CommentService {
 
     @Override
     public void modify(CommentDTO commentDTO, String content) {
-        commentDTO.setContent(content);
-        commentRepository.save(commentDTO.toEntity());
+        Comment comment = commentRepository.findById(commentDTO.getId()).orElseThrow(
+                () -> new DataNotFoundException("해당 대댓글이 존재하지 않습니다")
+        );
+        comment.updateContent(content);
     }
 
     @Override
