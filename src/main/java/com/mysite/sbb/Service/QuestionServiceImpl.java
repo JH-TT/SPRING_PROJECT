@@ -106,7 +106,10 @@ public class QuestionServiceImpl implements QuestionService{
 
     @Override
     @Transactional
-    public Long create(String subject, String content, SiteUserDTO author) {
+    public Long create(String subject, String content, String email) {
+        SiteUser author = userRepository.findByemail(email).orElseThrow(
+                () -> new DataNotFoundException("해당 유저가 존재하지 않습니다")
+        );
         Question question = new Question(subject, content, author);
         return questionRepository.save(question).getId();
     }

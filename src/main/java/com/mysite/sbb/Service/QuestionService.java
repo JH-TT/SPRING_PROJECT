@@ -16,7 +16,7 @@ public interface QuestionService {
     Page<QuestionDTO> getList(int page, String kw);
     Page<QuestionListDTO> getListV1(int page, String kw);
     QuestionDTO getQuestion(Long id);
-    Long create(String subject, String content, SiteUserDTO author);
+    Long create(String subject, String content, String email);
     void modify(Long id, String subject, String content);
     void delete(Long id);
     void vote(Long id, String username);
