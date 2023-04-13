@@ -1,6 +1,7 @@
 package com.mysite.sbb.Controller;
 
 
+import com.mysite.sbb.DTO.SessionUser;
 import com.mysite.sbb.DTO.SiteUserDTO;
 import com.mysite.sbb.DataNotFoundException;
 import com.mysite.sbb.Model.PrincipalDetails;
@@ -24,6 +25,8 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.PostConstruct;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 import java.security.Principal;
 import java.util.Map;
@@ -36,6 +39,7 @@ public class UserController {
 
     private final UserService userService;
     private final AuthenticationManager authenticationManager;
+    private final HttpSession httpSession;
 
     // get요청시 회원가입 템플릿 렌더링
     @GetMapping("/signup")
@@ -54,6 +58,7 @@ public class UserController {
             bindingResult.rejectValue("password2", "passwordInCorrect", "2개의 패스워드가 일치하지 않습니다.");
             return "login/signup_form";
         }
+
         try {
             userService.create(userCreateForm);
         } catch (DataIntegrityViolationException e) {
@@ -64,7 +69,7 @@ public class UserController {
             return "login/signup_form";
         }
 
-        return "redirect:/";
+        return "redirect:/user/login";
     }
 
     // 실제 로그인을 진행하는 Post방식의 메서드는
@@ -76,12 +81,10 @@ public class UserController {
 
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/setNickName")
-    public String goSettingNickNamePage(@ModelAttribute("usernameForm") UsernameForm usernameForm ,Authentication authentication) {
-        PrincipalDetails principal = (PrincipalDetails) authentication.getPrincipal();
-        log.info("goSettingNickNamePage.name = {}", authentication.getName());
-        SiteUser siteUser = principal.getUser();
-        log.info("siteUser={}", siteUser.toString());
-        boolean isCheck = siteUser.isNameChange();
+    public String goSettingNickNamePage(@ModelAttribute("usernameForm") UsernameForm usernameForm, HttpServletRequest request) {
+        HttpSession session = request.getSession();
+        SessionUser sessionUser = (SessionUser) session.getAttribute("user");
+        boolean isCheck = sessionUser.isNameCheck();
         if(isCheck) {
             return "redirect:/";
         }
@@ -91,7 +94,7 @@ public class UserController {
     @PostMapping("/setNickName")
     public String setNickName(@Validated @ModelAttribute UsernameForm usernameForm,
                               BindingResult bindingResult,
-                              @AuthenticationPrincipal PrincipalDetails principalDetails) {
+                              HttpServletRequest request) {
         if (bindingResult.hasErrors()) {
             return "login/setnickname";
         }
@@ -101,14 +104,12 @@ public class UserController {
             bindingResult.rejectValue("username", "changeNameFailed", "중복되는 이름입니다.");
             return "login/setnickname";
         } catch (DataNotFoundException e) {
-            String email = principalDetails.getUser().getEmail();
-            log.info("email={}", email);
+            HttpSession session = request.getSession();
+            SessionUser sessionUser = (SessionUser) session.getAttribute("user");
+            log.info("email={}", sessionUser.getEmail());
             log.info("username={}", usernameForm.getUsername());
-            userService.updateUserName(usernameForm.getUsername(), email, principalDetails);
-            SiteUser siteUserDTO = userService.getUser(usernameForm.getUsername());
-            Authentication authentication = authenticationManager.authenticate(
-                    new UsernamePasswordAuthenticationToken(usernameForm.getUsername(), siteUserDTO.getPassword()));
-            SecurityContextHolder.getContext().setAuthentication(authentication);
+            SiteUser siteUser = userService.updateUserName(usernameForm.getUsername(), sessionUser.getEmail());
+            httpSession.setAttribute("user", new SessionUser(siteUser));
         }
 
         return "redirect:/";

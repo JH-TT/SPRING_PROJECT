@@ -8,12 +8,11 @@ import com.mysite.sbb.UserCreateForm;
 import java.util.Optional;
 
 public interface UserService {
-    SiteUserDTO create(String username, String email, String password);
+    SiteUser create(String username, String email, String password);
     SiteUserDTO create(UserCreateForm createForm);
     SiteUserDTO create(SiteUserDTO siteUserDTO);
     SiteUser getUser(String username);
     SiteUserDTO getUserByEmail(String email);
 
-    void updateUserName(String username, String email, PrincipalDetails principalDetails);
-//    SiteUser updateUserName(String username, String email);
+    SiteUser updateUserName(String username, String email);
 }

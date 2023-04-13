@@ -23,13 +23,13 @@ public class UserServiceImpl implements UserService{
     private final PasswordEncoder passwordEncoder;
 
     @Override
-    public SiteUserDTO create(String username, String email, String password) {
+    public SiteUser create(String username, String email, String password) {
         SiteUserDTO siteUserDTO = SiteUserDTO.builder()
                 .username(username)
                 .email(email)
                 .password(passwordEncoder.encode(password))
                 .build();
-        return SiteUserDTO.from(userRepository.save(siteUserDTO.toEntity()));
+        return userRepository.save(siteUserDTO.toEntity());
     }
 
     @Override
@@ -62,9 +62,10 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
-    public void updateUserName(String username, String email, PrincipalDetails principalDetails) {
+    public SiteUser updateUserName(String username, String email) {
         SiteUser siteUser1 = userRepository.findByemail(email).orElseThrow(
                 () -> new DataNotFoundException("해당 회원이 존재하지 않습니다"));
         siteUser1.updateUserName(username);
+        return siteUser1;
     }
 }
