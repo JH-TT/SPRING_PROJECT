@@ -48,6 +48,13 @@ public class Answer extends BaseTimeEntity {
 
     //==생성 메서드==//
     @Builder
+    public Answer(Long id, String content, SiteUser author, List<Comment> commentList) {
+        this.id = id;
+        this.content = content;
+        this.author = author;
+        this.commentList = commentList;
+    }
+    @Builder
     public Answer(String content, SiteUser author, List<Comment> commentList) {
         this.content = content;
         this.author = author;
@@ -60,8 +67,8 @@ public class Answer extends BaseTimeEntity {
         this.author = author;
     }
 
-    public static Answer createAnswer(String content, Question question, SiteUserDTO author) {
-        Answer answer = new Answer(content, author.toEntity());
+    public static Answer createAnswer(String content, Question question, SiteUser author) {
+        Answer answer = new Answer(content, author);
         answer.setQuestion(question);
         return answer;
     }
@@ -88,5 +95,9 @@ public class Answer extends BaseTimeEntity {
 
     public int countOfVoter() {
         return voter.size();
+    }
+
+    public void updateContent(String content) {
+        this.content = content;
     }
 }
