@@ -35,6 +35,16 @@ public class AnswerServiceImpl implements AnswerService{
         return AnswerDTO.from(answerRepository.save(answer));
     }
 
+    // 유저엔티티가 넘어올 경우
+    @Override
+    public AnswerDTO create(Long id, String content, SiteUser author) {
+        Question question = questionRepository.findById(id).orElseThrow(
+                () -> new DataNotFoundException("해당 질문이 존재하지 않습니다.")
+        );
+        Answer answer = Answer.createAnswer(content, question, author);
+        return AnswerDTO.from(answerRepository.save(answer));
+    }
+
     @Override
     public AnswerDTO getAnswer(Long id) {
         Optional<Answer> answer = answerRepository.findById(id);
