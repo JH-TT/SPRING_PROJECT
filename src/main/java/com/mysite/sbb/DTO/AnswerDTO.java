@@ -45,6 +45,7 @@ public class AnswerDTO {
 
     public Answer toEntity() {
         return Answer.builder()
+                .id(id)
                 .content(content)
                 .author(author.toEntity())
                 .commentList(commentList.stream().map(CommentDTO::toEntity).collect(Collectors.toList()))
