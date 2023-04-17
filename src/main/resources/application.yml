@@ -42,6 +42,9 @@ spring:
             scope:
               - profile
               - email
+          github:
+            client-id: 3631b99780777031d70a
+            client-secret: 73a62eb56ce064850d72568b7fed4a2cf94eee6c
         provider:
           naver:
             authorization-uri: https://nid.naver.com/oauth2.0/authorize

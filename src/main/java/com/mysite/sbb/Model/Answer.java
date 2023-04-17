@@ -84,7 +84,6 @@ public class Answer extends BaseTimeEntity {
     }
 
     public List<CommentDTO> changeToCommentDTOList() {
-        System.out.println("changeToCommentDTOList 실행");
         return commentList.stream().map(CommentDTO::from)
                 .collect(Collectors.toList());
     }

@@ -2,7 +2,6 @@ package com.mysite.sbb.DTO;
 
 import com.mysite.sbb.Enum.UserRole;
 import com.mysite.sbb.Model.SiteUser;
-import com.mysite.sbb.Model.User;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -29,8 +28,19 @@ public class OAuthAttributes {
                                      Map<String, Object> attributes) {
         if (registrationId.equals("naver")) {
             return ofNaver("id", attributes);
+        } else if (registrationId.equals("github")) {
+            return ofGithub("id", attributes);
         }
         return ofGoogle(userNameAttributeName, attributes);
+    }
+
+    private static OAuthAttributes ofGithub(String userNameAttributeName, Map<String, Object> attributes) {
+        return OAuthAttributes.builder()
+                .name((String) attributes.get("login"))
+                .email((String) attributes.get("login") + "@github.com")
+                .attributes(attributes)
+                .nameAttributeKey(userNameAttributeName)
+                .build();
     }
 
     public static OAuthAttributes ofGoogle(String userNameAttributeName,
