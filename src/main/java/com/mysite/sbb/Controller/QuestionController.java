@@ -3,6 +3,7 @@ package com.mysite.sbb.Controller;
 import com.mysite.sbb.AnswerForm;
 import com.mysite.sbb.DTO.AnswerDTO;
 import com.mysite.sbb.DTO.QuestionDTO;
+import com.mysite.sbb.DTO.QuestionListDTO;
 import com.mysite.sbb.DTO.SessionUser;
 import com.mysite.sbb.Enum.UserRole;
 import com.mysite.sbb.Model.SiteUser;
@@ -48,7 +49,8 @@ public class QuestionController {
     public String list(Model model, @RequestParam(value = "page", defaultValue = "0") int page,
                        @RequestParam(value = "kw", defaultValue = "") String kw,
                        @AuthenticationPrincipal OAuth2User oAuth2UserPrincipal) {
-        Page<QuestionDTO> paging = questionService.getList(page, kw);
+//        Page<QuestionDTO> paging = questionService.getList(page, kw);
+        Page<QuestionListDTO> paging = questionService.getListV1(page, kw);
         model.addAttribute("paging", paging);
         model.addAttribute("kw", kw);
 
