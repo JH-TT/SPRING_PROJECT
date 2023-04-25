@@ -14,6 +14,8 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.AuthenticationFailureHandler;
+
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 @Configuration
@@ -24,7 +26,6 @@ public class SecurityConfig {
 
     private final UserSecurityService userSecurityService;
     private final PrincipalOauth2UserService principalOauth2UserService;
-
 
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration)
@@ -45,9 +46,9 @@ public class SecurityConfig {
 
         // 모든 인증되지 않은 요청을 허락.
         http
+                .csrf().disable()
                 .authorizeRequests()
-                .antMatchers("/**")
-                .permitAll()
+                .antMatchers("/**").permitAll()
                 .and()
                     .formLogin()
                     .loginPage("/user/login")
@@ -56,12 +57,10 @@ public class SecurityConfig {
                     .logout()
                     .logoutRequestMatcher(new AntPathRequestMatcher("/user/logout"))
                     .logoutSuccessUrl("/") // 루트URL로 이동
-                    .invalidateHttpSession(true) // 세션삭제
                 .and()
                     .oauth2Login()
                     .loginPage("/user/login")
                     .defaultSuccessUrl("/user/setNickName")
-    //                .defaultSuccessUrl("/")
                     .failureUrl("/user/login")
                     .userInfoEndpoint()
                     .userService(principalOauth2UserService);
