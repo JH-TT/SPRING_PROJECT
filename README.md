@@ -39,6 +39,7 @@
     - 소셜 로그인으로 로그인 하면 닉네임을 새로 만들도록 구현.
 - 비밀번호 보이기 구현완료
 - 아이디 기억하기 미구현
+- **추가** 깃허브 로그인 구현
 
 ### 회원가입
 ![회원가입](https://user-images.githubusercontent.com/79801565/208492552-1d40b3f6-d686-4c4c-8fdc-e53d6e63b12f.png)
@@ -50,10 +51,11 @@
 - 비밀번호 규정 추가예정
 
 ### 질문목록
-![질문목록](https://user-images.githubusercontent.com/79801565/208492956-2c8e34aa-de72-4bca-b12c-0aa09ddb322d.png)
+![질문목록](https://user-images.githubusercontent.com/79801565/234372785-f7ace4b2-e722-4b20-a594-94a6a9fca000.png)
 
 - 검색기능, 질문등록기능, 페이징기능 구현완료
 - 페이징이 한번에 5개에서 최대 7개까지 늘어나서 그냥 5개 혹은 10개로 고정할 예정.
+- 추천수 추가
 
 ### 질문상세
 ![질문상세](https://user-images.githubusercontent.com/79801565/208493337-2f95937e-54ab-45ee-a04f-0eb14edb2dc2.png)
