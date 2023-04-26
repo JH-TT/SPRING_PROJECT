@@ -28,6 +28,13 @@
 - join fetch 오류
   - 그냥 join fetch를 하니까 디폴트로 inner join이 되다보니 댓글이 없는 질문에 들어가면 오류발생함.
   - left join fetch로 해결했다.
+- _csrf토큰 오류
+  - 질문, 댓글폼에 가면 _csrf토큰 오류가 발생했다. 왜 그런가 봤더니 redis를 테스트한다고 post를 호출하는데 csrf를 잠시 disable했던것 때문에 관련 기능을 제대로 하지 못했던 것이다.
+  ```html
+  <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+  ```
+  - 여기서 고민이 됐던것은, csrf를 disable상태로 계속 두고 수정창이나 생성창을 따로 만들까 혹은 csrf를 활성화해서 유연하게 할까 고민을 헀다.
+  - 일단은 후자를 선택해서 유연하게 둔 뒤에, 나중에 바꿀 일이 생기면 바꾸기로 결정.
 
 ## 기능들
 
