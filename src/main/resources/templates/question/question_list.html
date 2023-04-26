@@ -20,6 +20,7 @@
                 <th style="width:50%">제목</th>
                 <th>글쓴이</th>
                 <th>작성일시</th>
+                <th>추천</th>
             </tr>
             </thead>
             <tbody>
@@ -35,9 +36,9 @@
                     </span>
                 </td>
                 <td><span th:if="${question.author != null}" th:text="${question.author}"></span></td>
-<!--                <td><span th:if="${question.author != null}" th:text="${question.author.username}"></span></td>-->
                 <!-- #temporals.format(날짜객체, 날짜포맷) - 날짜객체를 날짜포맷에 맞게 변환한다. -->
                 <td th:text="${#temporals.format(question.createDate, 'yyyy-MM-dd HH:mm')}"></td>
+                <td><span th:text="${question.voter}">999</span></td>
             </tr>
             </tbody>
         </table>

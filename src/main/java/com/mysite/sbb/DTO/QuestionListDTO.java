@@ -27,6 +27,7 @@ public class QuestionListDTO {
                 .subject(question.getSubject())
                 .author(question.getAuthor().getUsername())
                 .countOfAnswerComment(question.getTotalCountOfAnswerAndComment())
+                .voter(question.countOfVoter())
                 .build();
     }
 

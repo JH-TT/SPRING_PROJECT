@@ -49,7 +49,6 @@ public class QuestionController {
     public String list(Model model, @RequestParam(value = "page", defaultValue = "0") int page,
                        @RequestParam(value = "kw", defaultValue = "") String kw,
                        @AuthenticationPrincipal OAuth2User oAuth2UserPrincipal) {
-//        Page<QuestionDTO> paging = questionService.getList(page, kw);
         Page<QuestionListDTO> paging = questionService.getListV1(page, kw);
         model.addAttribute("paging", paging);
         model.addAttribute("kw", kw);
