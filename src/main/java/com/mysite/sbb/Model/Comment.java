@@ -52,7 +52,6 @@ public class Comment extends BaseTimeEntity {
     public void setAnswer(Answer answer) {
         this.answer = answer;
         answer.getCommentList().add(this);
-        answer.addComment();
     }
 
     public int countOfVoter() {
@@ -61,7 +60,6 @@ public class Comment extends BaseTimeEntity {
 
     public void removeComment() {
         answer.getCommentList().remove(this);
-        answer.removeComment();
     }
 
     public void vote(SiteUser siteUser) {

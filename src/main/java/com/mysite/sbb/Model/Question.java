@@ -75,7 +75,7 @@ public class Question extends BaseTimeEntity {
     public int getTotalCountOfAnswerAndComment() {
         return answerList
                 .stream()
-                .mapToInt(Answer::getCountOfComment)
+                .mapToInt(Answer::getCommentCount)
                 .sum() + answerList.size();
     }
 

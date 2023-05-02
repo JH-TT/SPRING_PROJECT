@@ -38,7 +38,6 @@ public class Answer extends BaseTimeEntity {
     @ManyToOne
     @JoinColumn(name = "siteuser_id")
     private SiteUser author;
-    private int countOfComment;
 
     @ManyToMany
     Set<SiteUser> voter = new HashSet<>();
@@ -79,12 +78,8 @@ public class Answer extends BaseTimeEntity {
         question.getAnswerList().add(this);
     }
 
-    public void addComment() {
-        countOfComment++;
-    }
-
-    public void removeComment() {
-        countOfComment--;
+    public int getCommentCount() {
+        return commentList.size();
     }
 
     public List<CommentDTO> changeToCommentDTOList() {
