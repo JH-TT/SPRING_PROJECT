@@ -83,6 +83,10 @@ public class Answer extends BaseTimeEntity {
         countOfComment++;
     }
 
+    public void removeComment() {
+        countOfComment--;
+    }
+
     public List<CommentDTO> changeToCommentDTOList() {
         return commentList.stream().map(CommentDTO::from)
                 .collect(Collectors.toList());

@@ -61,6 +61,7 @@ public class Comment extends BaseTimeEntity {
 
     public void removeComment() {
         answer.getCommentList().remove(this);
+        answer.removeComment();
     }
 
     public void vote(SiteUser siteUser) {
