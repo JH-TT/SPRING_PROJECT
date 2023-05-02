@@ -2,6 +2,7 @@ package com.mysite.sbb.config;
 
 import com.mysite.sbb.OAuth.PrincipalOauth2UserService;
 import com.mysite.sbb.Service.UserSecurityService;
+import com.mysite.sbb.auth.OauthSuccessHandler;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -45,8 +46,9 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 
         // 모든 인증되지 않은 요청을 허락.
+//        http
+//                .csrf().disable()
         http
-                .csrf().disable()
                 .authorizeRequests()
                 .antMatchers("/**").permitAll()
                 .and()
@@ -60,7 +62,7 @@ public class SecurityConfig {
                 .and()
                     .oauth2Login()
                     .loginPage("/user/login")
-                    .defaultSuccessUrl("/user/setNickName")
+                    .successHandler(new OauthSuccessHandler())
                     .failureUrl("/user/login")
                     .userInfoEndpoint()
                     .userService(principalOauth2UserService);
