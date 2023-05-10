@@ -2,10 +2,9 @@ package com.mysite.sbb.Controller;
 
 
 import com.mysite.sbb.DTO.SessionUser;
-import com.mysite.sbb.DTO.SiteUserDTO;
 import com.mysite.sbb.DataNotFoundException;
-import com.mysite.sbb.Model.PrincipalDetails;
 import com.mysite.sbb.Model.SiteUser;
+import com.mysite.sbb.Service.EmailTokenServiceImpl;
 import com.mysite.sbb.Service.UserService;
 import com.mysite.sbb.UserCreateForm;
 import com.mysite.sbb.UsernameForm;
@@ -14,11 +13,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
@@ -28,8 +22,6 @@ import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
-import java.security.Principal;
-import java.util.Map;
 
 @Slf4j
 @Controller
@@ -40,6 +32,8 @@ public class UserController {
     private final UserService userService;
     private final AuthenticationManager authenticationManager;
     private final HttpSession httpSession;
+
+    private final EmailTokenServiceImpl emailTokenService;
 
     // get요청시 회원가입 템플릿 렌더링
     @GetMapping("/signup")
@@ -61,6 +55,7 @@ public class UserController {
 
         try {
             userService.create(userCreateForm);
+            emailTokenService.createEmailToken(userCreateForm.getEmail(), userCreateForm.getEmail());
         } catch (DataIntegrityViolationException e) {
             bindingResult.reject("signupFailed", "이미 등록된 사용자입니다.");
             return "login/signup_form";
@@ -114,6 +109,24 @@ public class UserController {
 
         return "redirect:/";
     }
+
+    @ResponseBody
+    @GetMapping("/confirm-email")
+    public String viewConfirmEmail(@Valid @RequestParam String token) {
+        try {
+            userService.verifyEmail(token);
+            return "<script>" +
+                    "alert('이메일 인증에 성공했습니다!');" +
+                    "location.href='/'" +
+                    "</script>";
+        } catch (Exception e) {
+            return "<script>" +
+                    "alert('이메일 인증에 실패했습니다. 다시 시도해 주세요.');" +
+                    "location.href='/'" +
+                    "</script>";
+        }
+    }
+
 
     @PostConstruct
     public void init() {

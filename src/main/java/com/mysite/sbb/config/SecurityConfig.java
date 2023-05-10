@@ -2,6 +2,7 @@ package com.mysite.sbb.config;
 
 import com.mysite.sbb.OAuth.PrincipalOauth2UserService;
 import com.mysite.sbb.Service.UserSecurityService;
+import com.mysite.sbb.auth.LoginSuccessHandler;
 import com.mysite.sbb.auth.OauthSuccessHandler;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -54,6 +55,7 @@ public class SecurityConfig {
                 .and()
                     .formLogin()
                     .loginPage("/user/login")
+                    .successHandler(new LoginSuccessHandler())
                     .defaultSuccessUrl("/")
                 .and()
                     .logout()

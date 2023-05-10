@@ -13,6 +13,6 @@ public interface UserService {
     SiteUserDTO create(SiteUserDTO siteUserDTO);
     SiteUser getUser(String username);
     SiteUserDTO getUserByEmail(String email);
-
     SiteUser updateUserName(String username, String email);
+    void verifyEmail(String token);
 }

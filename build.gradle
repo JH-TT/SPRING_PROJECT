@@ -33,9 +33,8 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-data-redis'
     implementation 'org.springframework.session:spring-session-data-redis'
 
-    // spring mail
-    // https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-mail
-    implementation group: 'org.springframework.boot', name: 'spring-boot-starter-mail', version: '2.7.4'
+    // 이메일 인증
+    implementation 'org.springframework.boot:spring-boot-starter-mail'
 
     //thymeleaf
     implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
