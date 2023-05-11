@@ -14,9 +14,11 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;
@@ -43,7 +45,7 @@ public class UserController {
 
     // post요청시 회원가입
     @PostMapping("/signup")
-    public String signup(@Valid UserCreateForm userCreateForm, BindingResult bindingResult) {
+    public String signup(@Valid UserCreateForm userCreateForm, BindingResult bindingResult, RedirectAttributes re) {
         if (bindingResult.hasErrors()) {
             return "login/signup_form";
         }
@@ -56,6 +58,7 @@ public class UserController {
         try {
             userService.create(userCreateForm);
             emailTokenService.createEmailToken(userCreateForm.getEmail(), userCreateForm.getEmail());
+            re.addFlashAttribute("email", "해당 아메일에 인증 링크를 보냈습니다. 확인해 주세요!");
         } catch (DataIntegrityViolationException e) {
             bindingResult.reject("signupFailed", "이미 등록된 사용자입니다.");
             return "login/signup_form";

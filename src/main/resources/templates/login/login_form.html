@@ -7,11 +7,9 @@
   <link href='https://use.fontawesome.com/releases/v5.7.2/css/all.css' rel='stylesheet'>
 </head>
 <div layout:fragment="content" class="container">
-  <!--<div th:if="${param.error}">
-    <div class="alert alert-danger">
-      사용자ID 또는 비밀번호를 확인해 주세요.
-    </div>
-  </div>-->
+  <div class="alert alert-success" role="alert" th:if="${email != null}">
+    <span th:text="${email}"></span>
+  </div>
   <div class="row">
     <div class="offset-md-2 col-lg-5 col-md-7 offset-lg-4 offset-md-3">
       <div class="panel border bg-white">
@@ -19,7 +17,6 @@
           <h3 class="pt-3 font-weight-bold">Login</h3>
         </div>
         <div class="panel-body p-3">
-          <!--<form th:action="@{/loginProcess}" method="post">-->
           <form th:action="@{/user/login}" method="post">
             <div class="form-group py-2">
               <div class="input-field"> <span class="far fa-user p-2"></span> <input type="text" name="username" id="username" placeholder="Username or Email" required> </div>
