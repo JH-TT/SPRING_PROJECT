@@ -29,7 +29,26 @@
 - Redis Serializable 오류
   - 일반 로그인을 했는데 직렬화 문제가 발생.
   - redis에 제대로 직렬화가 이루어지지 않아서 저장하지 못하는 현상이 일어났다.
-  - 
+  - 기존 코드
+  ```java
+    public class SiteUser extends BaseTimeEntity {
+        @Id
+        @GeneratedValue(strategy = GenerationType.IDENTITY)
+        @Column(name = "siteuser_id")
+        private Long id;
+        ...
+    }
+  ```
+  - 수정한 코드(Serializable을 추가해줬다)
+  ```java
+    public class SiteUser extends BaseTimeEntity implements Serializable {
+        @Id
+        @GeneratedValue(strategy = GenerationType.IDENTITY)
+        @Column(name = "siteuser_id")
+        private Long id;
+        ...
+    }
+  ```
 
 ## 기능들
 
