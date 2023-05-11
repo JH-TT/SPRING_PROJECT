@@ -7,13 +7,14 @@ import org.hibernate.validator.constraints.Length;
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
+import java.io.Serializable;
 
 
 @Getter
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name = "siteuser")
-public class SiteUser extends BaseTimeEntity {
+public class SiteUser extends BaseTimeEntity implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "siteuser_id")
@@ -31,7 +32,7 @@ public class SiteUser extends BaseTimeEntity {
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private UserRole role;
-    private boolean isNameChange; // 소셜 로그인시 아이디를 바꿨는지 확인
+    private boolean isNameChange = false; // 소셜 로그인시 아이디를 바꿨는지 확인
 
     @Column(nullable = false)
     private boolean emailCheck = false; // 이메일 인증관련
