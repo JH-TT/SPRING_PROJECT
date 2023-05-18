@@ -1,30 +1,28 @@
 package com.mysite.sbb.Controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.mysite.sbb.DTO.SessionUser;
 import com.mysite.sbb.Model.Question;
 import com.mysite.sbb.Model.SiteUser;
 import com.mysite.sbb.QuestionForm;
 import com.mysite.sbb.Repository.QuestionRepository;
 import com.mysite.sbb.Repository.UserRepository;
-import com.mysite.sbb.Service.QuestionService;
 import com.mysite.sbb.Service.UserService;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.mock.web.MockHttpSession;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import org.springframework.util.LinkedMultiValueMap;
-import org.springframework.util.MultiValueMap;
 import org.springframework.web.context.WebApplicationContext;
 
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.*;
-import static org.junit.Assert.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -49,6 +47,8 @@ public class QuestionControllerTest {
 
     @Autowired
     private UserRepository userRepository;
+
+    public MockHttpSession session;
 
     @BeforeEach // 테스트 실행 전 실행하는 메서드
     public void mockMvcSetUp() {
@@ -105,5 +105,32 @@ public class QuestionControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(savedQuestion.getId()))
                 .andExpect(jsonPath("$.content").value(savedQuestion.getContent()));
+    }
+
+
+    @DisplayName("특정 게시글을 삭제한다.")
+    @Test
+    @WithMockUser("ttt")
+    public void deleteQuestion() throws Exception {
+        // given
+
+        // 세션 생성
+        SiteUser siteUser = userService.create("ttt", "ttt@test.com", "1234");
+        session = new MockHttpSession();
+        session.setAttribute("user", new SessionUser(siteUser));
+        // 세션 생성 END
+
+        Question savedQuestion = questionRepository.save(new Question("하이요", "제목", siteUser));
+        final String url = "/question/delete/{id}";
+
+        // when
+        ResultActions result = mockMvc.perform(get(url, savedQuestion.getId()).session(session));
+
+        // then
+        result.andExpect(status().is3xxRedirection()); // delete된 다음 루트 url로 리다이렉트함
+
+        List<Question> questions = questionRepository.findAll();
+
+        assertThat(questions.size()).isEqualTo(0); // 삭제되면 남는 게시글이 없어야 한다. 즉, size가 0이어야 한다.
     }
 }
