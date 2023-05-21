@@ -116,11 +116,12 @@ public class QuestionServiceImpl implements QuestionService{
 
     @Override
     @Transactional
-    public void modify(Long id, String subject, String content) {
+    public QuestionDTO modify(Long id, String subject, String content) {
         Question question = questionRepository.findById(id).orElseThrow(
                 () -> new DataNotFoundException("해당 질문글이 존재하지 않습니다.")
         );
         question.updateQuestion(subject, content);
+        return QuestionDTO.from(question);
     }
 
     @Override
@@ -143,5 +144,17 @@ public class QuestionServiceImpl implements QuestionService{
                 () -> new DataNotFoundException("존재하지 않는 유저입니다.")
         );
         question.addRecommand(siteUser);
+    }
+
+    @Override
+    public boolean checkLiked(Long id, String username) {
+        Question question = questionRepository.findById(id).orElseThrow(
+                () -> new DataNotFoundException("존재하지 않는 게시글 입니다.")
+        );
+        SiteUser siteUser = userRepository.findByusername(username).orElseThrow(
+                () -> new DataNotFoundException("존재하지 않는 유저입니다.")
+        );
+
+        return question.isLiked(siteUser);
     }
 }

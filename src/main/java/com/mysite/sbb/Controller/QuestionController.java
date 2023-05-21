@@ -126,7 +126,7 @@ public class QuestionController {
     public String questionDelete(HttpServletRequest request, @PathVariable("id") Long id) {
         QuestionDTO questionDTO = questionService.getQuestion(id);
         SessionUser sessionUser = getSessionUser(request);
-        userNameValidation(sessionUser, questionDTO, "삭제 권한이 없습니다" + questionDTO.getContent());
+        userNameValidation(sessionUser, questionDTO, "삭제 권한이 없습니다" + questionDTO.getSubject());
         questionService.delete(id);
         return "redirect:/";
     }
