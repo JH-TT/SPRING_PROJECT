@@ -39,7 +39,7 @@ public class Answer extends BaseTimeEntity {
     @JoinColumn(name = "siteuser_id")
     private SiteUser author;
 
-    @ManyToMany
+    @ManyToMany(cascade = CascadeType.ALL)
     Set<SiteUser> voter = new HashSet<>();
 
     @OneToMany(mappedBy = "answer", cascade = CascadeType.ALL)
@@ -97,5 +97,9 @@ public class Answer extends BaseTimeEntity {
 
     public void updateContent(String content) {
         this.content = content;
+    }
+
+    public boolean isLiked(SiteUser siteUser) {
+        return voter.contains(siteUser);
     }
 }
