@@ -2,6 +2,7 @@ package com.mysite.sbb.Controller;
 
 
 import com.mysite.sbb.DTO.SessionUser;
+import com.mysite.sbb.DTO.SiteUserDTO;
 import com.mysite.sbb.DataNotFoundException;
 import com.mysite.sbb.Model.SiteUser;
 import com.mysite.sbb.Service.EmailTokenServiceImpl;
@@ -58,7 +59,7 @@ public class UserController {
         try {
             userService.create(userCreateForm);
             emailTokenService.createEmailToken(userCreateForm.getEmail(), userCreateForm.getEmail());
-            re.addFlashAttribute("email", "해당 아메일에 인증 링크를 보냈습니다. 확인해 주세요!");
+            re.addFlashAttribute("email", "해당 이메일에 인증 링크를 보냈습니다. 확인해 주세요!");
         } catch (DataIntegrityViolationException e) {
             bindingResult.reject("signupFailed", "이미 등록된 사용자입니다.");
             return "login/signup_form";
@@ -127,6 +128,24 @@ public class UserController {
                     "alert('이메일 인증에 실패했습니다. 다시 시도해 주세요.');" +
                     "location.href='/'" +
                     "</script>";
+        }
+    }
+
+    @GetMapping("/resendEmail")
+    public String goSendEmailPage() {
+        return "/login/reSendEmail";
+    }
+
+    @ResponseBody
+    @PostMapping("/resendEmail")
+    public boolean resendEmail(@RequestParam("email") String email) {
+        try {
+            SiteUserDTO userByEmail = userService.getUserByEmail(email);
+            emailTokenService.createEmailToken(userByEmail.getEmail(), userByEmail.getEmail());
+            System.out.println("userByEmail = " + userByEmail);
+            return true;
+        } catch (DataNotFoundException e) {
+            return false;
         }
     }
 

@@ -15,12 +15,50 @@
   </style>
 </head>
 <body>
+<!-- csrf 값을 설정하기 위한 코드 -->
+<meta name="_csrf_header" th:content="${_csrf.headerName}">
+<meta name="_csrf" th:content="${_csrf.token}">
+
 <div class="container">
   <div class="py-5 text-center">
     <div>
-      <h4>이메일 다시 보내기</h4>
+      이메일 인증이 되지않은 유저입니다. 이메일 인증을 진행해 주세요.
+    </div>
+    <input type="text" id="email" />
+    <div>
+      <button type="button" class="btn btn-primary btn-lg" id="resend">이메일 다시 보내기</button>
     </div>
   </div>
 </div>
+<script>
+  document.getElementById('resend').addEventListener('click', () => {
+      const target = document.getElementById('email').value;
+      var header = $("meta[name='_csrf_header']").attr('content');
+      var token = $("meta[name='_csrf']").attr('content');
+
+      $.ajax({
+        url: "resendEmail",
+        method: 'post',
+        data: {"email": target},
+        beforeSend: function (xhr) {
+          xhr.setRequestHeader(header, token);
+        },
+        success: function (res) {
+          if (res === true) {
+            alert("성공");
+            $("#resend").attr("disabled", true);
+          } else {
+            alert("유저X");
+          }
+        },
+        error: function () {
+          alert("에러 발생");
+        }
+      });
+  });
+
+</script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 </body>
 </html>

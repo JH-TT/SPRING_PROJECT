@@ -47,16 +47,14 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 
         // 모든 인증되지 않은 요청을 허락.
-//        http
-//                .csrf().disable()
         http
                 .authorizeRequests()
                 .antMatchers("/**").permitAll()
+                .anyRequest().authenticated()
                 .and()
                     .formLogin()
-                    .loginPage("/user/login")
                     .successHandler(new LoginSuccessHandler())
-                    .defaultSuccessUrl("/")
+                    .loginPage("/user/login")
                 .and()
                     .logout()
                     .logoutRequestMatcher(new AntPathRequestMatcher("/user/logout"))
