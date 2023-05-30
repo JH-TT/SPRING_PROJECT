@@ -57,6 +57,6 @@ public class PrincipalOauth2UserService implements OAuth2UserService<OAuth2UserR
         SiteUser siteUser = userRepository.findByemail(attributes.getEmail()).orElse(attributes.toEntity());
         // SNS 로그인은 이메일 인증 패스
         siteUser.emailVerifiedSuccess();
-        return userRepository.save(siteUser);
+        return siteUser;
     }
 }
