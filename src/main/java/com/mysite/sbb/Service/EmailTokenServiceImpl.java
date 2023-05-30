@@ -6,23 +6,23 @@ import com.mysite.sbb.Repository.EmailTokenRepository;
 import io.jsonwebtoken.lang.Assert;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.mail.SimpleMailMessage;
 import org.springframework.stereotype.Service;
 
+import javax.mail.MessagingException;
+import java.io.UnsupportedEncodingException;
 import java.time.LocalDateTime;
-import java.util.Optional;
 
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class EmailTokenServiceImpl implements EmailTokenService{
+public class EmailTokenServiceImpl implements EmailTokenService {
 
     private final EmailSenderServiceImpl emailSenderService;
     private final EmailTokenRepository emailTokenRepository;
 
     // 이메일 인증 토큰 생성
     @Override
-    public String createEmailToken(String userEmail, String receiverEmail) {
+    public String createEmailToken(String userEmail, String receiverEmail) throws MessagingException, UnsupportedEncodingException {
         Assert.notNull(userEmail, "userEmail은 필수입니다.");
         Assert.hasText(receiverEmail, "receiverEmail은 필수입니다.");
 
@@ -31,11 +31,22 @@ public class EmailTokenServiceImpl implements EmailTokenService{
         emailTokenRepository.save(emailToken);
 
         // 이메일 전송
-        SimpleMailMessage mailMessage = new SimpleMailMessage();
-        mailMessage.setTo(receiverEmail);
-        mailMessage.setSubject("회원가입 이메일 인증");
-        mailMessage.setText("http://localhost:8080/user/confirm-email?token=" + emailToken.getId());
-        emailSenderService.sendEmail(mailMessage);
+        String msg = "";
+        msg += "<div style='margin:100px;'>";
+        msg += "<h1> 안녕하세요</h1>";
+        msg += "<h1> SBB 입니다</h1>";
+        msg += "<br>";
+        msg += "<p>아래 링크를 클릭해서 회원가입을 완료해주세요<p>";
+        msg += "<br>";
+        msg += "<p>항상 당신의 꿈을 응원합니다. 감사합니다!<p>";
+        msg += "<br>";
+        msg += "<div align='center' style='border:1px solid black; font-family:verdana';>";
+        msg += "<h3 style='color:blue;'>회원가입 인증 링크입니다.</h3>";
+        msg += "<div style='font-size:130%'>";
+        msg += "LINK : <a href=" + "http://localhost:8080/user/confirm-email?token=" + emailToken.getId() + ">";
+        msg += "이메일 인증하기!</a><div><br/> ";
+        msg += "</div>";
+        emailSenderService.sendEmail(msg, receiverEmail);
 
         return emailToken.getId(); // 인증메일 전송 시 토큰 반환
     }
