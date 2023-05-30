@@ -37,7 +37,8 @@
                     th:onclick="|comment_toggle(${answer.id})|">답변등록</button>
         </div>
         <!-- 대댓글 작성 -->
-        <form th:action="@{|/comment/create/${answer.id}|}" method="post" class="my-3" th:id="|comment_textarea${answer.id}|" style="display: none">
+        <form th:action="@{|/comment/create/${answer.id}|}" method="post" class="my-3"
+              th:id="|comment_textarea${answer.id}|" style="display: none">
             <div class="input-group">
                 <textarea sec:authorize="isAnonymous()" disabled =rows="6" class="form-control"></textarea>
                 <textarea sec:authorize="isAuthenticated()" name="content" rows="4" class="form-control"></textarea>
