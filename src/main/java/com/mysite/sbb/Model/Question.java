@@ -44,9 +44,8 @@ public class Question extends BaseTimeEntity {
     @JoinColumn(name = "siteuser_id")
     private SiteUser author;
 
-    @ManyToMany
+    @ManyToMany(cascade = CascadeType.ALL)
     Set<SiteUser> voter = new HashSet<>();
-    private int countOfAnswerAndComment;
 
     //==생성 로직==//
     @Builder
@@ -102,5 +101,8 @@ public class Question extends BaseTimeEntity {
 
     public void removeAnswer(Answer answer) {
         answerList.remove(answer);
+    }
+    public boolean isLiked(SiteUser siteUser) {
+        return voter.contains(siteUser);
     }
 }

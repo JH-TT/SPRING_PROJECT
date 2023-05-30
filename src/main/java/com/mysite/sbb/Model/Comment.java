@@ -33,7 +33,7 @@ public class Comment extends BaseTimeEntity {
     @JoinColumn(name = "siteuser_id")
     private SiteUser author;
 
-    @ManyToMany
+    @ManyToMany(cascade = CascadeType.ALL)
     Set<SiteUser> voter = new HashSet<>();
 
     //==생성 메서드==//
@@ -68,5 +68,9 @@ public class Comment extends BaseTimeEntity {
 
     public void updateContent(String content) {
         this.content = content;
+    }
+
+    public boolean isLiked(SiteUser siteUser) {
+        return voter.contains(siteUser);
     }
 }
