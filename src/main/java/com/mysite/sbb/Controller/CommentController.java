@@ -1,13 +1,12 @@
 package com.mysite.sbb.Controller;
 
+import com.mysite.sbb.AnswerForm;
 import com.mysite.sbb.CommentForm;
-import com.mysite.sbb.DTO.AnswerDTO;
-import com.mysite.sbb.DTO.CommentDTO;
-import com.mysite.sbb.DTO.SessionUser;
-import com.mysite.sbb.DTO.SiteUserDTO;
+import com.mysite.sbb.DTO.*;
 import com.mysite.sbb.Model.SiteUser;
 import com.mysite.sbb.Service.AnswerService;
 import com.mysite.sbb.Service.CommentService;
+import com.mysite.sbb.Service.QuestionService;
 import com.mysite.sbb.Service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -30,16 +29,21 @@ public class CommentController {
 
     private final AnswerService answerService;
     private final CommentService commentService;
-    private final UserService userService;
+    private final QuestionService questionService;
 
     @PostMapping("/create/{id}")
     @PreAuthorize("isAuthenticated()")
     public String createComment(Model model, @PathVariable("id") Long id
-                                , @RequestParam String content, @Valid CommentForm commentForm, BindingResult bindingResult, HttpServletRequest request) {
+                                , @RequestParam String content, BindingResult bindingResult, HttpServletRequest request) {
         AnswerDTO answerDTO = answerService.getAnswer(id);
         SessionUser sessionUser = getSessionUser(request);
-        if (sessionUser == null) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "로그인을 해야 작성할 수 있습니다");
+        if (bindingResult.hasErrors()) {
+            QuestionDTO questionDTO = questionService.getQuestion(answerDTO.getQuestion());
+            model.addAttribute("question", questionDTO);
+            return "question/question_detail";
+        }
+        if (!sessionUser.isEmailCheck()) {
+            return "redirect:/user/resendEmail";
         }
         // 바인딩 오류 추가예정
         commentService.create(id, content, sessionUser.getName());

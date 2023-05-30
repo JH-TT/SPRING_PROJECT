@@ -47,7 +47,10 @@ public class AnswerController {
         log.info("siteUser email = {}", sessionUser.getEmail());
         if(bindingResult.hasErrors()) {
             model.addAttribute("question", questionDTO);
-            return "/question/question_detail";
+            return "question/question_detail";
+        }
+        if (!sessionUser.isEmailCheck()) {
+            return "redirect:/user/resendEmail";
         }
         AnswerDTO answerDTO = answerService.create(id, answerForm.getContent(), sessionUser.getEmail());
         return String.format("redirect:/question/detail/%s#answer_%s", id, answerDTO.getId());

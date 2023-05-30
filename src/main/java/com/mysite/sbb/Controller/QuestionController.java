@@ -67,7 +67,11 @@ public class QuestionController {
 
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/create")
-    public String questionCreate(QuestionForm questionForm) {
+    public String questionCreate(QuestionForm questionFormm, HttpServletRequest request) {
+        SessionUser sessionUser = getSessionUser(request);
+        if (!sessionUser.isEmailCheck()) {
+            return "redirect:/user/resendEmail";
+        }
         return "question/question_form";
     }
 
@@ -150,14 +154,14 @@ public class QuestionController {
         return (SessionUser) session.getAttribute("user");
     }
 
-    @PostConstruct
-    public void init() {
-        SiteUser siteUserDTO = userService.create("ttt", "ttt@test.com", "1234");
-
-        for (int i = 0; i < 50; i++) {
-            Long aLong = questionService.create("테스트" + i, "테스트 내용입니다" + i, siteUserDTO.getEmail());
-            AnswerDTO answerDTO = answerService.create(aLong, "테스트 댓글 입니다.", siteUserDTO.getEmail());
-            commentService.create(answerDTO.getId(), "테스트 대댓글 입니다.", "ttt");
-        }
-    }
+//    @PostConstruct
+//    public void init() {
+//        SiteUser siteUserDTO = userService.create("ttt", "ttt@test.com", "1234");
+//
+//        for (int i = 0; i < 50; i++) {
+//            Long aLong = questionService.create("테스트" + i, "테스트 내용입니다" + i, siteUserDTO.getEmail());
+//            AnswerDTO answerDTO = answerService.create(aLong, "테스트 댓글 입니다.", siteUserDTO.getEmail());
+//            commentService.create(answerDTO.getId(), "테스트 대댓글 입니다.", "ttt");
+//        }
+//    }
 }

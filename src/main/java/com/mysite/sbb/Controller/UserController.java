@@ -22,9 +22,11 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.annotation.PostConstruct;
+import javax.mail.MessagingException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
+import java.io.UnsupportedEncodingException;
 
 @Slf4j
 @Controller
@@ -146,6 +148,10 @@ public class UserController {
             return true;
         } catch (DataNotFoundException e) {
             return false;
+        } catch (MessagingException e) {
+            throw new IllegalStateException("메시지 오류입니다");
+        } catch (UnsupportedEncodingException e) {
+            throw new IllegalStateException("인코딩 오류입니다.");
         }
     }
 
