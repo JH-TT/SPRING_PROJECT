@@ -1,9 +1,11 @@
 package com.mysite.sbb.Controller;
 
 
+import com.mysite.sbb.ArgumentResolver.LoginUser;
 import com.mysite.sbb.DTO.SessionUser;
 import com.mysite.sbb.DTO.SiteUserDTO;
 import com.mysite.sbb.DataNotFoundException;
+import com.mysite.sbb.LoginForm;
 import com.mysite.sbb.Model.SiteUser;
 import com.mysite.sbb.Service.EmailTokenServiceImpl;
 import com.mysite.sbb.Service.UserService;
@@ -82,9 +84,7 @@ public class UserController {
 
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/setNickName")
-    public String goSettingNickNamePage(@ModelAttribute("usernameForm") UsernameForm usernameForm, HttpServletRequest request) {
-        HttpSession session = request.getSession();
-        SessionUser sessionUser = (SessionUser) session.getAttribute("user");
+    public String goSettingNickNamePage(@ModelAttribute("usernameForm") UsernameForm usernameForm, @LoginUser SessionUser sessionUser) {
         boolean isCheck = sessionUser.isNameCheck();
         if(isCheck) {
             return "redirect:/";
@@ -95,7 +95,7 @@ public class UserController {
     @PostMapping("/setNickName")
     public String setNickName(@Validated @ModelAttribute UsernameForm usernameForm,
                               BindingResult bindingResult,
-                              HttpServletRequest request) {
+                              @LoginUser SessionUser sessionUser) {
         if (bindingResult.hasErrors()) {
             return "login/setnickname";
         }
@@ -105,8 +105,6 @@ public class UserController {
             bindingResult.rejectValue("username", "changeNameFailed", "중복되는 이름입니다.");
             return "login/setnickname";
         } catch (DataNotFoundException e) {
-            HttpSession session = request.getSession();
-            SessionUser sessionUser = (SessionUser) session.getAttribute("user");
             log.info("email={}", sessionUser.getEmail());
             log.info("username={}", usernameForm.getUsername());
             SiteUser siteUser = userService.updateUserName(usernameForm.getUsername(), sessionUser.getEmail());

@@ -1,6 +1,7 @@
 package com.mysite.sbb.Controller;
 
 import com.mysite.sbb.AnswerForm;
+import com.mysite.sbb.ArgumentResolver.LoginUser;
 import com.mysite.sbb.DTO.AnswerDTO;
 import com.mysite.sbb.DTO.QuestionDTO;
 import com.mysite.sbb.DTO.SessionUser;
@@ -40,15 +41,10 @@ public class AnswerController {
     @PreAuthorize("isAuthenticated()")
     @PostMapping("/create/{id}")
     public String createAnswer(Model model, @PathVariable("id") Long id
-                                , @Valid AnswerForm answerForm, BindingResult bindingResult, HttpServletRequest request){
+                                , @Valid AnswerForm answerForm, @LoginUser SessionUser sessionUser){
         QuestionDTO questionDTO = questionService.getQuestion(id);
-        SessionUser sessionUser = getSessionUser(request);
         log.info("siteUser name = {}", sessionUser.getName());
         log.info("siteUser email = {}", sessionUser.getEmail());
-        if(bindingResult.hasErrors()) {
-            model.addAttribute("question", questionDTO);
-            return "question/question_detail";
-        }
         if (!sessionUser.isEmailCheck()) {
             return "redirect:/user/resendEmail";
         }
@@ -58,9 +54,8 @@ public class AnswerController {
 
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/modify/{id}")
-    public String answerModify(AnswerForm answerForm, @PathVariable("id") Long id, HttpServletRequest request) {
+    public String answerModify(AnswerForm answerForm, @PathVariable("id") Long id, @LoginUser SessionUser sessionUser) {
         AnswerDTO answer = answerService.getAnswer(id);
-        SessionUser sessionUser = getSessionUser(request);
         userNameValidation(sessionUser, answer, "수정 권한이 없습니다.");
         answerForm.setContent(answer.getContent());
         return "/answer/answer_form";
@@ -69,12 +64,11 @@ public class AnswerController {
     @PreAuthorize("isAuthenticated()")
     @PostMapping("/modify/{id}")
     public String answerModify(@Valid AnswerForm answerForm, BindingResult bindingResult
-        ,@PathVariable("id") Long id, HttpServletRequest request) {
+        ,@PathVariable("id") Long id, @LoginUser SessionUser sessionUser) {
         if(bindingResult.hasErrors()) {
             return "/answer/answer_form";
         }
         AnswerDTO answerDTO = answerService.getAnswer(id);
-        SessionUser sessionUser = getSessionUser(request);
         userNameValidation(sessionUser, answerDTO, "수정 권한이 없습니다");
         answerService.modify(answerDTO, answerForm.getContent());
         return String.format("redirect:/question/detail/%s#answer_%s", answerDTO.getQuestion(), answerDTO.getId());
@@ -82,9 +76,8 @@ public class AnswerController {
 
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/delete/{id}")
-    public String answerDelete(HttpServletRequest request, @PathVariable("id") Long id) {
+    public String answerDelete(@LoginUser SessionUser sessionUser, @PathVariable("id") Long id) {
         AnswerDTO answer = answerService.getAnswer(id);
-        SessionUser sessionUser = getSessionUser(request);
         userNameValidation(sessionUser, answer, "삭제 권한이 없습니다");
         answerService.delete(id);
         return String.format("redirect:/question/detail/%s", answer.getQuestion());
@@ -92,9 +85,8 @@ public class AnswerController {
 
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/vote/{id}")
-    public String answerVote(HttpServletRequest request, @PathVariable("id") Long id) {
+    public String answerVote(@LoginUser SessionUser sessionUser, @PathVariable("id") Long id) {
         AnswerDTO answer = answerService.getAnswer(id);
-        SessionUser sessionUser = getSessionUser(request);
         answerService.vote(id, sessionUser.getName());
         return String.format("redirect:/question/detail/%s#answer_%s", answer.getQuestion(), answer.getId());
     }
@@ -103,10 +95,5 @@ public class AnswerController {
         if(!(answerDTO.getAuthor().getUsername().equals(sessionUser.getName()))) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, message);
         }
-    }
-
-    private SessionUser getSessionUser(HttpServletRequest request) {
-        HttpSession session = request.getSession();
-        return (SessionUser) session.getAttribute("user");
     }
 }

@@ -1,6 +1,7 @@
 package com.mysite.sbb.Controller;
 
 import com.mysite.sbb.AnswerForm;
+import com.mysite.sbb.ArgumentResolver.LoginUser;
 import com.mysite.sbb.DTO.AnswerDTO;
 import com.mysite.sbb.DTO.QuestionDTO;
 import com.mysite.sbb.DTO.QuestionListDTO;
@@ -67,8 +68,8 @@ public class QuestionController {
 
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/create")
-    public String questionCreate(QuestionForm questionFormm, HttpServletRequest request) {
-        SessionUser sessionUser = getSessionUser(request);
+    public String questionCreate(QuestionForm questionFormm, @LoginUser SessionUser sessionUser) {
+        System.out.println("sessionUser = " + sessionUser.toString());
         if (!sessionUser.isEmailCheck()) {
             return "redirect:/user/resendEmail";
         }
@@ -85,21 +86,19 @@ public class QuestionController {
     // 만약 2개의 매개변수의 위치가 맞지 않으면 @Valid만 적용돼 값 검증 실패 시 400오류뜬다.
     @PreAuthorize("isAuthenticated()")
     @PostMapping("/create")
-    public String questionCreate(@Valid QuestionForm questionForm, BindingResult bindingResult, HttpServletRequest request) {
+    public String questionCreate(@Valid QuestionForm questionForm, BindingResult bindingResult, @LoginUser SessionUser sessionUser) {
         // 오류가 있는 경우엔 다시 폼을 작성하는 화면을 렌더링하게한다.
         if (bindingResult.hasErrors()) {
             return "question/question_form";
         }
-        SessionUser sessionUser = getSessionUser(request);
         questionService.create(questionForm.getSubject(), questionForm.getContent(), sessionUser.getEmail());
         return "redirect:/question/list"; // 질문 저장후 질문목록으로 이동
     }
 
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/modify/{id}")
-    public String questionModify(QuestionForm questionForm, @PathVariable("id") Long id, HttpServletRequest request) {
+    public String questionModify(QuestionForm questionForm, @PathVariable("id") Long id, @LoginUser SessionUser sessionUser) {
         QuestionDTO questionDTO = questionService.getQuestion(id);
-        SessionUser sessionUser = getSessionUser(request);
         userNameValidation(sessionUser, questionDTO, "접근 권한이 없습니다" + questionDTO.getContent());
         // 수정할 질문의 제목과 내용을 화면에 보여주기 위해 Form객체에 값을 담아서 템플릿으로 전달한다.
         // 이게 없으면 값이 채워지지 않는다.
@@ -114,12 +113,11 @@ public class QuestionController {
     @PreAuthorize("isAuthenticated()")
     @PostMapping("/modify/{id}")
     public String questionModify(@Valid QuestionForm questionForm, @PathVariable("id") Long id, BindingResult bindingResult
-            , HttpServletRequest request) {
+            , @LoginUser SessionUser sessionUser) {
         if(bindingResult.hasErrors()) {
             return "/question/question_form";
         }
         QuestionDTO questionDTO = questionService.getQuestion(id);
-        SessionUser sessionUser = getSessionUser(request);
         userNameValidation(sessionUser, questionDTO, "수정 권한이 없습니다" + questionDTO.getSubject());
         questionService.modify(id, questionForm.getSubject(), questionForm.getContent());
         return String.format("redirect:/question/detail/%s", id);
@@ -127,9 +125,8 @@ public class QuestionController {
 
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/delete/{id}")
-    public String questionDelete(HttpServletRequest request, @PathVariable("id") Long id) {
+    public String questionDelete(@LoginUser SessionUser sessionUser, @PathVariable("id") Long id) {
         QuestionDTO questionDTO = questionService.getQuestion(id);
-        SessionUser sessionUser = getSessionUser(request);
         userNameValidation(sessionUser, questionDTO, "삭제 권한이 없습니다" + questionDTO.getSubject());
         questionService.delete(id);
         return "redirect:/";
@@ -137,8 +134,7 @@ public class QuestionController {
 
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/vote/{id}")
-    public String questionVote(HttpServletRequest request, @PathVariable("id") Long id) {
-        SessionUser sessionUser = getSessionUser(request);
+    public String questionVote(@LoginUser SessionUser sessionUser, @PathVariable("id") Long id) {
         questionService.vote(id, sessionUser.getName());
         return String.format("redirect:/question/detail/%s", id);
     }
@@ -147,11 +143,6 @@ public class QuestionController {
         if(!(questionDTO.getAuthor().getUsername().equals(sessionUser.getName()) || questionDTO.getAuthor().getRole() == UserRole.ADMIN)) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, message);
         }
-    }
-
-    private SessionUser getSessionUser(HttpServletRequest request) {
-        HttpSession session = request.getSession();
-        return (SessionUser) session.getAttribute("user");
     }
 
 //    @PostConstruct
