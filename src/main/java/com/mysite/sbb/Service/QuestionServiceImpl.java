@@ -99,7 +99,7 @@ public class QuestionServiceImpl implements QuestionService{
     @Override
     public QuestionDTO getQuestion(Long id) {
         Question q = questionRepository.findById(id).orElseThrow(
-                () -> new DataNotFoundException("question not found")
+                () -> new DataNotFoundException("게시글이 존재하지 않습니다.")
         );
         return QuestionDTO.from(q);
     }
