@@ -130,7 +130,7 @@ public class QuestionServiceImpl implements QuestionService{
         Question question = questionRepository.findById(id).orElseThrow(
                 () -> new DataNotFoundException("해당 질문이 존재하지 않습니다.")
         );
-        questionRepository.delete(question);
+        question.deleteQuestion();
     }
 
 

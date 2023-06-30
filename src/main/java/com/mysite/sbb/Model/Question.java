@@ -47,6 +47,8 @@ public class Question extends BaseTimeEntity {
     @ManyToMany(cascade = CascadeType.ALL)
     Set<SiteUser> voter = new HashSet<>();
 
+    private boolean isDeleted = false;
+
     //==생성 로직==//
     @Builder
     public Question(String content, String subject, List<Answer> answerList, SiteUser author) {
@@ -102,7 +104,12 @@ public class Question extends BaseTimeEntity {
     public void removeAnswer(Answer answer) {
         answerList.remove(answer);
     }
+
     public boolean isLiked(SiteUser siteUser) {
         return voter.contains(siteUser);
+    }
+
+    public void deleteQuestion() {
+        isDeleted = true;
     }
 }

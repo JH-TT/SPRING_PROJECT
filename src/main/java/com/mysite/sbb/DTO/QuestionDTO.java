@@ -29,6 +29,8 @@ public class QuestionDTO {
     int voter;
     int countOfAnswerComment;
 
+    boolean isDeleted;
+
     // Entity -> DTO
     public static QuestionDTO from(Question question) {
         if(question == null) return null;
@@ -43,6 +45,7 @@ public class QuestionDTO {
                 .answerList(question.changeToAnswerListDTO())
                 .voter(question.countOfVoter())
                 .countOfAnswerComment(question.getTotalCountOfAnswerAndComment())
+                .isDeleted(question.isDeleted())
                 .build();
     }
 
