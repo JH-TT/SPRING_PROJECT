@@ -28,7 +28,7 @@ public class AnswerServiceImpl implements AnswerService{
     // 유저 이메일만 넘어올 경우
     @Override
     @Transactional
-    public AnswerDTO create(Long id, String content, String email) {
+    public AnswerDTO create(final Long id, final String content, final String email) {
         Question question = questionRepository.findById(id).orElseThrow(
                 () -> new DataNotFoundException("해당 질문이 존재하지 않습니다.")
         );
@@ -42,7 +42,7 @@ public class AnswerServiceImpl implements AnswerService{
 
     // 유저엔티티가 넘어올 경우
     @Override
-    public AnswerDTO create(Long id, String content, SiteUser author) {
+    public AnswerDTO create(final Long id, final String content, final SiteUser author) {
         Question question = questionRepository.findById(id).orElseThrow(
                 () -> new DataNotFoundException("해당 질문이 존재하지 않습니다.")
         );
@@ -51,7 +51,7 @@ public class AnswerServiceImpl implements AnswerService{
     }
 
     @Override
-    public AnswerDTO getAnswer(Long id) {
+    public AnswerDTO getAnswer(final Long id) {
         Answer answer = answerRepository.findById(id).orElseThrow(
                 () -> new DataNotFoundException("해당 댓글이 존재하지 않습니다")
         );
@@ -59,7 +59,7 @@ public class AnswerServiceImpl implements AnswerService{
     }
 
     @Override
-    public Long getQuestionId(Long id) {
+    public Long getQuestionId(final Long id) {
         Answer answer = answerRepository.findById(id).orElseThrow(
                 () -> new DataNotFoundException("해당 댓글이 존재하지 않습니다")
         );
@@ -68,7 +68,7 @@ public class AnswerServiceImpl implements AnswerService{
 
     @Override
     @Transactional
-    public void modify(AnswerDTO answerDTO, String content) {
+    public void modify(AnswerDTO answerDTO, final String content) {
         Answer answer = answerRepository.findById(answerDTO.getId()).orElseThrow(
                 () -> new DataNotFoundException("해당 댓글이 존재하지 않습니다.")
         );
@@ -77,7 +77,7 @@ public class AnswerServiceImpl implements AnswerService{
 
     @Override
     @Transactional
-    public void delete(Long id) {
+    public void delete(final Long id) {
         Answer answer = answerRepository.findById(id).orElseThrow(
                 () -> new DataNotFoundException("해당 댓글이 존재하지 않습니다.")
         );
@@ -90,7 +90,7 @@ public class AnswerServiceImpl implements AnswerService{
 
     @Override
     @Transactional
-    public void vote(Long id, String username) {
+    public void vote(final Long id, final String username) {
         Answer answer = answerRepository.findById(id).orElseThrow(
                 () -> new DataNotFoundException("해당 댓글이 존재하지 않습니다.")
         );

@@ -16,6 +16,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpSession;
 import java.util.ArrayList;
 import java.util.List;
@@ -30,7 +31,7 @@ public class UserSecurityService implements UserDetailsService {
 
     // 로그인을 하면 해당 로직을 거친다.
     @Override
-    public UserDetails loadUserByUsername(String email) throws AuthenticationException {
+    public UserDetails loadUserByUsername(final String email) throws AuthenticationException {
         SiteUser user = userRepository.findByemail(email).orElseThrow(
                 () -> new UsernameNotFoundException("해당 사용자가 존재하지 않습니다.\n찾으려는 유저의 이메일 : " + email)
         );

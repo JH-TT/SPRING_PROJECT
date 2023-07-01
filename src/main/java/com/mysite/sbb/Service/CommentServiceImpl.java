@@ -25,7 +25,7 @@ public class CommentServiceImpl implements CommentService {
     private final UserRepository userRepository;
 
     @Override
-    public Long create(Long id, String content, String username) {
+    public Long create(final Long id, final String content, final String username) {
         Answer answer = answerRepository.findById(id).orElseThrow(
                 () -> new DataNotFoundException("해당 댓글이 존재하지 않습니다.")
         );
@@ -38,7 +38,7 @@ public class CommentServiceImpl implements CommentService {
 
     @Override
     @Transactional(readOnly = true)
-    public CommentDTO getComment(Long id) {
+    public CommentDTO getComment(final Long id) {
         Optional<Comment> comment = commentRepository.findById(id);
         if (comment.isPresent()) {
             return CommentDTO.from(comment.get());
@@ -48,7 +48,7 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
-    public void modify(CommentDTO commentDTO, String content) {
+    public void modify(CommentDTO commentDTO, final String content) {
         Comment comment = commentRepository.findById(commentDTO.getId()).orElseThrow(
                 () -> new DataNotFoundException("해당 대댓글이 존재하지 않습니다")
         );
@@ -56,7 +56,7 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
-    public void delete(Long id) {
+    public void delete(final Long id) {
         Comment comment = commentRepository.findById(id).orElseThrow(
                 () -> new DataNotFoundException("해당 대댓글이 존재하지 않습니다.")
         );
@@ -65,7 +65,7 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
-    public void vote(Long id, String username) {
+    public void vote(final Long id, final String username) {
         Comment comment = commentRepository.findById(id).orElseThrow(
                 () -> new DataNotFoundException("해당 대댓글이 존재하지 않습니다.")
         );

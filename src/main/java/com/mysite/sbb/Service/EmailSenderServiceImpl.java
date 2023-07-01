@@ -21,7 +21,7 @@ public class EmailSenderServiceImpl{
     private final JavaMailSender javaMailSender;
 
     @Async
-    public void sendEmail(String msg, String receiver) throws MessagingException, UnsupportedEncodingException {
+    public void sendEmail(final String msg, final String receiver) throws MessagingException, UnsupportedEncodingException {
         MimeMessage message = javaMailSender.createMimeMessage();
         message.addRecipients(Message.RecipientType.TO, receiver);
         message.setSubject("회원가입 인증링크입니다");

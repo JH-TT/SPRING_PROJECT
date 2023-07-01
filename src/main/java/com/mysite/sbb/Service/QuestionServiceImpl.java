@@ -30,7 +30,7 @@ public class QuestionServiceImpl implements QuestionService{
     private final QuestionRepository questionRepository;
     private final UserRepository userRepository;
 
-    private Specification<Question> search(String kw) {
+    private Specification<Question> search(final String kw) {
         return new Specification<>() {
 
             private static final long serialVersionUID = 1L;
@@ -66,7 +66,7 @@ public class QuestionServiceImpl implements QuestionService{
     }
 
     @Override
-    public Page<QuestionDTO> getList(int page) {
+    public Page<QuestionDTO> getList(final int page) {
         // 최근날짜로 데이터 가져옴
 //        List<Sort.Order> sorts = new ArrayList<>();
 //        sorts.add(Sort.Order.desc("createDate"));
@@ -76,7 +76,7 @@ public class QuestionServiceImpl implements QuestionService{
     }
 
     @Override
-    public Page<QuestionDTO> getList(int page, String kw) {
+    public Page<QuestionDTO> getList(final int page, final String kw) {
         List<Sort.Order> sorts = new ArrayList<>();
         sorts.add(Sort.Order.desc("createDate"));
         Pageable pageable = PageRequest.of(page, 10, Sort.by(sorts));
@@ -85,7 +85,7 @@ public class QuestionServiceImpl implements QuestionService{
     }
 
     @Override
-    public Page<QuestionListDTO> getListV1(int page, String kw) {
+    public Page<QuestionListDTO> getListV1(final int page, final String kw) {
         List<Sort.Order> sorts = new ArrayList<>();
         sorts.add(Sort.Order.desc("createDate"));
         Pageable pageable = PageRequest.of(page, 10, Sort.by(sorts));
@@ -94,7 +94,7 @@ public class QuestionServiceImpl implements QuestionService{
     }
 
     @Override
-    public QuestionDTO getQuestion(Long id) {
+    public QuestionDTO getQuestion(final Long id) {
         Question q = questionRepository.findById(id).orElseThrow(
                 () -> new DataNotFoundException("게시글이 존재하지 않습니다.")
         );
@@ -103,7 +103,7 @@ public class QuestionServiceImpl implements QuestionService{
 
     @Override
     @Transactional
-    public Long create(String subject, String content, String email) {
+    public Long create(final String subject, final String content, final String email) {
         SiteUser author = userRepository.findByemail(email).orElseThrow(
                 () -> new DataNotFoundException("해당 유저가 존재하지 않습니다")
         );
@@ -113,7 +113,7 @@ public class QuestionServiceImpl implements QuestionService{
 
     @Override
     @Transactional
-    public QuestionDTO modify(Long id, String subject, String content) {
+    public QuestionDTO modify(final Long id, final String subject, final String content) {
         Question question = questionRepository.findById(id).orElseThrow(
                 () -> new DataNotFoundException("해당 질문글이 존재하지 않습니다.")
         );
@@ -123,7 +123,7 @@ public class QuestionServiceImpl implements QuestionService{
 
     @Override
     @Transactional
-    public void delete(Long id) {
+    public void delete(final Long id) {
         Question question = questionRepository.findById(id).orElseThrow(
                 () -> new DataNotFoundException("해당 질문이 존재하지 않습니다.")
         );
@@ -133,7 +133,7 @@ public class QuestionServiceImpl implements QuestionService{
 
     @Override
     @Transactional
-    public void vote(Long id, String username) {
+    public void vote(final Long id, final String username) {
         Question question = questionRepository.findById(id).orElseThrow(
                 () -> new DataNotFoundException("존재하지 않는 게시글 입니다.")
         );
@@ -144,7 +144,7 @@ public class QuestionServiceImpl implements QuestionService{
     }
 
     @Override
-    public boolean checkLiked(Long id, String username) {
+    public boolean checkLiked(final Long id, final String username) {
         Question question = questionRepository.findById(id).orElseThrow(
                 () -> new DataNotFoundException("존재하지 않는 게시글 입니다.")
         );

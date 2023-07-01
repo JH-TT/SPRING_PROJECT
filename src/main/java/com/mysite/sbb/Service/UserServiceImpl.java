@@ -26,7 +26,7 @@ public class UserServiceImpl implements UserService{
     private final EmailTokenService emailTokenService;
 
     @Override
-    public SiteUser create(String username, String email, String password) {
+    public SiteUser create(final String username, final String email, final String password) {
         SiteUserDTO siteUserDTO = SiteUserDTO.builder()
                 .username(username)
                 .email(email)
@@ -48,7 +48,7 @@ public class UserServiceImpl implements UserService{
 
     @Override
     @Transactional(readOnly = true)
-    public SiteUser getUser(String username) {
+    public SiteUser getUser(final String username) {
         SiteUser siteUser = userRepository.findByusername(username).orElseThrow(
                 () -> new DataNotFoundException("해당 회원이 존재하지 않습니다.")
         );
@@ -57,7 +57,7 @@ public class UserServiceImpl implements UserService{
 
     @Override
     @Transactional(readOnly = true)
-    public SiteUserDTO getUserByEmail(String email) {
+    public SiteUserDTO getUserByEmail(final String email) {
         SiteUser siteUser = userRepository.findByemail(email).orElseThrow(
                 () -> new DataNotFoundException("해당 회원이 존재하지 않습니다.")
         );
@@ -65,7 +65,7 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
-    public SiteUser updateUserName(String username, String email) {
+    public SiteUser updateUserName(final String username, final String email) {
         SiteUser siteUser1 = userRepository.findByemail(email).orElseThrow(
                 () -> new DataNotFoundException("해당 회원이 존재하지 않습니다"));
         siteUser1.updateUserName(username);
@@ -74,7 +74,7 @@ public class UserServiceImpl implements UserService{
 
     @Override
     @Transactional
-    public void verifyEmail(String token) {
+    public void verifyEmail(final String token) {
         // 이메일 토큰을 가져온다.
         EmailToken findEmailToken = emailTokenService.findByIdAndExpirationDateAfterAndExpired(token);
 

@@ -22,7 +22,7 @@ public class EmailTokenServiceImpl implements EmailTokenService {
 
     // 이메일 인증 토큰 생성
     @Override
-    public String createEmailToken(String userEmail, String receiverEmail) throws MessagingException, UnsupportedEncodingException {
+    public String createEmailToken(final String userEmail, final String receiverEmail) throws MessagingException, UnsupportedEncodingException {
         Assert.notNull(userEmail, "userEmail은 필수입니다.");
         Assert.hasText(receiverEmail, "receiverEmail은 필수입니다.");
 
@@ -53,7 +53,7 @@ public class EmailTokenServiceImpl implements EmailTokenService {
 
     // 유효한 토큰 가져오기
     @Override
-    public EmailToken findByIdAndExpirationDateAfterAndExpired(String emailTokenId) {
+    public EmailToken findByIdAndExpirationDateAfterAndExpired(final String emailTokenId) {
 
         return emailTokenRepository.findByIdAndExpirationDateAfterAndExpired(emailTokenId, LocalDateTime.now(), false)
                 .orElseThrow(
