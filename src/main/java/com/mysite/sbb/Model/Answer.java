@@ -4,6 +4,8 @@ import com.mysite.sbb.DTO.AnswerDTO;
 import com.mysite.sbb.DTO.CommentDTO;
 import com.mysite.sbb.DTO.SiteUserDTO;
 import lombok.*;
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.Where;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
@@ -20,6 +22,7 @@ import static javax.persistence.FetchType.*;
 
 @Getter
 @Entity
+@SQLDelete(sql = "UPDATE answer SET deleted = true WHERE answer_id = ?")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Answer extends BaseTimeEntity {
     @Id
@@ -44,6 +47,8 @@ public class Answer extends BaseTimeEntity {
 
     @OneToMany(mappedBy = "answer", cascade = CascadeType.ALL)
     private List<Comment> commentList = new ArrayList<>();
+
+    private boolean deleted = Boolean.FALSE;
 
     //==생성 메서드==//
     @Builder

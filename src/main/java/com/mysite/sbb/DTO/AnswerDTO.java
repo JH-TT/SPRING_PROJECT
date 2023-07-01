@@ -28,6 +28,8 @@ public class AnswerDTO {
     int voter;
     List<CommentDTO> commentList;
 
+    boolean deleted;
+
     public static AnswerDTO from(Answer answer) {
         if(answer == null) return null;
 
@@ -40,6 +42,7 @@ public class AnswerDTO {
                 .author(SiteUserDTO.from(answer.getAuthor()))
                 .voter(answer.countOfVoter())
                 .commentList(answer.changeToCommentDTOList())
+                .deleted(answer.isDeleted())
                 .build();
     }
 
