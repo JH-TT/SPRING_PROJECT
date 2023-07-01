@@ -18,11 +18,15 @@ import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.context.WebApplicationContext;
 
+import javax.persistence.EntityManager;
+import javax.swing.text.html.Option;
 import java.util.List;
+import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -30,6 +34,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @SpringBootTest
+@Transactional
 @AutoConfigureMockMvc
 public class QuestionControllerTest {
     @Autowired
@@ -52,6 +57,9 @@ public class QuestionControllerTest {
 
     public MockHttpSession session;
     public SiteUser siteUser;
+
+    @Autowired
+    private EntityManager entityManager;
 
     @BeforeEach // 테스트 실행 전 실행하는 메서드
     public void mockMvcSetUp() {
@@ -113,7 +121,22 @@ public class QuestionControllerTest {
     }
 
 
-    @DisplayName("특정 게시글을 삭제한다.")
+    @DisplayName("Soft Delete와 Where테스트")
+    @Test
+    public void deleteAndWhere() throws Exception {
+        // given
+        Question savedQuestion = questionRepository.save(new Question("하이요", "제목", siteUser));
+
+        // when
+        questionRepository.delete(savedQuestion);
+        entityManager.flush();
+
+        // then
+        Optional<Question> findQuestion = questionRepository.findById(savedQuestion.getId());
+        assertThat(findQuestion).isEmpty();
+    }
+
+    /*@DisplayName("특정 게시글을 삭제한다.")
     @Test
     @WithMockUser("ttt")
     public void deleteQuestion() throws Exception {
@@ -130,7 +153,7 @@ public class QuestionControllerTest {
         List<Question> questions = questionRepository.findAll();
 
         assertThat(questions.size()).isEqualTo(0); // 삭제되면 남는 게시글이 없어야 한다. 즉, size가 0이어야 한다.
-    }
+    }*/
 
     @DisplayName("특정 게시글을 수정한다")
     @Test

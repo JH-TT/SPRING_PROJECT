@@ -2,7 +2,6 @@ package com.mysite.sbb.Service;
 
 import com.mysite.sbb.DTO.QuestionDTO;
 import com.mysite.sbb.DTO.QuestionListDTO;
-import com.mysite.sbb.DTO.SiteUserDTO;
 import com.mysite.sbb.DataNotFoundException;
 import com.mysite.sbb.Model.Answer;
 import com.mysite.sbb.Model.Question;
@@ -18,11 +17,9 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.annotation.PostConstruct;
 import javax.persistence.criteria.*;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -130,7 +127,7 @@ public class QuestionServiceImpl implements QuestionService{
         Question question = questionRepository.findById(id).orElseThrow(
                 () -> new DataNotFoundException("해당 질문이 존재하지 않습니다.")
         );
-        question.deleteQuestion();
+        questionRepository.delete(question);
     }
 
 

@@ -3,12 +3,10 @@ package com.mysite.sbb.Model;
 import com.mysite.sbb.DTO.AnswerDTO;
 import com.mysite.sbb.DTO.SiteUserDTO;
 import lombok.*;
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.LastModifiedDate;
-import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.Where;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -20,6 +18,8 @@ import static lombok.AccessLevel.*;
 
 @Getter
 @Entity
+@SQLDelete(sql = "UPDATE question SET deleted = true WHERE question_id = ?")
+@Where(clause = "deleted = false")
 @NoArgsConstructor(access = PROTECTED)
 public class Question extends BaseTimeEntity {
     @Id
@@ -47,7 +47,7 @@ public class Question extends BaseTimeEntity {
     @ManyToMany(cascade = CascadeType.ALL)
     Set<SiteUser> voter = new HashSet<>();
 
-    private boolean isDeleted = false;
+    private boolean deleted = Boolean.FALSE;
 
     //==생성 로직==//
     @Builder
@@ -107,9 +107,5 @@ public class Question extends BaseTimeEntity {
 
     public boolean isLiked(SiteUser siteUser) {
         return voter.contains(siteUser);
-    }
-
-    public void deleteQuestion() {
-        isDeleted = true;
     }
 }
