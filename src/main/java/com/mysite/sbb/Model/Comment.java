@@ -2,6 +2,7 @@ package com.mysite.sbb.Model;
 
 import com.mysite.sbb.DTO.SiteUserDTO;
 import lombok.*;
+import org.hibernate.annotations.SQLDelete;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
@@ -13,7 +14,7 @@ import java.util.Set;
 
 @Entity
 @Getter
-@Builder
+@SQLDelete(sql = "UPDATE comment SET deleted = true WHERE comment_id = ?")
 @NoArgsConstructor
 @AllArgsConstructor
 public class Comment extends BaseTimeEntity {
@@ -36,6 +37,8 @@ public class Comment extends BaseTimeEntity {
     @ManyToMany(cascade = CascadeType.ALL)
     Set<SiteUser> voter = new HashSet<>();
 
+    private boolean deleted = Boolean.FALSE;
+
     //==생성 메서드==//
     @Builder
     public Comment(String content, SiteUser author) {
@@ -56,10 +59,6 @@ public class Comment extends BaseTimeEntity {
 
     public int countOfVoter() {
         return voter.size();
-    }
-
-    public void removeComment() {
-        answer.getCommentList().remove(this);
     }
 
     public void vote(SiteUser siteUser) {

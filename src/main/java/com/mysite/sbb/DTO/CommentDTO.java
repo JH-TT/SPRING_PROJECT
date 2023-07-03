@@ -23,9 +23,10 @@ public class CommentDTO {
     SiteUserDTO author;
     int voter;
 
+    boolean deleted;
+
     public Comment toEntity() {
         return Comment.builder()
-                .id(id)
                 .content(content)
                 .author(author.toEntity())
                 .build();
@@ -42,6 +43,7 @@ public class CommentDTO {
                 .answer(comment.getAnswer().getId())
                 .author(SiteUserDTO.from(comment.getAuthor()))
                 .voter(comment.countOfVoter())
+                .deleted(comment.isDeleted())
                 .build();
     }
 }

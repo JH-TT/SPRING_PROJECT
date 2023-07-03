@@ -60,7 +60,6 @@ public class CommentServiceImpl implements CommentService {
         Comment comment = commentRepository.findById(id).orElseThrow(
                 () -> new DataNotFoundException("해당 대댓글이 존재하지 않습니다.")
         );
-        comment.removeComment();
         commentRepository.delete(comment);
     }
 

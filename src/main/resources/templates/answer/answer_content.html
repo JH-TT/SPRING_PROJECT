@@ -2,8 +2,8 @@
 <div th:fragment="answerFragment(question)" class="card my-3" th:each="answer : ${question.answerList}">
     <!-- 앵커추가 -->
     <a th:id="|answer_${answer.id}|"></a>
-    <th:block th:if="${answer.deleted == false}">
-        <div class="card-body">
+    <div class="card-body">
+        <th:block th:if="${answer.deleted == false}">
             <div class="card-text" th:utext="${@commonUtil.markdown(answer.content)}"></div>
             <div class="d-flex justify-content-end">
                 <div th:if="${answer.modifiedDate != answer.createDate}" class="badge bg-light text-dark p-2 text-start mx-3">
@@ -47,9 +47,16 @@
                     <input type="submit" value="대댓글추가" class="input-group-text">
                 </div>
             </form>
-            <!-- 지금 대댓글 개수만큼 댓글이 늘어남. 이 부분은 확인해 봐야할듯 N+1 문제 발생 -->
-            <!-- 대댓글 시작 -->
-            <div class="card my-3" th:each="comment : ${answer.commentList}">
+        </th:block>
+        <th:block th:if="${answer.deleted == true}">
+            <div class="card-body">
+                <div class="card-text">삭제된 댓글입니다.</div>
+            </div>
+        </th:block>
+        <!-- 지금 대댓글 개수만큼 댓글이 늘어남. 이 부분은 확인해 봐야할듯 N+1 문제 발생 -->
+        <!-- 대댓글 시작 -->
+        <div class="card my-3" th:each="comment : ${answer.commentList}">
+            <th:block th:if="${comment.deleted == false}">
                 <div th:text="${comment.content}"></div>
                 <div class="d-flex justify-content-end">
                     <div th:if="${comment.modifiedDate != comment.createDate}" class="badge bg-light text-dark p-2 text-start mx-3">
@@ -80,14 +87,14 @@
                        th:if="${comment.author != null and session.user.getName() == comment.author.username}"
                        th:text="삭제"></a>
                 </div>
-            </div>
-            <!-- 대댓글 끝 -->
-        </div>
-    </th:block>
-    <th:block th:if="${answer.deleted == true}">
-        <div class="card-body">
-            <div class="card-text">삭제된 댓글입니다.</div>
-        </div>
-    </th:block>
+            </th:block>
+            <th:block th:if="${comment.deleted == true}">
+                <div class="card-body">
+                    <div class="card-text">삭제된 댓글입니다.</div>
+                </div>
+            </th:block>
+        <div>
+        <!-- 대댓글 끝 -->
+    </div>
 </div>
 <!-- 답변 반복 끝  -->
